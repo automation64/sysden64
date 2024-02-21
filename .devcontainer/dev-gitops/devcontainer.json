@@ -1,0 +1,11 @@
+{
+	"name": "dev-gitops",
+	"image": "ghcr.io/automation64/dev/ubuntu-22.4-dev-gitops:latest",
+	"features": {},
+	"forwardPorts": [],
+	"customizations": {
+		"vscode": {
+			"extensions": []
+		}
+	}
+}

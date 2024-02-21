@@ -1,0 +1,18 @@
+shell:
+  program: "/usr/bin/tmux"
+
+window:
+  decorations_theme_variant : "Dark"
+  dynamic_title : true
+  startup_mode: "Fullscreen"
+
+scrolling:
+  history: 0
+
+font.normal:
+  family : "MesloLGS NF"
+
+cursor.style:
+  shape : "Beam"
+  blinking : "On"
+

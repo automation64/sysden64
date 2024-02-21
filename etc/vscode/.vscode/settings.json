@@ -1,0 +1,420 @@
+//
+// Settings Template Version: 100422
+// VSCode Version: >= 1.66
+//
+// Static settings section. Use to keep read-only settings that will only be modified when updating from the master template.
+//
+{
+  "aws.telemetry": false,
+  "azureTerraform.checkTerraformCmd": false,
+  "azureTerraform.files": "**/*.{rb,sh,tf,tfvars}",
+  "azureTerraform.terminal": "integrated",
+  "breadcrumbs.enabled": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.enableAppInsights": false,
+  "cSpell.allowCompoundWords": true,
+  "cSpell.diagnosticLevel": "Hint",
+  "debug.console.fontFamily": "'MesloLGS NF'",
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorStyle": "block",
+  "editor.cursorSurroundingLines": 1,
+  "editor.linkedEditing": true,
+  "editor.matchBrackets": "never",
+  "editor.minimap.enabled": false,
+  "editor.parameterHints.cycle": true,
+  "editor.renderControlCharacters": true,
+  "editor.renderLineHighlight": "none",
+  "editor.renderLineHighlightOnlyWhenFocus": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.showFoldingControls": "always",
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "on",
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.enableDragAndDrop": false,
+  "files.enableTrash": false,
+  "git.confirmSync": true,
+  "git.enableSmartCommit": true,
+  "gitlens.blame.avatars": false,
+  "gitlens.blame.compact": false,
+  "gitlens.blame.heatmap.enabled": false,
+  "gitlens.blame.highlight.enabled": false,
+  "gitlens.codeLens.authors.enabled": false,
+  "gitlens.codeLens.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.currentLine.pullRequests.enabled": false,
+  "gitlens.currentLine.scrollable": false,
+  "gitlens.hovers.currentLine.over": "line",
+  "markdown.preview.fontFamily": "'MesloLGS NF'",
+  "nxConsole.enableTelemetry": false,
+  "partialDiff.enableTelemetry": false,
+  "peacock.affectDebuggingStatusBar": true,
+  "peacock.affectStatusAndTitleBorders": true,
+  "peacock.affectTabActiveBorder": true,
+  "peacock.showColorInStatusBar": false,
+  "peacock.surpriseMeOnStartup": true,
+  "prettier.embeddedLanguageFormatting": "off",
+  "preview.preview.fontFamily": "'MesloLGS NF'",
+  "python.analysis.completeFunctionParens": true,
+  "python.formatting.provider": "black",
+  "python.languageServer": "Pylance",
+  "redhat.telemetry.enabled": false,
+  "rest-client.enableTelemetry": false,
+  "rest-client.fontFamily": "'MesloLGS NF'",
+  "scm.alwaysShowRepositories": true,
+  "search.followSymlinks": false,
+  "search.useIgnoreFiles": true,
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.fontFamily": "'MesloLGS NF'",
+  "todohighlight.isEnable": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "window.closeWhenEmpty": false,
+  "window.zoomLevel": 0,
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.tips.enabled": false,
+  "yaml.validate": true,
+  "auto-close-tag.activationOnLanguage": [
+    "xml",
+    "php",
+    "blade",
+    "ejs",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "liquid",
+    "erb",
+    "lang-cfml",
+    "cfml",
+    "plist"
+  ],
+  "todohighlight.include": [
+    "**/*.j2",
+    "**/*.ini",
+    "**/*.yml",
+    "**/*.md",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.html",
+    "**/*.php",
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.lineNumbers": "off",
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "gitlens.codeLens.scopes": ["document"]
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "files.eol": "\n"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[ansible]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  },
+  "[tsv]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": false,
+    "editor.tabSize": 2
+  },
+  "[csv]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": false,
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "peacock.elementAdjustments": {
+    "statusBar": "darken",
+    "titleBar": "lighten"
+  },
+  "peacock.darkForegroundColor": "",
+  "peacock.lightForegroundColor": "",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh"
+    },
+    "python3": {
+      "path": "python3",
+      "args": ["-i"]
+    }
+  },
+  "html-css-class-completion.HTMLLanguages": [
+    "html",
+    "vue",
+    "razor",
+    "blade",
+    "handlebars",
+    "twig",
+    "django-html",
+    "php",
+    "markdown",
+    "erb",
+    "ejs",
+    "svelte"
+  ],
+  "html-css-class-completion.JavaScriptLanguages": [
+    "javascript",
+    "javascriptreact",
+    "typescriptreact"
+  ],
+  "files.associations": {
+    "*.tsv": "tsv",
+    "*.toml": "toml",
+    "*.bash": "shellscript",
+    "*.sh": "shellscript",
+    "*.ini.j2": "jinja-toml",
+    "*.toml.j2": "jinja-toml",
+    "*.yml.j2": "jinja-yaml",
+    "*.sh.j2": "jinja-shell",
+    "*.json.j2": "jinja-json",
+    "*.service.j2": "jinja-systemd",
+    "*.yml": "ansible",
+    "*.html": "html"
+  },
+  //
+  // Local defaults section. Use to isolate settings that should not be replaced when updating from the master template
+  //
+  "peacock.favoriteColors": [
+    {
+      "name": "Angular Red",
+      "value": "#dd0531"
+    },
+    {
+      "name": "Azure Blue",
+      "value": "#007fff"
+    },
+    {
+      "name": "JavaScript Yellow",
+      "value": "#f9e64f"
+    },
+    {
+      "name": "Mandalorian Blue",
+      "value": "#1857a4"
+    },
+    {
+      "name": "Node Green",
+      "value": "#215732"
+    },
+    {
+      "name": "React Blue",
+      "value": "#61dafb"
+    },
+    {
+      "name": "Something Different",
+      "value": "#832561"
+    },
+    {
+      "name": "Svelte Orange",
+      "value": "#ff3d00"
+    },
+    {
+      "name": "Vue Green",
+      "value": "#42b883"
+    }
+  ],
+  "yaml.customTags": [
+    "!And",
+    "!And sequence",
+    "!If",
+    "!If sequence",
+    "!Not",
+    "!Not sequence",
+    "!Equals",
+    "!Equals sequence",
+    "!Or",
+    "!Or sequence",
+    "!FindInMap",
+    "!FindInMap sequence",
+    "!Base64",
+    "!Join",
+    "!Join sequence",
+    "!Cidr",
+    "!Ref",
+    "!Sub",
+    "!Sub sequence",
+    "!GetAtt",
+    "!GetAZs",
+    "!ImportValue",
+    "!ImportValue sequence",
+    "!Select",
+    "!Select sequence",
+    "!Split",
+    "!Split sequence"
+  ],
+  "terraform.languageServer": {
+    "external": true,
+    "pathToBinary": "",
+    "args": ["serve"],
+    "maxNumberOfProblems": 100,
+    "trace.server": "off"
+  },
+  "editor.fontFamily": "'MesloLGS NF'",
+  "editor.inlayHints.fontFamily": "'MesloLGS NF'",
+  "workbench.colorTheme": "Retro Green",
+  "workbench.iconTheme": "vscode-great-icons",
+  "workbench.preferredDarkColorTheme": "Night Owl",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.sideBar.location": "right",
+  "editor.fontSize": 11,
+  "scm.inputFontSize": 11,
+  "debug.console.fontSize": 11,
+  "markdown.preview.fontSize": 11,
+  "preview.preview.fontSize": 11,
+  "terminal.integrated.fontSize": 11,
+  "ansible.executionEnvironment.containerEngine": "podman",
+  "search.exclude": {
+    "**/.git": true,
+    "**/.cache": true,
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.vscode": true,
+    "**/build": true,
+    "**/dist": true
+  },
+  "files.exclude": {
+    "**/.cache": true,
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.project": true,
+    "**/.settings": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.tmp/*": true,
+    "**/.var/*": true,
+    "**/.cache/*": true,
+    "**/build/*": true
+  },
+  "cSpell.words": [
+    "centos",
+    "cloudutils",
+    "distro",
+    "drawio",
+    "flatpak",
+    "iptraf",
+    "keepassx",
+    "localds",
+    "nmcli",
+    "resolv",
+    "runcmd",
+    "spotify",
+    "tcpdump",
+    "tilix",
+    "vcpu",
+    "xmind"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#eee2c4",
+    "activityBar.background": "#eee2c4",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#32ad8a",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#eee2c4",
+    "statusBar.background": "#d8ba74",
+    "statusBar.border": "#d8ba74",
+    "statusBar.debuggingBackground": "#7492d8",
+    "statusBar.debuggingBorder": "#7492d8",
+    "statusBar.debuggingForeground": "#15202b",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#cda64c",
+    "statusBarItem.remoteBackground": "#d8ba74",
+    "statusBarItem.remoteForeground": "#15202b",
+    "tab.activeBorder": "#eee2c4",
+    "titleBar.activeBackground": "#eee2c4",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.border": "#eee2c4",
+    "titleBar.inactiveBackground": "#eee2c499",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.remoteColor": "#e3ce9c",
+  "peacock.color": "#0494e7",
+  "shellcheck.run": "onSave",
+  "shellcheck.useWorkspaceRootAsCwd": true,
+  "bashIde.includeAllWorkspaceSymbols": true,
+  //
+  // Runtime section. Use this section to isolate local changes made automatically by VSCode
+  //
+}
