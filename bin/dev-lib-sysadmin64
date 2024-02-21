@@ -178,6 +178,18 @@ function dev_lib_home_mc_setup() {
     "${home}/.config"
 }
 
+function dev_lib_home_btop_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  bl64_msg_show_task 'setup BTop'
+  # shellcheck disable=SC2086
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${DEV_ENV_SYSADMIN64_LOCAL_PATH_ETC}/mc/.config/btop" \
+    "${home}/.config"
+}
+
 function dev_lib_home_populate() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -185,6 +197,7 @@ function dev_lib_home_populate() {
     dev_lib_home_xdg_setup "$home" &&
     dev_lib_home_zsh_setup "$home" &&
     dev_lib_home_mc_setup "$home" &&
+    dev_lib_home_btop_setup "$home" &&
     dev_lib_home_ssh_setup "$home" &&
     dev_lib_home_kubectl_setup "$home" &&
     dev_lib_home_awscli_setup "$home"
