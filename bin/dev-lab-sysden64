@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Lab / SysAdmin64 / Container entrypoint
+# Dev / Lab / SysDen64 / Open sandbox environment
 #
-# * Version: 1.0.0
+# * Version: 2.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -27,63 +27,52 @@
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
 # shellcheck source-path=bin
-source ./bin/dev-env-sysadmin64 || exit 1
+source ./bin/dev-env-sysden64 || exit 1
 # shellcheck source-path=lib/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rbac.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rnd.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-iam.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
 #
 # Functions
 #
 
-function dev_lab_user_create() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'create user and group'
-  groupadd \
-    -g "$DEV_LAB_SYSADMIN64_CONTAINER_USER_UID" \
-    "$DEV_LAB_SYSADMIN64_CONTAINER_USER_NAME" &&
-    useradd \
-      --no-create-home \
-      -u "$DEV_LAB_SYSADMIN64_CONTAINER_USER_UID" \
-      -g "$DEV_LAB_SYSADMIN64_CONTAINER_USER_UID" \
-      -s "$DEV_LAB_SYSADMIN64_CONTAINER_SHELL" \
-      "$DEV_LAB_SYSADMIN64_CONTAINER_USER_NAME"
-}
-
-function dev_lab_user_setup() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'enable sudo for the user'
-  bl64_rbac_add_root "${DEV_LAB_SYSADMIN64_CONTAINER_USER_NAME}"
-}
-
-function dev_lab_shell_open() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'open interactive shell'
-  bl64_msg_show_info 'type "exit" when done'
-  /bin/su - "$DEV_LAB_SYSADMIN64_CONTAINER_USER_NAME"
+function dev_lab_open() {
+  bl64_dbg_app_show_function "$@"
+  local image="$1"
+  bl64_msg_show_task "open sanbox environment (${image})"
+  bl64_cnt_run_interactive \
+    --user='root' \
+    --network=host \
+    --entrypoint="$DEV_LAB_SYSDEN64_CONTAINER_PATH_ENTRYPOINT" \
+    --workdir="$DEV_LAB_SYSDEN64_CONTAINER_PATH_ROOT" \
+    --env "DEV_LAB_SYSDEN64_CONTAINER_USER_NAME=$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" \
+    --env "DEV_LAB_SYSDEN64_CONTAINER_USER_UID=$DEV_LAB_SYSDEN64_CONTAINER_USER_UID" \
+    --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_CONTAINER_PATH_ROOT}" \
+    --mount "type=bind,source=${DEV_ENV_SYSDEN64_LOCAL_PATH_HOME},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
+    "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
 }
 
 function dev_lab_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_export 'DEV_LAB_SYSADMIN64_CONTAINER_USER_NAME' &&
-    bl64_check_export 'DEV_LAB_SYSADMIN64_CONTAINER_USER_UID'
+  bl64_check_directory "$DEV_ENV_SYSDEN64_LOCAL_PATH_HOME" &&
+    bl64_cnt_setup
 }
 
 #
 # Main
 #
 
+declare dev_lab_image="${1:-${DEV_LAB_SYSDEN64_CONTAINER}}"
+
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
 bl64_msg_all_enable_verbose
 
-bl64_msg_show_batch_start 'dev-lab-sysadmin64-entrypoint'
+bl64_msg_show_batch_start 'dev-lab-sysden64'
 dev_lab_initialize &&
-  dev_lab_user_create &&
-  dev_lab_user_setup &&
-  dev_lab_shell_open
-bl64_msg_show_batch_finish $? 'dev-lab-sysadmin64-entrypoint'
+  dev_lab_open "$dev_lab_image"
+bl64_msg_show_batch_finish $? 'dev-lab-sysden64'

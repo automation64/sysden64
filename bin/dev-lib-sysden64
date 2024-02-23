@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Lib / SysAdmin64 / Prepare sysadmin64's home directory
+# Dev / Lib / SysDen64 / Prepare sysden64's home directory
 #
-# * Version: 1.1.0
+# * Version: 2.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -27,7 +27,7 @@
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
 # shellcheck source-path=bin
-source ./bin/dev-env-sysadmin64 || exit 1
+source ./bin/dev-env-sysden64 || exit 1
 # shellcheck source-path=lib/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-api.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-vcs.bash" &&
@@ -62,7 +62,7 @@ function dev_lib_home_xdg_setup() {
 function dev_lib_home_create() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  bl64_msg_show_task 'create SysAdmin64 home'
+  bl64_msg_show_task 'create SysDen64 home'
   bl64_fs_create_dir \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
@@ -79,6 +79,8 @@ function dev_lib_home_zsh_setup() {
   local omz_custom_themes_path="${omz_custom_path}/themes"
   local plugin=''
 
+  [[ -d "$omz_path" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+
   bl64_msg_show_task 'setup ZSH'
   # shellcheck disable=SC2086
   bl64_fs_copy_files \
@@ -86,13 +88,13 @@ function dev_lib_home_zsh_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_ENV_SYSADMIN64_LOCAL_PATH_ETC}/zsh/.zshrc" \
-    "${DEV_ENV_SYSADMIN64_LOCAL_PATH_ETC}/zsh/.p10k.zsh"||
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/zsh/.zshrc" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/zsh/.p10k.zsh" ||
     return $?
 
   bl64_msg_show_task "download Oh-My-ZSH (${omz_path})"
   bl64_rxtx_git_get_dir \
-    "$DEV_LIB_SYSADMIN64_GIT_OMZ" \
+    "$DEV_LIB_SYSDEN64_GIT_OMZ" \
     '.' \
     "$omz_path" \
     "$BL64_VAR_ON" \
@@ -100,12 +102,11 @@ function dev_lib_home_zsh_setup() {
     return $?
 
   bl64_msg_show_task "download plugins (${omz_custom_plugins_path})"
-  [[ -d "$omz_custom_plugins_path" ]] && bl64_fs_rm_full "$omz_custom_plugins_path"
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
     "$omz_custom_plugins_path" &&
     cd "$omz_custom_plugins_path" ||
     return $?
-  for plugin in $DEV_LIB_SYSADMIN64_GIT_ZSH_PLUGINS; do
+  for plugin in $DEV_LIB_SYSDEN64_GIT_ZSH_PLUGINS; do
     bl64_vcs_run_git \
       clone \
       --depth 1 \
@@ -120,7 +121,7 @@ function dev_lib_home_zsh_setup() {
     "$omz_custom_themes_path" &&
     cd "$omz_custom_themes_path" ||
     return $?
-  for plugin in $DEV_LIB_SYSADMIN64_GIT_ZSH_THEMES; do
+  for plugin in $DEV_LIB_SYSDEN64_GIT_ZSH_THEMES; do
     bl64_vcs_run_git \
       clone \
       --depth 1 \
@@ -136,10 +137,12 @@ function dev_lib_home_ssh_setup() {
   local target="${home}/.ssh"
   bl64_msg_show_task "setup OpenSSH (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_run_ln \
-    -s \
-    "${DEV_ENV_SYSADMIN64_CONTAINER_PATH_ROOT}/vault/ssh" \
-    "$target"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/ssh" &&
+    bl64_fs_run_ln \
+      -s \
+      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/ssh" \
+      "$target"
 }
 
 function dev_lib_home_kubectl_setup() {
@@ -148,10 +151,12 @@ function dev_lib_home_kubectl_setup() {
   local target="${home}/.kube"
   bl64_msg_show_task "setup KubeCTL (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_run_ln \
-    -s \
-    "${DEV_ENV_SYSADMIN64_CONTAINER_PATH_ROOT}/vault/kubectl" \
-    "$target"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/kubectl" &&
+    bl64_fs_run_ln \
+      -s \
+      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/kubectl" \
+      "$target"
 }
 
 function dev_lib_home_awscli_setup() {
@@ -160,34 +165,49 @@ function dev_lib_home_awscli_setup() {
   local target="${home}/.aws"
   bl64_msg_show_task "setup AWS CLI (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_run_ln \
-    -s \
-    "${DEV_ENV_SYSADMIN64_CONTAINER_PATH_ROOT}/vault/aws" \
-    "$target"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/aws" &&
+    bl64_fs_run_ln \
+      -s \
+      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/aws" \
+      "$target"
 }
 
 function dev_lib_home_mc_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  bl64_msg_show_task 'setup MC'
+  local target="${home}/.config/mc"
+  bl64_msg_show_task "setup MC (${target})"
+  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   # shellcheck disable=SC2086
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_ENV_SYSADMIN64_LOCAL_PATH_ETC}/mc/.config/mc" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/mc/.config/mc" \
     "${home}/.config"
 }
 
 function dev_lib_home_btop_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  bl64_msg_show_task 'setup BTop'
+  local target="${home}/.config/btop"
+  bl64_msg_show_task "setup BTop (${target})"
+  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   # shellcheck disable=SC2086
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_ENV_SYSADMIN64_LOCAL_PATH_ETC}/mc/.config/btop" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/btop/.config/btop" \
     "${home}/.config"
+}
+
+function dev_lib_paths_create() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'create base paths'
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_LOGS" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_TMP"
 }
 
 function dev_lib_home_populate() {
@@ -211,12 +231,13 @@ function dev_lib_initialize() {
 # Main
 #
 
-declare dev_lib_home="${1:-${DEV_ENV_SYSADMIN64_LOCAL_PATH_HOME}}"
+declare dev_lib_home="${1:-${DEV_ENV_SYSDEN64_LOCAL_PATH_HOME}}"
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
 bl64_msg_all_enable_verbose
 
-bl64_msg_show_batch_start 'dev-lib-sysadmin64'
+bl64_msg_show_batch_start 'dev-lib-sysden64'
 dev_lib_initialize &&
+  dev_lib_paths_create &&
   dev_lib_home_populate "$dev_lib_home"
-bl64_msg_show_batch_finish $? 'dev-lib-sysadmin64'
+bl64_msg_show_batch_finish $? 'dev-lib-sysden64'
