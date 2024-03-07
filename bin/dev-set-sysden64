@@ -18,32 +18,9 @@ source "./bin/dev-env-sysden64" ||
   { echo 'dev-set:Error: unable to load SysDen64 environment' 2>&1 && return 1; }
 
 #
-# Globals
-#
-
-# Set terminal type
-export TERM='tmux-256color'
-
-# Set locale
-export LC_ALL='C.UTF-8'
-export LANG='C.UTF-8'
-
-#
 # Main
 #
 
-# Set common tools
-if [[ -z "$EDITOR" ]]; then
-  export EDITOR='/usr/bin/nvim'
-  [[ ! -x "$EDITOR" ]] && unset EDITOR
-fi
-if [[ -z "$VISUAL" ]]; then
-  export VISUAL='/usr/bin/nvim'
-  [[ ! -x "$VISUAL" ]] && unset VISUAL
-fi
-if [[ -z "$PAGER" ]]; then
-  export PAGER='/usr/bin/most'
-  [[ ! -x "$PAGER" ]] && unset PAGER
-fi
+[[ "$PATH" =~ \.local\/bin  ]] && PATH="${PATH}:${HOME}/.local/bin"
 
 :
