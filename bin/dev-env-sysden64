@@ -67,8 +67,16 @@ DEV_LIB_SYSDEN64_GIT_ZSH_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
 #
 
 # Lab / SysDen64 / Container user
+export DEV_LAB_SYSDEN64_CONTAINER_USER_REPLACE="${DEV_LAB_SYSDEN64_CONTAINER_USER_REPLACE:-}"
 export DEV_LAB_SYSDEN64_CONTAINER_USER_NAME="${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME:-${USER}}"
 export DEV_LAB_SYSDEN64_CONTAINER_USER_UID="${DEV_LAB_SYSDEN64_CONTAINER_USER_UID:-${UID}}"
+# Env / SysDen64 / Shell Defaults
+export EDITOR="${EDITOR:-/usr/bin/nvim}"
+export VISUAL="${VISUAL:-/usr/bin/nvim}"
+export PAGER="${PAGER:-/usr/bin/most}"
+export LC_ALL="${LC_ALL:-C.UTF-8}"
+export LANG="${LANG:-C.UTF-8}"
+export TERM='tmux-256color'
 
 #
 # Secrets

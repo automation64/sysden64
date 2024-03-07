@@ -29,4 +29,3 @@
 
 - Project GIT repository: [https://github.com/automation64/sysden64.git](https://github.com/automation64/sysden64.git)
 - Project Documentation: [README](README.MD)
-- Release history: [CHANGELOG](CHANGELOG.md)

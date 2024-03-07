@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lib / SysDen64 / Prepare sysden64's home directory
 #
-# * Version: 2.0.0
+# * Version: 2.1.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -135,42 +135,89 @@ function dev_lib_home_ssh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.ssh"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/ssh"
+
   bl64_msg_show_task "setup OpenSSH (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/ssh" &&
+    "$vault" &&
     bl64_fs_run_ln \
       -s \
       "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/ssh" \
-      "$target"
+      "$target" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$vault" \
+      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ssh/.ssh/config"
 }
 
 function dev_lib_home_kubectl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.kube"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/kubectl"
+
   bl64_msg_show_task "setup KubeCTL (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/kubectl" &&
+    "$vault" &&
     bl64_fs_run_ln \
       -s \
       "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/kubectl" \
-      "$target"
+      "$target" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$vault" \
+      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/kubectl/.kube/config"
+}
+
+function dev_lib_home_gcloud_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local target="${home}/.config/gcloud"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/gcloud"
+
+  bl64_msg_show_task "setup GCloud CLI (${target})"
+  [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$vault" \
+    "${vault}/configurations" &&
+    bl64_fs_run_ln \
+      -s \
+      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/gcloud" \
+      "$target" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "${vault}/configurations" \
+      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/gcloud/.config/gcloud/configurations/config_default"
 }
 
 function dev_lib_home_awscli_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.aws"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/aws"
+
   bl64_msg_show_task "setup AWS CLI (${target})"
   [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/aws" &&
+    "$vault" &&
     bl64_fs_run_ln \
       -s \
       "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/aws" \
-      "$target"
+      "$target" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$vault" \
+      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/aws/.aws/config"
 }
 
 function dev_lib_home_mc_setup() {
@@ -201,6 +248,18 @@ function dev_lib_home_btop_setup() {
     "${home}/.config"
 }
 
+function dev_lib_home_ansible_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  bl64_msg_show_task 'setup Ansible'
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$home" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ansible/.ansible.cfg"
+}
+
 function dev_lib_paths_create() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'create base paths'
@@ -220,7 +279,9 @@ function dev_lib_home_populate() {
     dev_lib_home_btop_setup "$home" &&
     dev_lib_home_ssh_setup "$home" &&
     dev_lib_home_kubectl_setup "$home" &&
-    dev_lib_home_awscli_setup "$home"
+    dev_lib_home_gcloud_setup "$home" &&
+    dev_lib_home_awscli_setup "$home" &&
+    dev_lib_home_ansible_setup "$home"
 }
 
 function dev_lib_initialize() {
