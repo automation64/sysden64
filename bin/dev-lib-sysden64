@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lib / SysDen64 / Prepare sysden64's home directory
 #
-# * Version: 2.1.0
+# * Version: 2.2.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -59,17 +59,6 @@ function dev_lib_home_xdg_setup() {
     "${xdg_local}/state"
 }
 
-function dev_lib_home_create() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  bl64_msg_show_task 'create SysDen64 home'
-  bl64_fs_create_dir \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$home"
-}
-
 function dev_lib_home_zsh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -78,8 +67,6 @@ function dev_lib_home_zsh_setup() {
   local omz_custom_plugins_path="${omz_custom_path}/plugins"
   local omz_custom_themes_path="${omz_custom_path}/themes"
   local plugin=''
-
-  [[ -d "$omz_path" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
 
   bl64_msg_show_task 'setup ZSH'
   # shellcheck disable=SC2086
@@ -92,6 +79,7 @@ function dev_lib_home_zsh_setup() {
     "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/zsh/.p10k.zsh" ||
     return $?
 
+  [[ -d "$omz_path" ]] && return 0
   bl64_msg_show_task "download Oh-My-ZSH (${omz_path})"
   bl64_rxtx_git_get_dir \
     "$DEV_LIB_SYSDEN64_GIT_OMZ" \
@@ -131,101 +119,12 @@ function dev_lib_home_zsh_setup() {
   done
 }
 
-function dev_lib_home_ssh_setup() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  local target="${home}/.ssh"
-  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/ssh"
-
-  bl64_msg_show_task "setup OpenSSH (${target})"
-  [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$vault" &&
-    bl64_fs_run_ln \
-      -s \
-      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/ssh" \
-      "$target" &&
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$vault" \
-      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ssh/.ssh/config"
-}
-
-function dev_lib_home_kubectl_setup() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  local target="${home}/.kube"
-  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/kubectl"
-
-  bl64_msg_show_task "setup KubeCTL (${target})"
-  [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$vault" &&
-    bl64_fs_run_ln \
-      -s \
-      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/kubectl" \
-      "$target" &&
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$vault" \
-      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/kubectl/.kube/config"
-}
-
-function dev_lib_home_gcloud_setup() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  local target="${home}/.config/gcloud"
-  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/gcloud"
-
-  bl64_msg_show_task "setup GCloud CLI (${target})"
-  [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$vault" \
-    "${vault}/configurations" &&
-    bl64_fs_run_ln \
-      -s \
-      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/gcloud" \
-      "$target" &&
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "${vault}/configurations" \
-      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/gcloud/.config/gcloud/configurations/config_default"
-}
-
-function dev_lib_home_awscli_setup() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  local target="${home}/.aws"
-  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/aws"
-
-  bl64_msg_show_task "setup AWS CLI (${target})"
-  [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$vault" &&
-    bl64_fs_run_ln \
-      -s \
-      "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/aws" \
-      "$target" &&
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$vault" \
-      "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/aws/.aws/config"
-}
-
 function dev_lib_home_mc_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/mc"
+
   bl64_msg_show_task "setup MC (${target})"
-  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   # shellcheck disable=SC2086
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
@@ -238,8 +137,8 @@ function dev_lib_home_btop_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/btop"
+
   bl64_msg_show_task "setup BTop (${target})"
-  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
   # shellcheck disable=SC2086
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
@@ -248,9 +147,59 @@ function dev_lib_home_btop_setup() {
     "${home}/.config"
 }
 
+function dev_lib_home_tmux_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local plugins_path="${home}/.tmux/plugins"
+
+  bl64_msg_show_task 'setup TMUX'
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$home" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/tmux/.tmux.conf" ||
+    return $?
+
+  [[ -d "$plugins_path" ]] && return 0
+  bl64_msg_show_task "download plugins (${plugins_path})"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "${home}/.tmux" \
+    "$plugins_path" &&
+    cd "$plugins_path" ||
+    return $?
+  for plugin in $DEV_LIB_SYSDEN64_GIT_TMUX_PLUGINS; do
+    bl64_vcs_run_git \
+      clone \
+      --depth 1 \
+      --single-branch \
+      "$plugin" ||
+      return $?
+  done
+}
+
+function dev_lib_home_nvim_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local target="${home}/.config/nvim"
+
+  bl64_msg_show_task "setup NVIM (${target})"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$target" ||
+    return $?
+
+  [[ -f "${target}/.neoconf.json" ]] && return 0
+  bl64_rxtx_git_get_dir \
+    "$DEV_LIB_SYSDEN64_GIT_LAZYVIM" \
+    '.' \
+    "$target" \
+    "$BL64_VAR_ON"
+}
+
 function dev_lib_home_ansible_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+
   bl64_msg_show_task 'setup Ansible'
   bl64_fs_copy_files \
     "$BL64_VAR_DEFAULT" \
@@ -258,6 +207,202 @@ function dev_lib_home_ansible_setup() {
     "$BL64_VAR_DEFAULT" \
     "$home" \
     "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ansible/.ansible.cfg"
+}
+
+function dev_lib_home_create() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+
+  bl64_lib_flag_is_enabled "$local_only" && return 0
+
+  bl64_msg_show_task 'create SysDen64 home'
+  bl64_fs_create_dir \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$home"
+}
+
+function dev_lib_home_alacritty_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+
+  bl64_lib_flag_is_enabled "$local_only" || return 0
+  bl64_msg_show_task 'setup Alacritty'
+  # shellcheck disable=SC2086
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/alacritty/.alacritty.yml" \
+    "$home"
+}
+
+function dev_lib_home_keepassx_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local target="${home}/.config/keepassx"
+
+  bl64_lib_flag_is_enabled "$local_only" || return 0
+  bl64_msg_show_task "setup KeePassX (${target})"
+  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+  # shellcheck disable=SC2086
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/keepassx/.config/keepassx" \
+    "${home}/.config"
+}
+
+function dev_lib_home_ssh_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+  local target="${home}/.ssh"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/ssh"
+
+  bl64_msg_show_task "setup OpenSSH (${target})"
+  if ! bl64_lib_flag_is_enabled "$local_only"; then
+    [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$vault" &&
+      bl64_fs_run_ln \
+        -s \
+        "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/ssh" \
+        "$target" ||
+      return $?
+    target="$vault"
+  else
+    [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
+  fi
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$target" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ssh/.ssh/config"
+}
+
+function dev_lib_home_kubectl_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+  local target="${home}/.kube"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/kubectl"
+
+  bl64_msg_show_task "setup KubeCTL (${target})"
+  if ! bl64_lib_flag_is_enabled "$local_only"; then
+    [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$vault" &&
+      bl64_fs_run_ln \
+        -s \
+        "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/kubectl" \
+        "$target" ||
+      return $?
+    target="$vault"
+  else
+    [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
+  fi
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$target" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/kubectl/.kube/config"
+}
+
+function dev_lib_home_gcloud_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+  local target="${home}/.config/gcloud"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/gcloud"
+
+  bl64_msg_show_task "setup GCloud CLI (${target})"
+  if ! bl64_lib_flag_is_enabled "$local_only"; then
+    [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$vault" \
+      "${vault}/configurations" &&
+      bl64_fs_run_ln \
+        -s \
+        "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/gcloud" \
+        "$target" ||
+      return $?
+    target="$vault"
+  else
+    [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" \
+      "${target}/configurations" ||
+      return $?
+  fi
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${target}/configurations" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/gcloud/.config/gcloud/configurations/config_default"
+}
+
+function dev_lib_home_awscli_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+  local target="${home}/.aws"
+  local vault="${DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT}/aws"
+
+  bl64_msg_show_task "setup AWS CLI (${target})"
+  if ! bl64_lib_flag_is_enabled "$local_only"; then
+    [[ -L "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$vault" &&
+      bl64_fs_run_ln \
+        -s \
+        "${DEV_LAB_SYSDEN64_CONTAINER_PATH_VAULT}/aws" \
+        "$target" ||
+      return $?
+    target="$vault"
+  else
+    [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
+  fi
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$target" \
+    "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/aws/.aws/config"
+}
+
+function dev_lib_home_populate() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local local_only="$2"
+
+  dev_lib_home_create "$home" "$local_only" &&
+    dev_lib_home_xdg_setup "$home" &&
+    dev_lib_home_zsh_setup "$home" &&
+    dev_lib_home_mc_setup "$home" &&
+    dev_lib_home_btop_setup "$home" &&
+    dev_lib_home_ansible_setup "$home" &&
+    dev_lib_home_tmux_setup "$home" &&
+    dev_lib_home_nvim_setup "$home" &&
+    dev_lib_home_alacritty_setup "$home" "$local_only" &&
+    dev_lib_home_keepassx_setup "$home" "$local_only" &&
+    dev_lib_home_ssh_setup "$home" "$local_only" &&
+    dev_lib_home_kubectl_setup "$home" "$local_only" &&
+    dev_lib_home_gcloud_setup "$home" "$local_only" &&
+    dev_lib_home_awscli_setup "$home" "$local_only"
 }
 
 function dev_lib_paths_create() {
@@ -269,21 +414,6 @@ function dev_lib_paths_create() {
     "$DEV_ENV_SYSDEN64_LOCAL_PATH_TMP"
 }
 
-function dev_lib_home_populate() {
-  bl64_dbg_app_show_function "$@"
-  local home="$1"
-  dev_lib_home_create "$home" &&
-    dev_lib_home_xdg_setup "$home" &&
-    dev_lib_home_zsh_setup "$home" &&
-    dev_lib_home_mc_setup "$home" &&
-    dev_lib_home_btop_setup "$home" &&
-    dev_lib_home_ssh_setup "$home" &&
-    dev_lib_home_kubectl_setup "$home" &&
-    dev_lib_home_gcloud_setup "$home" &&
-    dev_lib_home_awscli_setup "$home" &&
-    dev_lib_home_ansible_setup "$home"
-}
-
 function dev_lib_initialize() {
   bl64_dbg_app_show_function
 }
@@ -293,6 +423,7 @@ function dev_lib_initialize() {
 #
 
 declare dev_lib_home="${1:-${DEV_ENV_SYSDEN64_LOCAL_PATH_HOME}}"
+declare dev_lib_local_only="${2:-NO}"
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
 bl64_msg_all_enable_verbose
@@ -300,5 +431,5 @@ bl64_msg_all_enable_verbose
 bl64_msg_show_batch_start 'dev-lib-sysden64'
 dev_lib_initialize &&
   dev_lib_paths_create &&
-  dev_lib_home_populate "$dev_lib_home"
+  dev_lib_home_populate "$dev_lib_home" "$dev_lib_local_only"
 bl64_msg_show_batch_finish $? 'dev-lib-sysden64'
