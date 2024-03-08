@@ -108,6 +108,7 @@
   )
 
   function prompt_sysden64() {
+    [[ -d /sa ]] || return 0
     p10k segment -f black -b white -i '⭐' -t 'SYSDEN64-CONTAINER'
   }
 
