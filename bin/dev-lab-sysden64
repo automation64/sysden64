@@ -26,7 +26,7 @@
 
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
-# shellcheck source-path=bin
+# shellcheck source=bin/dev-env-sysden64
 source ./bin/dev-env-sysden64 || exit 1
 # shellcheck source-path=lib/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
@@ -57,6 +57,15 @@ function dev_lab_open() {
     "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
 }
 
+function dev_lib_store_create() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'create base paths'
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_LOGS" \
+    "$DEV_ENV_SYSDEN64_LOCAL_PATH_TMP"
+}
+
 function dev_lab_initialize() {
   bl64_dbg_app_show_function
   bl64_check_directory "$DEV_ENV_SYSDEN64_LOCAL_PATH_HOME" &&
@@ -74,5 +83,6 @@ bl64_msg_all_enable_verbose
 
 bl64_msg_show_batch_start 'dev-lab-sysden64'
 dev_lab_initialize &&
+  dev_lib_store_create &&
   dev_lab_open "$dev_lab_image"
 bl64_msg_show_batch_finish $? 'dev-lab-sysden64'

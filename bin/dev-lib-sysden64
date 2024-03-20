@@ -41,12 +41,12 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-api.bash" &&
 # Functions
 #
 
-function dev_lib_home_xdg_setup() {
+function dev_lib_xdg_setup() {
   bl64_dbg_app_show_function "$@"
-  local user_home="$1"
-  local xdg_config="${user_home}/.config"
-  local xdg_cache="${user_home}/.cache"
-  local xdg_local="${user_home}/.local"
+  local home="$1"
+  local xdg_config="${home}/.config"
+  local xdg_cache="${home}/.cache"
+  local xdg_local="${home}/.local"
 
   bl64_msg_show_task 'setup XDG'
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -59,7 +59,53 @@ function dev_lib_home_xdg_setup() {
     "${xdg_local}/state"
 }
 
-function dev_lib_home_zsh_setup() {
+function dev_lib_bash_setup_bashrc() {
+  bl64_dbg_app_show_function
+  local user_profile="${home}/.bashrc"
+  # shellcheck disable=SC2016
+  printf \
+    '\n# added-by-sysden64 #
+declare module=""
+if [[ -d "${HOME}/.bashrc.d" ]]; then
+  for module in ${HOME}/.bashrc.d/*; do
+    [[ -r "$module" ]] && source "$module"
+  done
+fi\n' >>"$user_profile"
+}
+
+function dev_lib_bash_setup_bashrc() {
+  bl64_dbg_app_show_function
+  local user_profile="${home}/.bash_profile"
+  # shellcheck disable=SC2016
+  printf \
+    '#!/usr/bin/env bash
+# added-by-sysden64 #
+declare module=""
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+if [[ -d "${HOME}/.bashrc.d" ]]; then
+  for module in ${HOME}/.bashrc.d/*; do
+    [[ -r "$module" ]] && source "$module"
+  done
+fi\n' >"$user_profile" &&
+    bl64_fs_set_permissions '0700' "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$user_profile"
+}
+
+function dev_lib_bash_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local user_bashrc_d="${home}/.bashrc.d"
+
+  bl64_msg_show_task "Create modular bashr store (${user_bashrc_d})"
+  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$user_bashrc_d"
+
+  bl64_msg_show_task "Setup user's bash environment (${home})"
+
+  dev_lib_bash_setup_bashrc &&
+    dev_lib_bash_setup_bash_profile
+}
+
+function dev_lib_zsh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local omz_path="${home}/.oh-my-zsh"
@@ -119,7 +165,7 @@ function dev_lib_home_zsh_setup() {
   done
 }
 
-function dev_lib_home_mc_setup() {
+function dev_lib_mc_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/mc"
@@ -133,7 +179,7 @@ function dev_lib_home_mc_setup() {
     "${home}/.config"
 }
 
-function dev_lib_home_btop_setup() {
+function dev_lib_btop_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/btop"
@@ -147,7 +193,7 @@ function dev_lib_home_btop_setup() {
     "${home}/.config"
 }
 
-function dev_lib_home_tmux_setup() {
+function dev_lib_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local plugins_path="${home}/.tmux/plugins"
@@ -178,7 +224,7 @@ function dev_lib_home_tmux_setup() {
   done
 }
 
-function dev_lib_home_nvim_setup() {
+function dev_lib_nvim_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/nvim"
@@ -196,7 +242,7 @@ function dev_lib_home_nvim_setup() {
     "$BL64_VAR_ON"
 }
 
-function dev_lib_home_ansible_setup() {
+function dev_lib_ansible_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
 
@@ -224,7 +270,7 @@ function dev_lib_home_create() {
     "$home"
 }
 
-function dev_lib_home_alacritty_setup() {
+function dev_lib_alacritty_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
 
@@ -238,7 +284,7 @@ function dev_lib_home_alacritty_setup() {
     "$home"
 }
 
-function dev_lib_home_keepassx_setup() {
+function dev_lib_keepassx_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/keepassx"
@@ -254,7 +300,7 @@ function dev_lib_home_keepassx_setup() {
     "${home}/.config"
 }
 
-function dev_lib_home_ssh_setup() {
+function dev_lib_ssh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_only="$2"
@@ -286,7 +332,7 @@ function dev_lib_home_ssh_setup() {
     "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/ssh/.ssh/config"
 }
 
-function dev_lib_home_kubectl_setup() {
+function dev_lib_kubectl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_only="$2"
@@ -318,7 +364,7 @@ function dev_lib_home_kubectl_setup() {
     "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/kubectl/.kube/config"
 }
 
-function dev_lib_home_gcloud_setup() {
+function dev_lib_gcloud_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_only="$2"
@@ -352,7 +398,7 @@ function dev_lib_home_gcloud_setup() {
     "${DEV_ENV_SYSDEN64_LOCAL_PATH_ETC}/gcloud/.config/gcloud/configurations/config_default"
 }
 
-function dev_lib_home_awscli_setup() {
+function dev_lib_awscli_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_only="$2"
@@ -389,29 +435,20 @@ function dev_lib_home_populate() {
   local home="$1"
   local local_only="$2"
 
-  dev_lib_home_create "$home" "$local_only" &&
-    dev_lib_home_xdg_setup "$home" &&
-    dev_lib_home_zsh_setup "$home" &&
-    dev_lib_home_mc_setup "$home" &&
-    dev_lib_home_btop_setup "$home" &&
-    dev_lib_home_ansible_setup "$home" &&
-    dev_lib_home_tmux_setup "$home" &&
-    dev_lib_home_nvim_setup "$home" &&
-    dev_lib_home_alacritty_setup "$home" "$local_only" &&
-    dev_lib_home_keepassx_setup "$home" "$local_only" &&
-    dev_lib_home_ssh_setup "$home" "$local_only" &&
-    dev_lib_home_kubectl_setup "$home" "$local_only" &&
-    dev_lib_home_gcloud_setup "$home" "$local_only" &&
-    dev_lib_home_awscli_setup "$home" "$local_only"
-}
-
-function dev_lib_paths_create() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'create base paths'
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_LOGS" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_TMP"
+  dev_lib_xdg_setup "$home" &&
+    dev_lib_bash_setup "$home" &&
+    dev_lib_zsh_setup "$home" &&
+    dev_lib_mc_setup "$home" &&
+    dev_lib_btop_setup "$home" &&
+    dev_lib_ansible_setup "$home" &&
+    dev_lib_tmux_setup "$home" &&
+    dev_lib_nvim_setup "$home" &&
+    dev_lib_alacritty_setup "$home" "$local_only" &&
+    dev_lib_keepassx_setup "$home" "$local_only" &&
+    dev_lib_ssh_setup "$home" "$local_only" &&
+    dev_lib_kubectl_setup "$home" "$local_only" &&
+    dev_lib_gcloud_setup "$home" "$local_only" &&
+    dev_lib_awscli_setup "$home" "$local_only"
 }
 
 function dev_lib_initialize() {
@@ -430,6 +467,6 @@ bl64_msg_all_enable_verbose
 
 bl64_msg_show_batch_start 'dev-lib-sysden64'
 dev_lib_initialize &&
-  dev_lib_paths_create &&
+  dev_lib_home_create "$dev_lib_home" "$dev_lib_local_only" &&
   dev_lib_home_populate "$dev_lib_home" "$dev_lib_local_only"
 bl64_msg_show_batch_finish $? 'dev-lib-sysden64'
