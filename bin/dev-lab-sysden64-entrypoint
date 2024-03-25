@@ -43,6 +43,7 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
 
 function dev_lab_user_create() {
   bl64_dbg_app_show_function
+
   if bl64_lib_flag_is_enabled "$DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE"; then
     bl64_msg_show_task "create user and group (${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME})"
     groupadd \
@@ -52,7 +53,11 @@ function dev_lab_user_create() {
         -u "$DEV_LAB_SYSDEN64_CONTAINER_USER_UID" \
         -g "$DEV_LAB_SYSDEN64_CONTAINER_USER_UID" \
         -s "$DEV_LAB_SYSDEN64_CONTAINER_SHELL" \
-        "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME"
+        "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" ||
+      return $?
+
+    bl64_msg_show_task 'enable sudo for the user'
+    bl64_rbac_add_root "${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}"
   else
     bl64_msg_show_task "modify existing user and group (${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME})"
     groupadd \
@@ -68,9 +73,6 @@ function dev_lab_user_create() {
 
 function dev_lab_user_setup() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'enable sudo for the user'
-  bl64_rbac_add_root "${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" ||
-    return $?
 
   sudo -H -u "${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" "${DEV_PATH_BIN}/dev-lib-sysden64"
 }
