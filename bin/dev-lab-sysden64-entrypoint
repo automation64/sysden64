@@ -73,7 +73,6 @@ function dev_lab_user_create() {
 
 function dev_lab_user_setup() {
   bl64_dbg_app_show_function
-
   sudo -H -u "${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" "${DEV_PATH_BIN}/dev-lib-sysden64"
 }
 
