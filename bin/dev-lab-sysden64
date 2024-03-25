@@ -38,45 +38,57 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
 #
+# Globals
+#
+
+declare _DEV_LAB_SYSDEN64_PATH_DEN=''
+
+#
 # Functions
 #
 
 function dev_lab_open() {
   bl64_dbg_app_show_function "$@"
-  local image="$1"
-  bl64_msg_show_task "open sanbox environment (${image})"
+  local entrypoint="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/bin/dev-lab-sysden64-entrypoint"
+
+  bl64_msg_show_task "open sanbox environment (${DEV_LAB_SYSDEN64_CONTAINER})"
   bl64_cnt_run_interactive \
-    --user='root' \
     --network=host \
-    --entrypoint="$DEV_LAB_SYSDEN64_CONTAINER_PATH_ENTRYPOINT" \
-    --workdir="$DEV_LAB_SYSDEN64_CONTAINER_PATH_ROOT" \
+    --user='root' \
+    --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
+    --entrypoint="$entrypoint" \
     --env "DEV_LAB_SYSDEN64_CONTAINER_USER_NAME=$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" \
     --env "DEV_LAB_SYSDEN64_CONTAINER_USER_UID=$DEV_LAB_SYSDEN64_CONTAINER_USER_UID" \
-    --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_CONTAINER_PATH_ROOT}" \
-    --mount "type=bind,source=${DEV_ENV_SYSDEN64_LOCAL_PATH_HOME},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
-    "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
+    --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}" \
+    --mount "type=bind,source=${_DEV_LAB_SYSDEN64_PATH_DEN},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
+    "${DEV_ENV_SYSDEN64_REGISTRY}/${DEV_LAB_SYSDEN64_CONTAINER}"
 }
 
 function dev_lib_store_create() {
   bl64_dbg_app_show_function
+
   bl64_msg_show_task 'create base paths'
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_VAULT" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_LOGS" \
-    "$DEV_ENV_SYSDEN64_LOCAL_PATH_TMP"
+  bl64_fs_run_mkdir \
+    "$BL64_FS_SET_MKDIR_PARENTS" \
+    "$DEV_LAB_SYSDEN64_PATH_VAULT" \
+    "$DEV_LAB_SYSDEN64_PATH_LOGS" \
+    "$DEV_LAB_SYSDEN64_PATH_TMP" \
+    "$_DEV_LAB_SYSDEN64_PATH_DEN"
 }
 
 function dev_lab_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_directory "$DEV_ENV_SYSDEN64_LOCAL_PATH_HOME" &&
-    bl64_cnt_setup
+  bl64_cnt_setup
+  bl64_dbg_app_show_comments 'adjust profile paths to image name'
+  DEV_LAB_SYSDEN64_PATH_VAULT+="/${DEV_LAB_SYSDEN64_CONTAINER}"
+  DEV_LAB_SYSDEN64_PATH_LOGS+="/${DEV_LAB_SYSDEN64_CONTAINER}"
+  DEV_LAB_SYSDEN64_PATH_TMP+="/${DEV_LAB_SYSDEN64_CONTAINER}"
+  _DEV_LAB_SYSDEN64_PATH_DEN="${DEV_LAB_SYSDEN64_PATH_TMP}/home"
 }
 
 #
 # Main
 #
-
-declare dev_lab_image="${1:-${DEV_LAB_SYSDEN64_CONTAINER}}"
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
 bl64_msg_all_enable_verbose
@@ -84,5 +96,5 @@ bl64_msg_all_enable_verbose
 bl64_msg_show_batch_start 'dev-lab-sysden64'
 dev_lab_initialize &&
   dev_lib_store_create &&
-  dev_lab_open "$dev_lab_image"
+  dev_lab_open
 bl64_msg_show_batch_finish $? 'dev-lab-sysden64'
