@@ -80,7 +80,8 @@ function dev_lab_shell_open() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'open interactive shell'
   bl64_msg_show_info 'type "exit" when done'
-  /bin/su - "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME"
+  /bin/su \
+    -l "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME"
 }
 
 function dev_lab_initialize() {

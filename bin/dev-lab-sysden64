@@ -62,6 +62,7 @@ function dev_lab_open() {
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE' \
+      --env "_DEV_LAB_SYSDEN64_CONTAINER=${image}" \
       --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}" \
       --mount "type=bind,source=${_DEV_LAB_SYSDEN64_PATH_DEN},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
       "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
