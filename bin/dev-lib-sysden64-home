@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lib / SysDen64 / Prepare sysden64's home directory
 #
-# * Version: 2.3.0
+# * Version: 2.4.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -61,7 +61,16 @@ function dev_lib_sysden64_setup() {
       "${DEV_LAB_SYSDEN64_PATH_TMP}" \
       "${home}/tmp" &&
     bl64_fs_create_symlink \
-      "${DEV_PATH_ROOT}/src" \
+      "${DEV_LAB_SYSDEN64_PATH_ETC}" \
+      "${home}/etc" &&
+    bl64_fs_create_symlink \
+      "${DEV_LAB_SYSDEN64_PATH_VAR}" \
+      "${home}/var" &&
+    bl64_fs_create_symlink \
+      "${DEV_PATH_DOCS}" \
+      "${home}/docs" &&
+    bl64_fs_create_symlink \
+      "${DEV_PATH_SRC}" \
       "${home}/src"
 }
 
@@ -109,13 +118,14 @@ function dev_lib_starship_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${config}" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/starship/.config/starship.toml"
+    "${DEV_LAB_SYSDEN64_PATH_MODEL}/starship/.config/starship.toml"
 }
 
 function dev_lib_bash_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local user_bashrc_d="${home}/.bashrc.d"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/bash"
 
   bl64_msg_show_phase 'prepare Bash'
   ! bl64_bsh_command_is_executable 'bash' &&
@@ -132,13 +142,14 @@ function dev_lib_bash_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/bash/.bashrc" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/bash/.bash_profile"
+    "${model}/.bashrc" \
+    "${model}/.bash_profile"
 }
 
 function dev_lib_zsh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/zsh"
 
   bl64_msg_show_phase 'prepare ZSH'
   ! bl64_bsh_command_is_executable 'zsh' &&
@@ -149,13 +160,14 @@ function dev_lib_zsh_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/zsh/.zshrc"
+    "${model}/.zshrc"
 }
 
 function dev_lib_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local profile="${home}/.zshrc"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/powerlevel10k"
 
   bl64_msg_show_phase 'prepare PowerLevel10K'
   ! bl64_bsh_command_is_executable 'zsh' &&
@@ -164,7 +176,7 @@ function dev_lib_p10k_setup() {
   bl64_msg_show_task "enable PowerLevel10K (${profile})"
   if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" 'powerlevel10k/powerlevel10k' "$profile"; then
     "$BL64_OS_CMD_CAT" \
-      "${DEV_LAB_SYSDEN64_PATH_ETC}/powerlevel10k/p10k.snippet" >>"$profile"
+      "${model}/p10k.snippet" >>"$profile"
   fi
 
   bl64_msg_show_task 'setup PowerLevel10K'
@@ -174,13 +186,15 @@ function dev_lib_p10k_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/powerlevel10k/.p10k.zsh"
+    "${model}/.p10k.zsh"
 }
+
 function dev_lib_omz_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local omz_path="${home}/.oh-my-zsh"
   local profile="${home}/.zshrc"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/oh-my-zsh"
 
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
   ! bl64_bsh_command_is_executable 'zsh' &&
@@ -189,7 +203,7 @@ function dev_lib_omz_setup() {
   bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
   if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
     "$BL64_OS_CMD_CAT" \
-      "${DEV_LAB_SYSDEN64_PATH_ETC}/oh-my-zsh/oh-my-zsh.snippet" >>"$profile"
+      "${model}/oh-my-zsh.snippet" >>"$profile"
   fi
 
   bl64_msg_show_task "download Oh-My-ZSH (${omz_path})"
@@ -245,6 +259,7 @@ function dev_lib_mc_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/mc"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/mc"
 
   bl64_msg_show_phase 'prepare MC'
   ! bl64_bsh_command_is_executable 'mc' &&
@@ -255,7 +270,7 @@ function dev_lib_mc_setup() {
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/mc/.config/mc" \
+    "${model}/.config/mc" \
     "${home}/.config"
 }
 
@@ -263,6 +278,7 @@ function dev_lib_btop_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/btop"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/btop"
 
   bl64_msg_show_phase 'prepare BTop'
   ! bl64_bsh_command_is_executable 'btop' &&
@@ -273,7 +289,7 @@ function dev_lib_btop_setup() {
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/btop/.config/btop" \
+    "${model}/.config/btop" \
     "${home}/.config"
 }
 
@@ -281,6 +297,7 @@ function dev_lib_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local plugins_path="${home}/.tmux/plugins"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/tmux"
 
   bl64_msg_show_phase 'prepare TMUX'
   ! bl64_bsh_command_is_executable 'tmux' &&
@@ -291,7 +308,7 @@ function dev_lib_tmux_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/tmux/.tmux.conf" ||
+    "${model}/.tmux.conf" ||
     return $?
 
   [[ -d "$plugins_path" ]] && return 0
@@ -336,6 +353,7 @@ function dev_lib_nvim_setup() {
 function dev_lib_ansible_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/ansible"
 
   bl64_msg_show_phase 'prepare Ansible'
   bl64_fs_copy_files \
@@ -343,12 +361,13 @@ function dev_lib_ansible_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/ansible/.ansible.cfg"
+    "${model}/.ansible.cfg"
 }
 
 function dev_lib_alacritty_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/alacritty"
 
   bl64_msg_show_phase 'prepare Alacritty'
   ! bl64_bsh_command_is_executable 'alacritty' &&
@@ -358,7 +377,7 @@ function dev_lib_alacritty_setup() {
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/alacritty/.alacritty.yml" \
+    "${model}/.alacritty.yml" \
     "$home"
 }
 
@@ -366,6 +385,7 @@ function dev_lib_keepassx_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/keepassx"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/keepassx"
 
   bl64_msg_show_phase 'prepare KeePassX'
   bl64_msg_show_task "setup KeePassX (${target})"
@@ -374,7 +394,7 @@ function dev_lib_keepassx_setup() {
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/keepassx/.config/keepassx" \
+    "${model}/.config/keepassx" \
     "${home}/.config"
 }
 
@@ -384,6 +404,7 @@ function dev_lib_ssh_setup() {
   local persistence="$2"
   local target="${home}/.ssh"
   local vault="${DEV_LAB_SYSDEN64_PATH_VAULT}/ssh"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/ssh"
 
   bl64_msg_show_phase 'prepare OpenSSH'
   bl64_msg_show_task "setup OpenSSH (${target})"
@@ -404,7 +425,7 @@ function dev_lib_ssh_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/ssh/.ssh/config"
+    "${model}/.ssh/config"
 }
 
 function dev_lib_kubectl_setup() {
@@ -413,6 +434,7 @@ function dev_lib_kubectl_setup() {
   local persistence="$2"
   local target="${home}/.kube"
   local vault="${DEV_LAB_SYSDEN64_PATH_VAULT}/kubectl"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/kubectl"
 
   bl64_msg_show_phase 'prepare KubeCTL'
   bl64_msg_show_task "setup KubeCTL (${target})"
@@ -433,7 +455,7 @@ function dev_lib_kubectl_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/kubectl/.kube/config"
+    "${model}/.kube/config"
 }
 
 function dev_lib_gcloud_setup() {
@@ -442,6 +464,7 @@ function dev_lib_gcloud_setup() {
   local persistence="$2"
   local target="${home}/.config/gcloud"
   local vault="${DEV_LAB_SYSDEN64_PATH_VAULT}/gcloud"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/gcloud"
 
   bl64_msg_show_phase 'prepare GCloud CLI'
   bl64_msg_show_task "setup GCloud CLI (${target})"
@@ -463,7 +486,7 @@ function dev_lib_gcloud_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${target}/configurations" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/gcloud/.config/gcloud/configurations/config_default"
+    "${model}/.config/gcloud/configurations/config_default"
 }
 
 function dev_lib_awscli_setup() {
@@ -472,6 +495,7 @@ function dev_lib_awscli_setup() {
   local persistence="$2"
   local target="${home}/.aws"
   local vault="${DEV_LAB_SYSDEN64_PATH_VAULT}/aws"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/aws"
 
   bl64_msg_show_phase 'prepare AWS CLI'
   bl64_msg_show_task "setup AWS CLI (${target})"
@@ -492,7 +516,7 @@ function dev_lib_awscli_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${DEV_LAB_SYSDEN64_PATH_ETC}/aws/.aws/config"
+    "${model}/.aws/config"
 }
 
 function dev_lib_gpg_setup() {
@@ -519,6 +543,7 @@ function dev_lib_home_populate() {
   local persistence="$2"
 
   dev_lib_xdg_setup "$home" &&
+    dev_lib_sysden64_setup "$home" "$persistence" &&
     dev_lib_bash_setup "$home" &&
     dev_lib_starship_setup "$home" &&
     dev_lib_zsh_setup "$home" &&
@@ -535,8 +560,7 @@ function dev_lib_home_populate() {
     dev_lib_ssh_setup "$home" "$persistence" &&
     dev_lib_kubectl_setup "$home" "$persistence" &&
     dev_lib_gcloud_setup "$home" "$persistence" &&
-    dev_lib_awscli_setup "$home" "$persistence" &&
-    dev_lib_sysden64_setup "$home" "$persistence"
+    dev_lib_awscli_setup "$home" "$persistence"
 }
 
 function dev_lib_initialize() {
@@ -550,18 +574,17 @@ function dev_lib_initialize() {
 # Lib / SysDen64 / Full path to user's home
 declare dev_lib_home="${1:-${HOME}}"
 # Lib / SysDen64 / Use persistent storage? (YES/NO)
-declare dev_lib_persistence="${1:-YES}"
-declare setup_marker="${HOME}/.sysden64"
+declare dev_lib_persistence="${2:-YES}"
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
 bl64_msg_all_enable_verbose
 
 bl64_msg_show_batch_start 'dev-lib-sysden64'
-if [[ -f "$setup_marker" ]]; then
+if [[ -f "$DEV_LIB_SYSDEN64_FLAG" ]]; then
   bl64_msg_show_warning "SysDen64 already deployed to current user's home (${dev_lib_home}). No further action taken"
 else
   dev_lib_initialize &&
     dev_lib_home_populate "$dev_lib_home" "$dev_lib_persistence" &&
-    "$BL64_FS_CMD_TOUCH" "$setup_marker"
+    echo "$DEV_LIB_SYSDEN64_WATERMARK" > "$DEV_LIB_SYSDEN64_FLAG"
 fi
 bl64_msg_show_batch_finish $? 'dev-lib-sysden64'
