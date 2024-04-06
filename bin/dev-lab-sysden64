@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / SysDen64 / Open sandbox environment
 #
-# * Version: 2.0.0
+# * Version: 2.1.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -38,19 +38,12 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
 #
-# Globals
-#
-
-declare _DEV_LAB_SYSDEN64_PATH_DEN=''
-
-#
 # Functions
 #
 
 function dev_lab_open() {
   bl64_dbg_app_show_function "$@"
   local image="$1"
-  local entrypoint="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/bin/dev-lab-sysden64-entrypoint"
 
   bl64_msg_show_task "open sanbox environment (${image})"
   if [[ -n "$DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE" ]]; then
@@ -58,13 +51,14 @@ function dev_lab_open() {
       --network=host \
       --user='root' \
       --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
-      --entrypoint="$entrypoint" \
+      --entrypoint="$DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT" \
+      --env 'DEV_ENVIRONMENT' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE' \
       --env "_DEV_LAB_SYSDEN64_CONTAINER=${image}" \
       --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}" \
-      --mount "type=bind,source=${_DEV_LAB_SYSDEN64_PATH_DEN},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
+      --mount "type=bind,source=${DEV_LAB_SYSDEN64_PATH_DEN},target=/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" \
       "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
   else
     bl64_cnt_run_interactive \
@@ -77,21 +71,21 @@ function dev_lab_open() {
 
 function dev_lib_store_create() {
   bl64_dbg_app_show_function
-
   bl64_msg_show_task 'create base paths'
   bl64_fs_run_mkdir \
     "$BL64_FS_SET_MKDIR_PARENTS" \
-    "$DEV_LAB_SYSDEN64_PATH_VAULT" \
+    "$DEV_LAB_SYSDEN64_PATH_DEN" \
+    "$DEV_LAB_SYSDEN64_PATH_ETC" \
     "$DEV_LAB_SYSDEN64_PATH_LOGS" \
     "$DEV_LAB_SYSDEN64_PATH_TMP" \
-    "$_DEV_LAB_SYSDEN64_PATH_DEN"
+    "$DEV_LAB_SYSDEN64_PATH_VAR" \
+    "$DEV_LAB_SYSDEN64_PATH_VAULT"
 }
 
 function dev_lab_initialize() {
   bl64_dbg_app_show_function "$@"
   local image="$1"
   bl64_cnt_setup
-  _DEV_LAB_SYSDEN64_PATH_DEN="${DEV_LAB_SYSDEN64_PATH_TMP}/session"
 }
 
 #
