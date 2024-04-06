@@ -585,6 +585,6 @@ if [[ -f "$DEV_LIB_SYSDEN64_FLAG" ]]; then
 else
   dev_lib_initialize &&
     dev_lib_home_populate "$dev_lib_home" "$dev_lib_persistence" &&
-    echo "$DEV_LIB_SYSDEN64_WATERMARK" > "$DEV_LIB_SYSDEN64_FLAG"
+    echo "$DEV_LIB_SYSDEN64_WATERMARK" >"$DEV_LIB_SYSDEN64_FLAG"
 fi
-bl64_msg_show_batch_finish $? 'dev-lib-sysden64'
+bl64_msg_show_batch_finish $? 'dev-lib-sysden64-home'
