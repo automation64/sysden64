@@ -121,20 +121,27 @@ function dev_lib_starship_setup() {
     "${DEV_LAB_SYSDEN64_PATH_MODEL}/starship/.config/starship.toml"
 }
 
+function dev_lib_env_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/env"
+
+  bl64_msg_show_task "Populate modular env store  (${DEV_LAB_SYSDEN64_PATH_ENVS})"
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${model}/.env.d" \
+    "$home"
+}
+
 function dev_lib_bash_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local user_bashrc_d="${home}/.bashrc.d"
   local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/bash"
 
   bl64_msg_show_phase 'prepare Bash'
   ! bl64_bsh_command_is_executable 'bash' &&
     bl64_msg_show_warning 'tool not detected. No further action taken' && return 0
-
-  bl64_msg_show_task "Create modular bashr store (${user_bashrc_d})"
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$user_bashrc_d" ||
-    return $?
 
   bl64_msg_show_task "Setup user's bash profile (${home})"
   bl64_fs_copy_files \
@@ -564,6 +571,7 @@ function dev_lib_home_populate() {
 
   dev_lib_xdg_setup "$home" &&
     dev_lib_sysden64_setup "$home" "$persistence" &&
+    dev_lib_env_setup "$home" &&
     dev_lib_bash_setup "$home" &&
     dev_lib_starship_setup "$home" &&
     dev_lib_zsh_setup "$home" &&
