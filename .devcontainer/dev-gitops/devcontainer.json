@@ -62,11 +62,12 @@
 				//
 				// VSCode / Extensions / Cloud
 				//
-				// Settings Template Version: 19FEB24
+				// Settings Template Version: 4MAY24
 				// VSCode Version: >= 1.66
 				//
 				"AmazonWebServices.aws-toolkit-vscode",
 				"GoogleCloudTools.cloudcode",
+				"AmazonWebServices.amazon-q-vscode",
 				"ms-vscode.azurecli",
 				//
 				// VSCode / Extensions / Docker
