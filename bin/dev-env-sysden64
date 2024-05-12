@@ -33,9 +33,10 @@
     # Lab / SysDen64 / Default image
     export DEV_LAB_SYSDEN64_CONTAINER="${DEV_LAB_SYSDEN64_CONTAINER:-toolbox/oraclelinux-9-toolbox-gitops}"
     # Lab / SysDen64 / Profile paths
+    export DEV_LAB_SYSDEN64_BASE_ENVS='.env.d'
     export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_TMP}/home"
     export DEV_LAB_SYSDEN64_PATH_PROFILE="${DEV_LAB_SYSDEN64_PATH_DEN}/.sysden64-profile"
-    export DEV_LAB_SYSDEN64_PATH_ENVS="${DEV_LAB_SYSDEN64_PATH_DEN}/.env.d"
+    export DEV_LAB_SYSDEN64_PATH_ENVS="${DEV_LAB_SYSDEN64_PATH_DEN}/${DEV_LAB_SYSDEN64_BASE_ENVS}"
     # Lab / SysDen64 / Container paths
     export DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER:-/sysden64}"
     # Lab / SysDen64 / Application configuration boilerplates

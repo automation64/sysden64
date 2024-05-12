@@ -102,7 +102,7 @@ function dev_lib_env_setup() {
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
-    "${model}/.env.d" \
+    "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
     "$home"
 }
 
@@ -302,6 +302,7 @@ if [[ -f "$DEV_LAB_SYSDEN64_PATH_PROFILE" ]]; then
 else
   dev_lib_initialize &&
     dev_lib_home_populate "$dev_lib_home" "$dev_lib_persistence" &&
+    dev_lib_apps_populate  "$dev_lib_home" "$dev_lib_persistence" &&
     printf '%s\n' "$DEV_PROFILE" >"$DEV_LAB_SYSDEN64_PATH_PROFILE"
 fi
 bl64_msg_show_batch_finish $? 'dev-lib-sysden64-home'

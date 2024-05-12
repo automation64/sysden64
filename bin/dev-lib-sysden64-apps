@@ -154,6 +154,40 @@ function dev_lib_ansible_setup() {
     "${model}/.ansible.cfg"
 }
 
+function dev_lib_github_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/github"
+
+  bl64_msg_show_phase 'prepare GitHub'
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
+      "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
+}
+
+function dev_lib_git_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/git"
+
+  bl64_msg_show_phase 'prepare GIT'
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$home" \
+    "${model}/.gitconfig" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
+      "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
+}
+
 function dev_lib_alacritty_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -306,7 +340,43 @@ function dev_lib_awscli_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.aws/config"
+    "${model}/.aws/config" &&
+    bl64_fs_copy_files \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
+      "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
+}
+
+function dev_lib_docker_setup() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local persistence="$2"
+  local target="${home}/.docker"
+  local vault="${DEV_PATH_PROF_VAULT}/docker"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/docker"
+
+  bl64_msg_show_phase 'prepare Docker CLI'
+  bl64_msg_show_task "setup Docker CLI (${target})"
+  if bl64_lib_flag_is_enabled "$persistence"; then
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$vault" &&
+      bl64_fs_create_symlink \
+        "$vault" \
+        "$target" ||
+      return $?
+    target="$vault"
+  fi
+  [[ -f "${target}/config.json" ]] &&
+    bl64_msg_show_warning 'already configured. No further action taken' &&
+    return 0
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$target" \
+    "${model}/.docker/config.json"
 }
 
 function dev_lib_gpg_setup() {
@@ -338,11 +408,14 @@ function dev_lib_apps_populate() {
     dev_lib_keepassx_setup "$home" &&
     dev_lib_lnav_setup "$home" &&
     dev_lib_mc_setup "$home" &&
+    dev_lib_git_setup "$home" &&
+    dev_lib_github_setup "$home" &&
     dev_lib_nvim_setup "$home" &&
     dev_lib_tmux_setup "$home" &&
     dev_lib_awscli_setup "$home" "$persistence" &&
     dev_lib_gcloud_setup "$home" "$persistence" &&
     dev_lib_gpg_setup "$home" "$persistence" &&
     dev_lib_kubectl_setup "$home" "$persistence" &&
+    dev_lib_docker_setup "$home" "$persistence" &&
     dev_lib_ssh_setup "$home" "$persistence"
 }
