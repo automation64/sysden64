@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / SysDen64 / Open sandbox environment
 #
-# * Version: 2.1.0
+# * Version: 3.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -52,7 +52,7 @@ function dev_lab_open() {
       --user='root' \
       --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
       --entrypoint="$DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT" \
-      --env 'DEV_ENVIRONMENT' \
+      --env 'DEV_PROFILE' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE' \
@@ -71,15 +71,9 @@ function dev_lab_open() {
 
 function dev_lib_store_create() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'create base paths'
-  bl64_fs_run_mkdir \
-    "$BL64_FS_SET_MKDIR_PARENTS" \
-    "$DEV_LAB_SYSDEN64_PATH_DEN" \
-    "$DEV_LAB_SYSDEN64_PATH_ETC" \
-    "$DEV_LAB_SYSDEN64_PATH_LOGS" \
-    "$DEV_LAB_SYSDEN64_PATH_TMP" \
-    "$DEV_LAB_SYSDEN64_PATH_VAR" \
-    "$DEV_LAB_SYSDEN64_PATH_VAULT"
+  "${DEV_PATH_BIN}/dev-profile" &&
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$DEV_LAB_SYSDEN64_PATH_DEN"
 }
 
 function dev_lab_initialize() {

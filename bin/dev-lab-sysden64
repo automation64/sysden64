@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / SysDen64 / Open sandbox environment
 #
-# * Version: 1.0.0
+# * Version: 2.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -36,6 +36,6 @@ source ./bin/dev-env-sysden64 || exit 1
 declare lab_profile="$1"
 
 # Set the environment for the sandbox container
-DEV_ENVIRONMENT="$lab_profile"
+DEV_PROFILE="$lab_profile"
 shift
 "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$@"

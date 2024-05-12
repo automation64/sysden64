@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / SysDen64 / Container entrypoint
 #
-# * Version: 2.2.0
+# * Version: 2.3.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -76,12 +76,14 @@ function dev_lab_user_create() {
 
 function dev_lab_user_setup() {
   bl64_dbg_app_show_function
-  sudo -E -H -u "${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" "$DEV_LAB_SYSDEN64_SCRIPT_HOME"
+  sudo -E -H -u \
+    "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" \
+    "$DEV_LAB_SYSDEN64_SCRIPT_HOME"
 }
 
 function dev_lab_shell_open() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'open interactive shell'
+  bl64_msg_show_task "open interactive shell (${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}@${DEV_PROFILE})"
   bl64_msg_show_info 'type "exit" when done'
   /bin/su \
     -l "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME"
