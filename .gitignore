@@ -26,5 +26,9 @@
 # Remove next line if home content should be git tracked
 /var/prof/*/home
 
+# Use to test new content without affecting git repo
+/etc/prof/sandbox
+/var/prof/sandbox
+
 # Keep placeholder for empty directories
 !/**/.gitkeep
