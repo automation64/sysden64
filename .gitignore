@@ -23,5 +23,8 @@
 
 /.vscode
 
+# Remove next line if home content should be git tracked
+/var/prof/*/home
+
 # Keep placeholder for empty directories
 !/**/.gitkeep
