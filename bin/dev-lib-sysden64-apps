@@ -3,7 +3,7 @@
 # Dev / Lib / SysDen64 / Prepare sysden64's apps
 #
 # * Library only. Called by dev-lib-sysden64-home
-# * Version: 1.0.0
+# * Version: 2.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -122,22 +122,19 @@ function dev_lib_nvim_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/nvim"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/nvim"
 
   bl64_msg_show_phase 'prepare NVIM'
   ! bl64_bsh_command_is_executable 'nvim' &&
     bl64_msg_show_warning 'tool not detected. No further action taken' && return 0
 
   bl64_msg_show_task "setup NVIM (${target})"
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$target" ||
-    return $?
-
-  [[ -f "${target}/.neoconf.json" ]] && return 0
-  bl64_rxtx_git_get_dir \
-    "$DEV_LIB_SYSDEN64_GIT_LAZYVIM" \
-    '.' \
-    "$target" \
-    "$BL64_VAR_ON"
+  # shellcheck disable=SC2086
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${model}/.config/nvim" \
+    "${home}/.config"
 }
 
 function dev_lib_ansible_setup() {

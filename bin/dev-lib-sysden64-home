@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lib / SysDen64 / Prepare sysden64's home directory
 #
-# * Version: 3.0.0
+# * Version: 3.1.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -78,19 +78,9 @@ function dev_lib_sysden64_setup() {
 function dev_lib_xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local xdg_config="${home}/.config"
-  local xdg_cache="${home}/.cache"
-  local xdg_local="${home}/.local"
-
   bl64_msg_show_phase 'prepare XDG'
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$xdg_config" \
-    "$xdg_local" \
-    "$xdg_cache" \
-    "${xdg_local}/bin" \
-    "${xdg_local}/lib" \
-    "${xdg_local}/share" \
-    "${xdg_local}/state"
+  bl64_iam_xdg_create \
+    "$home"
 }
 
 function dev_lib_env_setup() {
@@ -99,6 +89,7 @@ function dev_lib_env_setup() {
   local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/env"
 
   bl64_msg_show_task "Populate modular env store  (${DEV_LAB_SYSDEN64_PATH_ENVS})"
+  # shellcheck disable=SC2086
   bl64_fs_run_cp \
     $BL64_FS_SET_CP_RECURSIVE \
     $BL64_FS_SET_CP_FORCE \
