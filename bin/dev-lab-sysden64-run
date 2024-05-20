@@ -53,6 +53,7 @@ function dev_lab_open() {
       --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
       --entrypoint="$DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT" \
       --env 'DEV_PROFILE' \
+      --env 'DEV_LIB_SYSDEN64_REPLACE_ENABLED' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
       --env 'DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE' \
@@ -64,6 +65,7 @@ function dev_lab_open() {
     bl64_cnt_run_interactive \
       --network=host \
       --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
+      --env 'DEV_LIB_SYSDEN64_REPLACE_ENABLED' \
       --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}" \
       "${DEV_ENV_SYSDEN64_REGISTRY}/${image}"
   fi

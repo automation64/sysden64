@@ -102,18 +102,14 @@ function dev_lib_tmux_setup() {
     return $?
 
   [[ -d "$plugins_path" ]] && return 0
-  bl64_msg_show_task "download plugins (${plugins_path})"
+  bl64_msg_show_task "deploy plugins (${plugins_path})"
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${home}/.tmux" \
-    "$plugins_path" &&
-    cd "$plugins_path" ||
+    "${home}/.tmux" ||
     return $?
   for plugin in $DEV_LIB_SYSDEN64_GIT_TMUX_PLUGINS; do
-    bl64_vcs_run_git \
-      clone \
-      --depth 1 \
-      --single-branch \
-      "$plugin" ||
+    bl64_vcs_git_clone \
+      "$plugin" \
+      "$plugins_path" ||
       return $?
   done
 }
@@ -157,12 +153,12 @@ function dev_lib_github_setup() {
   local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/github"
 
   bl64_msg_show_phase 'prepare GitHub'
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
-      "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
+    "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
 }
 
 function dev_lib_git_setup() {
@@ -237,6 +233,10 @@ function dev_lib_ssh_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -267,6 +267,10 @@ function dev_lib_kubectl_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -298,6 +302,11 @@ function dev_lib_gcloud_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" \
+      "${target}/configurations" ||
+      return $?
   fi
   [[ -f "${target}/configurations/config_default" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -328,6 +337,10 @@ function dev_lib_awscli_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -364,6 +377,10 @@ function dev_lib_docker_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config.json" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -391,6 +408,10 @@ function dev_lib_gpg_setup() {
       bl64_fs_create_symlink \
         "$vault" \
         "$target"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
 }
 
