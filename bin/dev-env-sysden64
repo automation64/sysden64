@@ -2,7 +2,7 @@
 #######################################
 # Dev / Env / SysDen64 / Shared environment variables
 #
-# * Version: 4.0.0
+# * Version: 5.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -34,7 +34,7 @@
     export DEV_LAB_SYSDEN64_CONTAINER="${DEV_LAB_SYSDEN64_CONTAINER:-toolbox/oraclelinux-9-toolbox-gitops}"
     # Lab / SysDen64 / Profile paths
     export DEV_LAB_SYSDEN64_BASE_ENVS='.env.d'
-    export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_TMP}/home"
+    export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_VAR}/home"
     export DEV_LAB_SYSDEN64_PATH_PROFILE="${DEV_LAB_SYSDEN64_PATH_DEN}/.sysden64-profile"
     export DEV_LAB_SYSDEN64_PATH_ENVS="${DEV_LAB_SYSDEN64_PATH_DEN}/${DEV_LAB_SYSDEN64_BASE_ENVS}"
     # Lab / SysDen64 / Container paths
