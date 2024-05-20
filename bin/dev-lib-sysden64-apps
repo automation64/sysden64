@@ -3,7 +3,7 @@
 # Dev / Lib / SysDen64 / Prepare sysden64's apps
 #
 # * Library only. Called by dev-lib-sysden64-home
-# * Version: 1.0.0
+# * Version: 2.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -102,18 +102,14 @@ function dev_lib_tmux_setup() {
     return $?
 
   [[ -d "$plugins_path" ]] && return 0
-  bl64_msg_show_task "download plugins (${plugins_path})"
+  bl64_msg_show_task "deploy plugins (${plugins_path})"
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${home}/.tmux" \
-    "$plugins_path" &&
-    cd "$plugins_path" ||
+    "${home}/.tmux" ||
     return $?
   for plugin in $DEV_LIB_SYSDEN64_GIT_TMUX_PLUGINS; do
-    bl64_vcs_run_git \
-      clone \
-      --depth 1 \
-      --single-branch \
-      "$plugin" ||
+    bl64_vcs_git_clone \
+      "$plugin" \
+      "$plugins_path" ||
       return $?
   done
 }
@@ -122,22 +118,19 @@ function dev_lib_nvim_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/nvim"
+  local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/nvim"
 
   bl64_msg_show_phase 'prepare NVIM'
   ! bl64_bsh_command_is_executable 'nvim' &&
     bl64_msg_show_warning 'tool not detected. No further action taken' && return 0
 
   bl64_msg_show_task "setup NVIM (${target})"
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$target" ||
-    return $?
-
-  [[ -f "${target}/.neoconf.json" ]] && return 0
-  bl64_rxtx_git_get_dir \
-    "$DEV_LIB_SYSDEN64_GIT_LAZYVIM" \
-    '.' \
-    "$target" \
-    "$BL64_VAR_ON"
+  # shellcheck disable=SC2086
+  bl64_fs_run_cp \
+    $BL64_FS_SET_CP_RECURSIVE \
+    $BL64_FS_SET_CP_FORCE \
+    "${model}/.config/nvim" \
+    "${home}/.config"
 }
 
 function dev_lib_ansible_setup() {
@@ -160,12 +153,12 @@ function dev_lib_github_setup() {
   local model="${DEV_LAB_SYSDEN64_PATH_MODEL}/github"
 
   bl64_msg_show_phase 'prepare GitHub'
-    bl64_fs_copy_files \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "$BL64_VAR_DEFAULT" \
-      "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
-      "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
+  bl64_fs_copy_files \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${DEV_LAB_SYSDEN64_BASE_ENVS}" \
+    "${model}/${DEV_LAB_SYSDEN64_BASE_ENVS}"/*.env
 }
 
 function dev_lib_git_setup() {
@@ -240,6 +233,10 @@ function dev_lib_ssh_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -270,6 +267,10 @@ function dev_lib_kubectl_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -301,6 +302,11 @@ function dev_lib_gcloud_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" \
+      "${target}/configurations" ||
+      return $?
   fi
   [[ -f "${target}/configurations/config_default" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -331,6 +337,10 @@ function dev_lib_awscli_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -367,6 +377,10 @@ function dev_lib_docker_setup() {
         "$target" ||
       return $?
     target="$vault"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
   [[ -f "${target}/config.json" ]] &&
     bl64_msg_show_warning 'already configured. No further action taken' &&
@@ -394,6 +408,10 @@ function dev_lib_gpg_setup() {
       bl64_fs_create_symlink \
         "$vault" \
         "$target"
+  else
+    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$target" ||
+      return $?
   fi
 }
 
