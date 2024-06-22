@@ -49,11 +49,35 @@ declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
 # SysDen64 / Application configuration boilerplates
 declare SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
 # SysDen64 / Installation path
-declare SYSDEN64_MODULE_LIST=''
-SYSDEN64_MODULE_LIST+='env '
+declare SYSDEN64_MODULE_LIST_BASE=''
+SYSDEN64_MODULE_LIST_BASE+='env '
+SYSDEN64_MODULE_LIST_BASE+='bash '
+SYSDEN64_MODULE_LIST_BASE+='starship '
+SYSDEN64_MODULE_LIST_BASE+='zsh '
+SYSDEN64_MODULE_LIST_BASE+='omz '
+SYSDEN64_MODULE_LIST_BASE+='p10k '
+declare SYSDEN64_MODULE_LIST_TOOLS=''
+SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
+SYSDEN64_MODULE_LIST_TOOLS+='ansible '
+SYSDEN64_MODULE_LIST_TOOLS+='btop '
+SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
+SYSDEN64_MODULE_LIST_TOOLS+='lnav '
+SYSDEN64_MODULE_LIST_TOOLS+='mc '
+SYSDEN64_MODULE_LIST_TOOLS+='git '
+SYSDEN64_MODULE_LIST_TOOLS+='github '
+SYSDEN64_MODULE_LIST_TOOLS+='nvim '
+SYSDEN64_MODULE_LIST_TOOLS+='tmux '
+SYSDEN64_MODULE_LIST_TOOLS+='awscli '
+SYSDEN64_MODULE_LIST_TOOLS+='gcloud '
+SYSDEN64_MODULE_LIST_TOOLS+='gpg '
+SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
+SYSDEN64_MODULE_LIST_TOOLS+='docker '
+SYSDEN64_MODULE_LIST_TOOLS+='ssh '
 
 # DevBin64 / Target profile
 export DEV_PROFILE=''
+# DevBin64 / Use devbin64 type repository?
+declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 # DevBin64 / Env Set script
 declare SYSDEN64_FILE_DEVBIN64_SET='bin/dev-set'
 # DevBin64 / Profile set script
@@ -68,10 +92,15 @@ declare SYSDEN64_PATH_DEVBIN64_DEN=''
 function sysden64_module_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local use_devbin64="$2"
   local module=''
 
-  for module in $SYSDEN64_MODULE_LIST; do
+  for module in $SYSDEN64_MODULE_LIST_BASE; do
+    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+      "sysden64_${module}_setup" "$home" ||
+      return $?
+  done
+  for module in $SYSDEN64_MODULE_LIST_TOOLS; do
     bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
       source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
       "sysden64_${module}_setup" "$home" ||
@@ -79,14 +108,14 @@ function sysden64_module_setup() {
   done
 }
 
-function sysden64_devbin64_setup() {
+function SYSDEN64_USE_DEVBIN64_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local repository="$2"
   local profile="$3"
 
-  bl64_msg_show_phase "prepare DevBin64 repository for SysDen64 ($repository)"
-  bl64_msg_show_task 'source DevBin64 environment'
+  bl64_msg_show_phase 'prepare DevBin64'
+  bl64_msg_show_task "source DevBin64 environment (${repository})"
   DEV_PROFILE="$profile"
   # shellcheck disable=SC1090
   cd "$repository" &&
@@ -133,18 +162,17 @@ function sysden64_deploy() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local replace="$2"
-  local use_devbin64="$3"
-  local repository="$4"
-  local profile="$5"
+  local repository="$3"
+  local profile="$4"
 
   sysden64_xdg_setup "$home" ||
     return $?
 
-  if bl64_lib_flag_is_enabled "$use_devbin64"; then
-    sysden64_devbin64_setup "$home" "$repository" "$profile" ||
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    SYSDEN64_USE_DEVBIN64_setup "$home" "$repository" "$profile" ||
       return $?
   fi
-  sysden64_module_setup "$home" "$use_devbin64"
+  sysden64_module_setup "$home"
 }
 
 #######################################
@@ -161,13 +189,12 @@ function sysden64_deploy() {
 function sysden64_initialize() {
   bl64_dbg_app_show_function "@"
   local command="$1"
-  local use_devbin64="$2"
-  local repository="$3"
+  local repository="$2"
 
   bl64_check_parameter 'command' ||
     { sysden64_help && return 1; }
 
-  if bl64_lib_flag_is_enabled "$use_devbin64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     bl64_check_parameter 'repository' &&
       bl64_check_directory "$repository" &&
       bl64_check_file "${repository}/${SYSDEN64_FILE_DEVBIN64_SET}" &&
@@ -220,12 +247,11 @@ declare sysden64_home="$HOME"
 declare sysden64_repository="$BL64_VAR_DEFAULT"
 declare sysden64_replace="$BL64_VAR_OFF"
 declare sysden64_profile='main'
-declare sysden64_devbin64="$BL64_VAR_OFF"
 
 while getopts ':dlro:i:p:V:D:h' sysden64_option; do
   case "$sysden64_option" in
   l) sysden64_command='deploy' ;;
-  d) sysden64_devbin64="$BL64_VAR_ON" ;;
+  d) SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON" ;;
   r) sysden64_replace="$BL64_VAR_ON" ;;
   o) sysden64_home="$OPTARG" ;;
   i) sysden64_repository="$OPTARG" ;;
@@ -237,11 +263,11 @@ while getopts ':dlro:i:p:V:D:h' sysden64_option; do
   esac
 done
 bl64_dbg_set_level "$sysden64_debug" && bl64_msg_set_level "$sysden64_verbose" || exit $?
-sysden64_initialize "$sysden64_command" "$sysden64_devbin64" "$sysden64_repository" || exit $?
+sysden64_initialize "$sysden64_command" "$sysden64_repository" || exit $?
 
 bl64_msg_show_batch_start "$sysden64_command"
 case "$sysden64_command" in
-'deploy') sysden64_deploy "$sysden64_home" "$sysden64_replace" "$sysden64_devbin64" "$sysden64_repository" "$sysden64_profile" ;;
+'deploy') sysden64_deploy "$sysden64_home" "$sysden64_replace" "$sysden64_repository" "$sysden64_profile" ;;
 *) bl64_check_alert_parameter_invalid "$sysden64_command" ;;
 esac
 bl64_msg_show_batch_finish $? "$sysden64_command"
