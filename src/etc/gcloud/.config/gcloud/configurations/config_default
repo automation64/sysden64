@@ -1,0 +1,7 @@
+[core]
+console_log_format = detailed
+default_format = json
+disable_color = false
+disable_usage_reporting = true
+show_structured_logs = always
+verbosity = info
