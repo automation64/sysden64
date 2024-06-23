@@ -25,7 +25,7 @@ function sysden64_tmux_setup() {
   bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
     "${home}/.tmux" ||
     return $?
-  for plugin in $sysden64_SYSDEN64_GIT_TMUX_PLUGINS; do
+  for plugin in $SYSDEN64_GIT_TMUX_PLUGINS; do
     bl64_vcs_git_clone \
       "$plugin" \
       "$plugins_path" ||
