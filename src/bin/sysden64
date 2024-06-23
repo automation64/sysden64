@@ -77,7 +77,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='docker '
 SYSDEN64_MODULE_LIST_TOOLS+='ssh '
 
 # DevBin64 / Target profile
-export DEV_PROFILE=''
+export DEV_PROFILE='default'
 # DevBin64 / Use devbin64 type repository?
 declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 # DevBin64 / Env Set script
@@ -110,24 +110,21 @@ function sysden64_module_setup() {
   done
 }
 
-function SYSDEN64_USE_DEVBIN64_setup() {
+function sysden64_devbin64_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local repository="$2"
-  local profile="$3"
 
   bl64_msg_show_phase 'prepare DevBin64'
   bl64_msg_show_task "source DevBin64 environment (${repository})"
-  DEV_PROFILE="$profile"
   # shellcheck disable=SC1090
   cd "$repository" &&
     source "./${SYSDEN64_FILE_DEVBIN64_SET}" ||
     return $?
 
-  bl64_msg_show_task "create/update DevBin64 profile (${profile})"
-  "./${SYSDEN64_FILE_DEVBIN64_PROFILE}" &&
-    SYSDEN64_PATH_DEVBIN64_DEN="${DEV_PATH_PROF_VAR}/home"
-  return $?
+  bl64_msg_show_task "create/update DevBin64 DEV_PROFILE (${DEV_PROFILE})"
+  "./${SYSDEN64_FILE_DEVBIN64_PROFILE}" ||
+    return $?
 
   bl64_fs_create_symlink \
     "${DEV_PATH_PROF_LOGS}" \
@@ -163,15 +160,13 @@ function sysden64_xdg_setup() {
 function sysden64_deploy() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local replace="$2"
-  local repository="$3"
-  local profile="$4"
+  local repository="$2"
 
   sysden64_xdg_setup "$home" ||
     return $?
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
-    SYSDEN64_USE_DEVBIN64_setup "$home" "$repository" "$profile" ||
+    sysden64_devbin64_setup "$home" "$repository" ||
       return $?
   fi
   sysden64_module_setup "$home"
@@ -220,18 +215,17 @@ function sysden64_initialize() {
 function sysden64_help() {
   # shellcheck disable=SC2016
   bl64_msg_show_usage \
-    '-l [-o Home] [-i Repo] [-p Profile] [-r] [-d] [-V Verbose] [-D Debug] [-h]' \
+    '-l [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]' \
     'SysDen64' \
     '
     -l         : Deploy configuration files to home directory
     ' '
     -d         : Use DevBin64 repository for persistense
-    -r         : Replace existing configuration files
     -h         : Show help
     ' '
     -o Home    : Full path to the users home directory. Default: $HOME
     -i Repo    : DevBin64 repository path. Required for -d
-    -p Profile : DevBin64 profile. Required for -d. Default: main
+    -p Profile : DevBin64 DEV_PROFILE. Required for -d. Default: default
     -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
     -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
     '
@@ -247,17 +241,14 @@ declare sysden64_option=''
 declare sysden64_verbose="$BL64_MSG_VERBOSE_APP"
 declare sysden64_home="$HOME"
 declare sysden64_repository="$BL64_VAR_DEFAULT"
-declare sysden64_replace="$BL64_VAR_OFF"
-declare sysden64_profile='main'
 
-while getopts ':dlro:i:p:V:D:h' sysden64_option; do
+while getopts ':dlo:i:p:V:D:h' sysden64_option; do
   case "$sysden64_option" in
   l) sysden64_command='deploy' ;;
   d) SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON" ;;
-  r) sysden64_replace="$BL64_VAR_ON" ;;
   o) sysden64_home="$OPTARG" ;;
   i) sysden64_repository="$OPTARG" ;;
-  p) sysden64_profile="$OPTARG" ;;
+  p) DEV_PROFILE="$OPTARG" ;;
   V) sysden64_verbose="$OPTARG" ;;
   D) sysden64_debug="$OPTARG" ;;
   h) sysden64_help && exit 0 ;;
@@ -269,7 +260,7 @@ sysden64_initialize "$sysden64_command" "$sysden64_repository" || exit $?
 
 bl64_msg_show_batch_start "$sysden64_command"
 case "$sysden64_command" in
-'deploy') sysden64_deploy "$sysden64_home" "$sysden64_replace" "$sysden64_repository" "$sysden64_profile" ;;
+'deploy') sysden64_deploy "$sysden64_home" "$sysden64_repository" ;;
 *) bl64_check_alert_parameter_invalid "$sysden64_command" ;;
 esac
 bl64_msg_show_batch_finish $? "$sysden64_command"
