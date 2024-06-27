@@ -2,12 +2,13 @@ function sysden64_awscli_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.aws"
-  local vault="${DEV_PATH_PROF_VAULT}/aws"
+  local vault=''
   local model="${SYSDEN64_PATH_ETC}/aws"
 
   bl64_msg_show_phase 'prepare AWS CLI'
   bl64_msg_show_task "setup AWS CLI (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    vault="${DEV_PATH_PROF_VAULT}/aws"
     bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" &&
       bl64_fs_create_symlink \
