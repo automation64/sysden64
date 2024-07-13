@@ -2,7 +2,7 @@
 #######################################
 # SysDen64
 #
-# * Version: 4.0.0
+# * Version: 4.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,6 +27,7 @@
 declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
 # shellcheck source-path=lib/bl64
 source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-bsh.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-vcs.bash" &&
@@ -161,6 +162,9 @@ function sysden64_deploy() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local repository="$2"
+
+  bl64_ui_ask_confirmation "Deploy SysDen64 to the target home directory? (${home})" 'YES' ||
+    return $?
 
   sysden64_xdg_setup "$home" ||
     return $?
