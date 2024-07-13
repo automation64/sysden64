@@ -27,6 +27,7 @@
 declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
 # shellcheck source-path=lib/bl64
 source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-bsh.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-vcs.bash" &&
