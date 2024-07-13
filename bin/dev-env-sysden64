@@ -27,7 +27,7 @@
 # * Use .env file to override values
 #
 
-# shellcheck disable=2154
+# shellcheck disable=SC2154
 {
     # Env / SysDen64 / Registry for lab and testing containers
     export DEV_ENV_SYSDEN64_REGISTRY="${DEV_ENV_SYSDEN64_REGISTRY:-ghcr.io/automation64}"
@@ -56,10 +56,10 @@
 #
 # Locals
 #
-# * Use .local file or CICD variables to override values
+# * Use .local.env file or CICD variables to override values
 #
 
-# shellcheck disable=2154
+# shellcheck disable=SC2154
 {
     # Lab / SysDen64 / Container user
     export DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE="${DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE:-YES}"
@@ -70,5 +70,5 @@
 #
 # Secrets
 #
-# * Use .secrets file or CICD secrets to override values
+# * Use .secrets.env file or CICD secrets to override values
 #
