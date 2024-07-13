@@ -2,7 +2,8 @@
 #
 # Dev / Pack / Project / Create distributable release
 #
-# * Version: 1.1.0
+# * Version: 2.0.0
+# * Template: 2.0.1
 #
 
 #
@@ -14,7 +15,9 @@ source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2
 # shellcheck source-path=bin
 source ./bin/dev-env-project || exit 1
 # shellcheck source-path=lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-arc.bash" &&
@@ -26,14 +29,14 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
 
 function dev_pack_prepare() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task "gather distributable package content (${DEV_PACK_PROJECT_STAGING})"
+  bl64_msg_show_task "gather distributable package content (${DEV_PATH_BUILD_STAGING})"
   # shellcheck disable=SC2086
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$DEV_PACK_PROJECT_STAGING" \
+    "$DEV_PATH_BUILD_STAGING" \
     $DEV_PACK_PROJECT_ASSETS
 }
 
@@ -41,24 +44,16 @@ function dev_pack_create() {
   bl64_dbg_app_show_function
   bl64_msg_show_task "create dstributable bundle (${DEV_PACK_PROJECT_BUNDLE})"
   # shellcheck disable=SC2086,SC2035
-  cd "$DEV_PACK_PROJECT_STAGING" &&
+  cd "$DEV_PATH_BUILD_STAGING" &&
     bl64_arc_run_tar \
-      czf "${DEV_PACK_PROJECT_STORE}/${DEV_PACK_PROJECT_BUNDLE}" \
+      czf "${DEV_PATH_BUILD_PACK}/${DEV_PACK_PROJECT_BUNDLE}" \
       $BL64_ARC_SET_TAR_VERBOSE \
       *
 }
 
 function dev_pack() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task "prepare packages destination (${DEV_PACK_PROJECT_STORE})"
-  bl64_fs_rm_full \
-    "$DEV_PACK_PROJECT_STAGING" \
-    "$DEV_PACK_PROJECT_STORE"
-  bl64_fs_create_dir \
-    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$DEV_PACK_PROJECT_STAGING" \
-    "$DEV_PACK_PROJECT_STORE" ||
-    return $?
+  bl64_msg_show_task "prepare packages destination (${DEV_PATH_BUILD_PACK})"
   dev_pack_prepare &&
     dev_pack_create
 }
@@ -66,7 +61,11 @@ function dev_pack() {
 function dev_pack_initialize() {
   bl64_dbg_app_show_function
   bl64_check_export 'DEV_PACK_PROJECT_BUNDLE' &&
-    bl64_arc_setup
+    bl64_arc_setup &&
+    bl64_fs_dir_reset \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$DEV_PATH_BUILD_STAGING" \
+      "$DEV_PATH_BUILD_PACK"
 }
 
 #
