@@ -4,7 +4,7 @@
 #
 # * Source this script from the project's root directory
 # * Warning: Bash is the only supported shell. Other shells may work as long as they are compatible with Bash syntax
-# * Version: 8.1.0
+# * Version: 8.1.1
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -42,6 +42,7 @@ export DEV_MODULE_LOAD="${DEV_MODULE_LOAD:-}"
 # From CICD products
 export GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-}"
 export GITLAB_CI="${GITLAB_CI:-}"
+export TESTMANSH_PROJECT_ROOT="${TESTMANSH_PROJECT_ROOT:-}"
 
 #
 # Functions
