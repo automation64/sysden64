@@ -1,0 +1,35 @@
+[/]
+auto-hide-mouse=true
+close-with-last-session=false
+copy-on-select=true
+enable-wide-handle=true
+focus-follow-mouse=true
+paste-advanced-default=false
+quake-specific-monitor=0
+terminal-title-style='none'
+theme-variant='light'
+unsafe-paste-alert=false
+warn-vte-config-issue=false
+window-save-state=true
+window-state=43908
+window-style='disable-csd-hide-toolbar'
+
+[profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
+background-color='#000000000000'
+badge-color='#AC7EA8'
+badge-color-set=false
+bold-color-set=false
+cursor-blink-mode='on'
+cursor-colors-set=false
+cursor-shape='underline'
+custom-command='zsh'
+font='MesloLGS NF 12'
+foreground-color='#839496'
+highlight-colors-set=false
+login-shell=true
+palette=['#073642', '#DC322F', '#859900', '#B58900', '#268BD2', '#D33682', '#2AA198', '#EEE8D5', '#002B36', '#CB4B16', '#586E75', '#657B83', '#839496', '#6C71C4', '#93A1A1', '#FDF6E3']
+terminal-bell='icon-sound'
+use-custom-command=true
+use-system-font=false
+use-theme-colors=false
+visible-name='Default'
