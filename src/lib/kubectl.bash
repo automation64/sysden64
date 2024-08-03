@@ -2,7 +2,7 @@ function sysden64_kubectl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.kube"
-  local vault="${DEV_PATH_PROF_VAULT}/kubectl"
+  local vault=''
   local model="${SYSDEN64_PATH_ETC}/kubectl"
 
   bl64_msg_show_phase 'prepare KubeCTL'
