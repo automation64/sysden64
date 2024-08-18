@@ -2,7 +2,7 @@
 #######################################
 # SysDen64
 #
-# * Version: 4.0.0
+# * Version: 4.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -63,6 +63,8 @@ declare SYSDEN64_MODULE_LIST_TOOLS=''
 SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
 SYSDEN64_MODULE_LIST_TOOLS+='ansible '
 SYSDEN64_MODULE_LIST_TOOLS+='btop '
+SYSDEN64_MODULE_LIST_TOOLS+='bat '
+SYSDEN64_MODULE_LIST_TOOLS+='delta '
 SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
 SYSDEN64_MODULE_LIST_TOOLS+='lnav '
 SYSDEN64_MODULE_LIST_TOOLS+='mc '
