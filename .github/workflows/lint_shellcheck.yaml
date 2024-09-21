@@ -1,0 +1,35 @@
+---
+# Template: 1.0.2
+name: "Lint / ShellCheck"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  DEV_CICD_DEBUG: ""
+
+on:
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "feature/**"
+    paths:
+      - "src/**"
+
+jobs:
+  lint-shellcheck:
+    runs-on: "ubuntu-latest"
+    steps:
+
+      - name: "Check out repository code"
+        uses: "actions/checkout@main"
+
+      - name: "Prepare environment"
+        run: "./bin/dev-lib-base"
+
+      - name: "Run tests"
+        run: "./bin/dev-lint-shellcheck"
+...

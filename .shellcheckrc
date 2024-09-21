@@ -1,0 +1,17 @@
+# Template: 1.0.0
+#
+# Configuration
+#
+
+external-sources=true
+# Warning: temporary fix to avoid memory bug in 0.9 series
+extended-analysis=false
+
+#
+# Optional checks
+#
+
+enable=add-default-case
+enable=avoid-nullary-conditions
+enable=check-unassigned-uppercase
+enable=deprecate-which
