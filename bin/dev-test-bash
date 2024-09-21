@@ -3,7 +3,7 @@
 # Dev / Test / Bash / Simple test runner
 #
 # * Run tests in test/bash using containers
-# * Version: 1.1.0
+# * Version: 1.2.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -39,13 +39,6 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
 #
-# Globals
-#
-
-# Dev / Test / Base / Flag for marking container environment
-export _DEV_TEST_BASH_CONTAINER_ENVIRONMENT='OFF'
-
-#
 # Functions
 #
 
@@ -62,7 +55,10 @@ function dev_test_run() {
   bl64_cnt_run \
     $BL64_CNT_SET_RM \
     $BL64_CNT_SET_TTY \
-    --env=_DEV_TEST_BASH_CONTAINER_ENVIRONMENT='ON' \
+    --env=DEV_TEST_BASH_CONTAINER_ENVIRONMENT='ON' \
+    --env=DEV_ENV_BASH_CONTAINER_PATH_SRC \
+    --env=DEV_ENV_BASH_CONTAINER_PATH_ROOT \
+    --env=DEV_ENV_BASH_CONTAINER_PATH_TEST \
     --workdir="$DEV_ENV_BASH_CONTAINER_PATH_ROOT" \
     --mount "type=bind,source=${DEV_PATH_SRC},target=${DEV_ENV_BASH_CONTAINER_PATH_SRC},readonly" \
     --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_ENV_BASH_CONTAINER_PATH_ROOT},readonly" \

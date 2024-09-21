@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Lab / SysDen64 / Open sandbox environment
+# Dev / Env / SysOp64 / Shared environment variables
 #
-# * Version: 2.0.0
+# * Version: 1.0.0
+# * Template: 1.0.1
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -21,20 +22,27 @@
 #######################################
 
 #
-# Imports
+# Globals
+#
+# * Use .env file to override values
 #
 
-# shellcheck source=bin/dev-set
-source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
+# shellcheck disable=SC2154
+{
+  # Lib / SysOp64 / Installer
+  export DEV_LIB_SYSOP64_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-sysop64"
+  # Lib / SysOp64 / Target
+  export DEV_LIB_SYSOP64_TARGET="${DEV_LIB_SYSOP64_TARGET:-${DEV_PATH_LIB}/so64}"
+}
 
 #
-# Main
+# Locals
+#
+# * Use .local.env file or CICD variables to override values
 #
 
-DEV_PROFILE="${1:-$DEV_PROFILE}"
-
-shift
-source ./bin/dev-set &&
-  source ./bin/dev-env-sysden64 &&
-  "${DEV_PATH_BIN}/dev-profile-create" &&
-  "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$@"
+#
+# Secrets
+#
+# * Use .secrets.env file or CICD secrets to override values
+#

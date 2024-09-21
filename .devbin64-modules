@@ -1,4 +1,6 @@
 bash
 git
 github
+gitleaks
+shellcheck
 sysden64

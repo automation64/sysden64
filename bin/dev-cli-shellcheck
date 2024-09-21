@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Lab / SysDen64 / Open sandbox environment
+# Dev / CLI / ShellCheck / Command runner for interactive shell
 #
-# * Version: 2.0.0
+# * Use to run the command in an interactive shell
+# * Associated shell environment is loaded before command execution
+# * Any other dev task that needs to use the command should call it directly, not using this wrapper
+# * Version: 1.0.0
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -26,15 +29,11 @@
 
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
+# shellcheck source=bin/dev-env-shellcheck
+source ./bin/dev-env-shellcheck || exit 1
 
 #
 # Main
 #
 
-DEV_PROFILE="${1:-$DEV_PROFILE}"
-
-shift
-source ./bin/dev-set &&
-  source ./bin/dev-env-sysden64 &&
-  "${DEV_PATH_BIN}/dev-profile-create" &&
-  "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$@"
+"$DEV_LIB_SHELLCHECK_BIN" "$@"
