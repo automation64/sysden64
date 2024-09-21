@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Env / Installer64 / Shared environment variables
+# Dev / Env / GitLeaks / Shared environment variables
 #
-# * Version: 1.2.0
+# * Version: 1.0.0
+# * Template: 1.0.1
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -28,10 +29,14 @@
 
 # shellcheck disable=SC2154
 {
-    # Lib / Installer64 / Location
-    export DEV_LIB_INSTALLER64_TARGET="${DEV_LIB_INSTALLER64_TARGET:-${DEV_PATH_LIB}/inst64}"
-    # Lib / Installer64 / Source
-    export DEV_LIB_INSTALLER64_URL='https://raw.githubusercontent.com/automation64/installer64/main/src/install-installer64'
+  # Lib / GitLeaks / Installer
+  export DEV_LIB_GITLEAKS_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-gitleaks"
+  # Lib / GitLeaks / Target
+  export DEV_LIB_GITLEAKS_TARGET="${DEV_LIB_GITLEAKS_TARGET:-${DEV_PATH_LIB}/gitleaks}"
+  # Lib / GitLeaks / Version
+  export DEV_LIB_GITLEAKS_VERSION="${DEV_LIB_GITLEAKS_VERSION:-v8.18.4}"
+  # SAST / GitLeaks / Format
+  export DEV_SAST_GITLEAKS_FORMAT="${DEV_SAST_GITLEAKS_FORMAT:-sarif}"
 }
 
 #
@@ -42,8 +47,8 @@
 
 # shellcheck disable=SC2154
 {
-  # Lib / Installer64 / Local BashLib64 for Installer64
-  export INST64_BASHLIB64="$DEV_LIB_BASHLIB64_TARGET"
+  # Lib / GitLeaks / Command
+  export DEV_LIB_GITLEAKS_BIN="${DEV_LIB_GITLEAKS_BIN:-${DEV_LIB_GITLEAKS_TARGET}/gitleaks}"
 }
 
 #
