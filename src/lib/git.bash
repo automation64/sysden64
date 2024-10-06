@@ -5,6 +5,9 @@ function sysden64_git_setup() {
   local target="${home}"
 
   bl64_msg_show_phase 'prepare GIT'
+  ! bl64_bsh_command_is_executable 'git' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
@@ -15,7 +18,7 @@ function sysden64_git_setup() {
     return $?
 
   [[ -f "${target}/.gitconfig" ]] &&
-    bl64_msg_show_warning 'already configured. No further action taken' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
 
   bl64_fs_path_copy \

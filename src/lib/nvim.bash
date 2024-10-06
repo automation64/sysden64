@@ -6,7 +6,16 @@ function sysden64_nvim_setup() {
 
   bl64_msg_show_phase 'prepare NVIM'
   ! bl64_bsh_command_is_executable 'nvim' &&
-    bl64_msg_show_warning 'tool not detected. No further action taken' && return 0
+    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${SYSDEN64_PATH_SHELLENV}" \
+    "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
+    return $?
 
   bl64_msg_show_task "setup NVIM (${target})"
   # shellcheck disable=SC2086

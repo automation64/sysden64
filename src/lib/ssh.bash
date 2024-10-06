@@ -6,6 +6,9 @@ function sysden64_ssh_setup() {
   local model="${SYSDEN64_PATH_ETC}/ssh"
 
   bl64_msg_show_phase 'prepare OpenSSH'
+  ! bl64_bsh_command_is_executable 'ssh' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+
   bl64_msg_show_task "setup OpenSSH (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/ssh"
@@ -22,9 +25,10 @@ function sysden64_ssh_setup() {
       return $?
   fi
   [[ -f "${target}/config" ]] &&
-    bl64_msg_show_warning 'already configured. No further action taken' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
-  bl64_fs_copy_files \
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
