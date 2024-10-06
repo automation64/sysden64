@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modules
   - EZA
   - DUF
-  - FD: zgrep
+  - FD
   - HWatch
   - RipGrep
   - Terraform
@@ -20,8 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Shell Aliases
   - Bat: zcat
-  - KubeCTL: zk
-  - Bat: zcat
+  - Docker: xd
+  - GCloud: xg
+  - KubeCTL: xk
+  - NVIM: zvi
 
 ### Changed
 
