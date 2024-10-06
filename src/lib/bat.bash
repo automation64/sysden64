@@ -4,6 +4,9 @@ function sysden64_bat_setup() {
   local model="${SYSDEN64_PATH_ETC}/bat"
 
   bl64_msg_show_phase 'prepare Bat'
+  ! bl64_bsh_command_is_executable 'bat' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

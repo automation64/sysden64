@@ -19,10 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Shell Aliases
   - Bat: zcat
-  - Delta: zdiff
+  - KubeCTL: zk
+  - Bat: zcat
 
 ### Changed
 
+- all
+  - do not run if the tool is not present
 - devbin64
   - use shared string messages
 - bash

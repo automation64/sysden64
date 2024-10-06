@@ -6,6 +6,9 @@ function sysden64_awscli_setup() {
   local model="${SYSDEN64_PATH_ETC}/aws"
 
   bl64_msg_show_phase 'prepare AWS CLI'
+  ! bl64_bsh_command_is_executable 'aws' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+
   bl64_msg_show_task "setup AWS CLI (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/aws"
