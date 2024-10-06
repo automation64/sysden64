@@ -1,5 +1,3 @@
-declare SYSDEN64_PATH_SHELLENV='.env.d'
-
 function sysden64_env_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
