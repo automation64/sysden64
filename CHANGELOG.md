@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - FD: zgrep
   - HWatch
   - RipGrep
+  - Terraform
   - Zellij
 
 - Shell Aliases
