@@ -14,7 +14,8 @@ function sysden64_nvim_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env
+    "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
+    return $?
 
   bl64_msg_show_task "setup NVIM (${target})"
   # shellcheck disable=SC2086
