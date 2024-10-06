@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0]
 
+### Added
+
+- Modules
+  - EZA
+  - DUF
+  - FD: zgrep
+  - HWatch
+  - RipGrep
+  - Zellij
+
+- Shell Aliases
+  - Bat: zcat
+  - Delta: zdiff
+
 ### Changed
 
 - devbin64
