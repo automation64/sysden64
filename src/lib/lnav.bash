@@ -9,7 +9,7 @@ function sysden64_lnav_setup() {
     bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
 
   bl64_msg_show_task "setup LNAV (${target})"
-  [[ -d "$target" ]] && bl64_msg_show_warning 'already configured. No further action taken' && return 0
+  [[ -d "$target" ]] && bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" && return 0
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

@@ -3,7 +3,7 @@ function sysden64_delta_setup() {
   local home="$1"
   local model="${SYSDEN64_PATH_ETC}/delta"
 
-  bl64_msg_show_phase 'prepare delta'
+  bl64_msg_show_phase 'prepare Delta'
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

@@ -22,7 +22,7 @@ function sysden64_docker_setup() {
       return $?
   fi
   [[ -f "${target}/config.json" ]] &&
-    bl64_msg_show_warning 'already configured. No further action taken' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \

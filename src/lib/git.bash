@@ -15,7 +15,7 @@ function sysden64_git_setup() {
     return $?
 
   [[ -f "${target}/.gitconfig" ]] &&
-    bl64_msg_show_warning 'already configured. No further action taken' &&
+    bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
 
   bl64_fs_path_copy \
