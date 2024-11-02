@@ -13,6 +13,7 @@ function sysden64_bash_setup() {
     echo "$SYSDEN64_TXT_WATERMARK" >"$path_bash_rc" &&
     bl64_bsh_profile_bash_generate >>"$path_bash_profile" &&
     bl64_bsh_profile_rc_generate >>"$path_bash_rc" &&
+    bl64_bsh_env_store_generate >>"$path_bash_rc" &&
     bl64_fs_path_permission_set \
       '0700' "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$path_bash_profile" \
