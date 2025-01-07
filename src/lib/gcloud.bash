@@ -21,7 +21,7 @@ function sysden64_gcloud_setup() {
   bl64_msg_show_task "setup GCloud CLI (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/gcloud"
-    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" \
       "${vault}/configurations" &&
       bl64_fs_create_symlink \
@@ -30,7 +30,7 @@ function sysden64_gcloud_setup() {
       return $?
     target="$vault"
   else
-    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$target" \
       "${target}/configurations" ||
       return $?

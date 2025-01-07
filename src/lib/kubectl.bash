@@ -20,7 +20,7 @@ function sysden64_kubectl_setup() {
   bl64_msg_show_task "setup KubeCTL (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/kubectl"
-    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" &&
       bl64_fs_create_symlink \
         "$vault" \
@@ -28,7 +28,7 @@ function sysden64_kubectl_setup() {
       return $?
     target="$vault"
   else
-    bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$target" ||
       return $?
   fi

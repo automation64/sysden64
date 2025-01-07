@@ -22,7 +22,7 @@ function sysden64_tmux_setup() {
 
   [[ -d "$plugins_path" ]] && return 0
   bl64_msg_show_task "deploy plugins (${plugins_path})"
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+  bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
     "${home}/.tmux" ||
     return $?
   for plugin in $SYSDEN64_GIT_TMUX_PLUGINS; do
