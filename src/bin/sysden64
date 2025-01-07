@@ -168,25 +168,25 @@ function sysden64_devbin64_setup() {
     return $?
 
   # shellcheck disable=SC2154
-  bl64_fs_create_symlink \
+  bl64_fs_symlink_create \
     "${DEV_PATH_PROF_LOGS}" \
     "${home}/logs" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAULT}" \
       "${home}/vault" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_TMP}" \
       "${home}/tmp" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_ETC}" \
       "${home}/etc" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAR}" \
       "${home}/var" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_DOCS}" \
       "${home}/docs" &&
-    bl64_fs_create_symlink \
+    bl64_fs_symlink_create \
       "${DEV_PATH_SRC}" \
       "${home}/src"
 }
@@ -286,11 +286,11 @@ bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
 '-l         : Deploy configuration files to home directory
--c         : Deploy configuration files to SysDen64 repository
+-c         : Create SysDen64 repository
 -d         : Use SysDen64 repository for persistense
 -h         : Show help
 -o Home    : Full path to the user home directory. Default: $HOME
--i Repo    : SysDen64 repository path. Required for -d and -l
+-i Repo    : SysDen64 repository path. Required for -d and -c
 -p Profile : SysDen64 DEV_PROFILE. Required for -d. Default: default
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'

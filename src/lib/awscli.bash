@@ -23,7 +23,7 @@ function sysden64_awscli_setup() {
     vault="${DEV_PATH_PROF_VAULT}/aws"
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" &&
-      bl64_fs_create_symlink \
+      bl64_fs_symlink_create \
         "$vault" \
         "$target" ||
       return $?
