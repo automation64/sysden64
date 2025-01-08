@@ -1,5 +1,5 @@
-  declare SYSDEN64_GIT_TMUX_PLUGINS=''
-  SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
+declare SYSDEN64_GIT_TMUX_PLUGINS=''
+SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
 function sysden64_tmux_setup() {
   bl64_dbg_app_show_function "$@"
@@ -7,9 +7,11 @@ function sysden64_tmux_setup() {
   local plugins_path="${home}/.tmux/plugins"
   local model="${SYSDEN64_PATH_ETC}/tmux"
 
-  bl64_msg_show_phase 'prepare TMUX'
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   ! bl64_bsh_command_is_executable 'tmux' &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+  bl64_msg_show_phase 'prepare TMUX'
 
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
@@ -22,7 +24,7 @@ function sysden64_tmux_setup() {
 
   [[ -d "$plugins_path" ]] && return 0
   bl64_msg_show_task "deploy plugins (${plugins_path})"
-  bl64_fs_create_dir "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+  bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
     "${home}/.tmux" ||
     return $?
   for plugin in $SYSDEN64_GIT_TMUX_PLUGINS; do

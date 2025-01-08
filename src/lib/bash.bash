@@ -4,9 +4,11 @@ function sysden64_bash_setup() {
   local path_bash_profile="${home}/.bash_profile"
   local path_bash_rc="${home}/.bashrc"
 
-  bl64_msg_show_phase 'prepare Bash'
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
+  bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   ! bl64_bsh_command_is_executable 'bash' &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_msg_show_phase 'prepare Bash'
 
   bl64_msg_show_task "Setup user's bash profile (${home})"
   echo "$SYSDEN64_TXT_WATERMARK" >"$path_bash_profile" &&

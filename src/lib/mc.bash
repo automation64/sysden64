@@ -4,9 +4,11 @@ function sysden64_mc_setup() {
   local target="${home}/.config/mc"
   local model="${SYSDEN64_PATH_ETC}/mc"
 
-  bl64_msg_show_phase 'prepare MC'
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   ! bl64_bsh_command_is_executable 'mc' &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+  bl64_msg_show_phase 'prepare MC'
 
   bl64_msg_show_task "setup MC (${target})"
   # shellcheck disable=SC2086
