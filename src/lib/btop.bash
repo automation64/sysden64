@@ -4,6 +4,8 @@ function sysden64_btop_setup() {
   local target="${home}/.config/btop"
   local model="${SYSDEN64_PATH_ETC}/btop"
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   bl64_msg_show_phase 'prepare BTop'
   ! bl64_bsh_command_is_executable 'btop' &&
     bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0

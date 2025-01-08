@@ -4,6 +4,8 @@ function sysden64_nvim_setup() {
   local target="${home}/.config/nvim"
   local model="${SYSDEN64_PATH_ETC}/nvim"
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   bl64_msg_show_phase 'prepare NVIM'
   ! bl64_bsh_command_is_executable 'nvim' &&
     bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0

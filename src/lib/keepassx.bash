@@ -4,6 +4,8 @@ function sysden64_keepassx_setup() {
   local target="${home}/.config/keepassx"
   local model="${SYSDEN64_PATH_ETC}/keepassx"
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   bl64_msg_show_phase 'prepare KeePassX'
   bl64_msg_show_task "setup KeePassX (${target})"
   [[ -d "$target" ]] && bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" && return 0

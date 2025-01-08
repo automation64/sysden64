@@ -1,11 +1,13 @@
-  declare SYSDEN64_GIT_TMUX_PLUGINS=''
-  SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
+declare SYSDEN64_GIT_TMUX_PLUGINS=''
+SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
 function sysden64_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local plugins_path="${home}/.tmux/plugins"
   local model="${SYSDEN64_PATH_ETC}/tmux"
+
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
   bl64_msg_show_phase 'prepare TMUX'
   ! bl64_bsh_command_is_executable 'tmux' &&

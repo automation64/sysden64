@@ -3,6 +3,8 @@ function sysden64_env_setup() {
   local home="$1"
   local model="${SYSDEN64_PATH_ETC}/env"
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   bl64_msg_show_phase 'prepare shell-env'
   bl64_msg_show_task "Populate env store  (${SYSDEN64_PATH_SHELLENV})"
   # shellcheck disable=SC2086

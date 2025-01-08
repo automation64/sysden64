@@ -4,6 +4,8 @@ function sysden64_starship_setup() {
   local profile="${home}/.bash_profile"
   local config="${home}/.config"
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+
   bl64_msg_show_phase 'prepare Starship'
   bl64_msg_show_task "Enable Starship (${profile})"
   ! bl64_bsh_command_is_executable 'starship' &&

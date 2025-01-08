@@ -53,6 +53,8 @@ readonly SYSDEN64_PATH_SHELLENV='.env.d'
 readonly SYSDEN64_PATH_VERSION='.sysden64'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
+# SysDen64 / Profile switch marker
+declare SYSDEN64_PROFILE_SWITCH="$BL64_VAR_OFF"
 
 # SysDen64 / Common messages
 # shellcheck disable=SC2034
@@ -97,8 +99,6 @@ SYSDEN64_MODULE_LIST_TOOLS+='terraform '
 SYSDEN64_MODULE_LIST_TOOLS+='tmux '
 SYSDEN64_MODULE_LIST_TOOLS+='zellij '
 
-# DevBin64 / Target profile
-export DEV_PROFILE=''
 # DevBin64 / Installation path
 readonly SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
 # DevBin64 / Env Set script
@@ -119,6 +119,8 @@ SYSDEN64_MODULE_DEVBIN64+='github\n'
 SYSDEN64_MODULE_DEVBIN64+='gitleaks\n'
 SYSDEN64_MODULE_DEVBIN64+='shellcheck\n'
 SYSDEN64_MODULE_DEVBIN64+='sysden64\n'
+# DevBin64 / Target profile
+export DEV_PROFILE=''
 
 #
 # Functions
@@ -201,12 +203,11 @@ function deploy_home() {
   local home="$1"
   local repository="$2"
   local profile="$3"
-  local persistent="$4"
 
   xdg_setup "$home" ||
     return $?
 
-  if bl64_lib_flag_is_enabled "$persistent"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     devbin64_setup "$home" "$repository" "$profile" ||
       return $?
   fi
@@ -234,8 +235,9 @@ function deploy_profile() {
   local repository="$2"
   local profile="$3"
 
+  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
   deploy_sysden "$SYSDEN64_REPOSITORY" &&
-    deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" "$BL64_VAR_ON"
+    deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE"
 }
 
 function switch_profile() {
@@ -244,6 +246,8 @@ function switch_profile() {
   local repository="$2"
   local profile="$3"
 
+  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+  SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
   devbin64_setup "$home" "$repository" "$profile" &&
     module_setup "$home"
 }
@@ -346,7 +350,7 @@ bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
 'deploy_profile') deploy_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" "$SYSDEN64_USE_DEVBIN64" ;;
+'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE";;
 'deploy_sysden') deploy_sysden "$SYSDEN64_REPOSITORY" ;;
 'switch_profile') switch_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
