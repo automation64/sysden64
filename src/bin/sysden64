@@ -54,6 +54,7 @@ readonly SYSDEN64_PATH_VERSION='.sysden64'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
+# shellcheck disable=SC2034
 declare SYSDEN64_PROFILE_SWITCH="$BL64_VAR_OFF"
 
 # SysDen64 / Common messages
