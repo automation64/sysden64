@@ -7,7 +7,7 @@ function sysden64_ssh_setup() {
 
   bl64_msg_show_phase 'prepare OpenSSH'
   ! bl64_bsh_command_is_executable 'ssh' &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info  "$SYSDEN64_TXT_NOT_DETECTED" && return 0
 
   bl64_msg_show_task "setup OpenSSH (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
@@ -16,7 +16,8 @@ function sysden64_ssh_setup() {
       "$vault" &&
       bl64_fs_symlink_create \
         "$vault" \
-        "$target" ||
+        "$target" \
+        "$BL64_VAR_ON" ||
       return $?
     target="$vault"
   else

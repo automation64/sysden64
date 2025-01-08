@@ -21,7 +21,7 @@ function sysden64_omz_setup() {
 
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
   ! bl64_bsh_command_is_executable 'zsh' &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info  "$SYSDEN64_TXT_NOT_DETECTED" && return 0
 
   bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
   if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
