@@ -156,7 +156,7 @@ function sysden64_devbin64_setup() {
   local profile="$3"
 
   bl64_msg_show_phase 'prepare DevBin64'
-  bl64_msg_show_task "source DevBin64 environment (${repository})"
+  bl64_msg_show_task "source environment (${repository} - ${profile})"
   DEV_PROFILE="$profile"
   unset DEV_PATH_ROOT
   # shellcheck disable=SC1090
@@ -164,7 +164,7 @@ function sysden64_devbin64_setup() {
     source "$SYSDEN64_CMD_DEVBIN64_SET" ||
     return $?
 
-  bl64_msg_show_task "create/update DevBin64 DEV_PROFILE (${DEV_PROFILE})"
+  bl64_msg_show_task "create/update profile (${profile})"
   "./$SYSDEN64_CMD_DEVBIN64_PROFILE" ||
     return $?
 
