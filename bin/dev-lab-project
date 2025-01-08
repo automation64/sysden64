@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / Project / Open sandbox environment
 #
-# * Version: 1.0.1
+# * Version: 1.1.0
 # * Template: 1.0.1
 #
 #######################################
@@ -51,6 +51,7 @@ function dev_lab_open() {
   bl64_cnt_run_interactive \
     --entrypoint="$dev_lab_entrypoint" \
     --workdir="$DEV_ENV_PROJECT_CONTAINER_PATH_ROOT" \
+    --env='DEV_TEST_BASH_CONTAINER_ENVIRONMENT=ON' \
     --mount "type=bind,source=${DEV_PATH_SRC},target=${DEV_ENV_PROJECT_CONTAINER_PATH_SRC},readonly" \
     --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT},readonly" \
     "${DEV_ENV_PROJECT_REGISTRY}/${dev_lab_image}"
