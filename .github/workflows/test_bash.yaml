@@ -29,7 +29,7 @@ jobs:
         uses: "actions/checkout@main"
 
       - name: "Prepare environment"
-        run: "./bin/dev-lib-base"
+        run: "./bin/dev-lib-base && ./bin/dev-lib-project"
 
       - name: "Run tests"
         run: "./bin/dev-test-bash"
