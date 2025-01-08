@@ -5,9 +5,9 @@ function sysden64_ssh_setup() {
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/ssh"
 
-  bl64_msg_show_phase 'prepare OpenSSH'
   ! bl64_bsh_command_is_executable 'ssh' &&
-    bl64_dbg_app_show_info  "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+  bl64_msg_show_phase 'prepare OpenSSH'
 
   bl64_msg_show_task "setup OpenSSH (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then

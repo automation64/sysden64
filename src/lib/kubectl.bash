@@ -5,9 +5,9 @@ function sysden64_kubectl_setup() {
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/kubectl"
 
-  bl64_msg_show_phase 'prepare KubeCTL'
   ! bl64_bsh_command_is_executable 'kubectl' &&
-    bl64_dbg_app_show_info  "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
+  bl64_msg_show_phase 'prepare KubeCTL'
 
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
