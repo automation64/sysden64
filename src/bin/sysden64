@@ -172,8 +172,8 @@ function devbin64_setup() {
   "./$SYSDEN64_CMD_DEVBIN64_PROFILE" ||
     return $?
 
-  # shellcheck disable=SC2154
   bl64_msg_show_task "create/update home links to profile (${profile})"
+  # shellcheck disable=SC2154
   bl64_fs_symlink_create \
     "${DEV_PATH_DOCS}" "${home}/${SYSDEN64_PREFIX}docs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
