@@ -5,14 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0]
+
+### Added
+
+- SysDen64
+  - Deploy profiles
+
 ## [1.5.1]
-
-### Fixed
-
-- Bash
-  - Added missing env snippet
-
-## [1.5.0]
 
 ### Added
 
@@ -42,6 +42,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Use BL64 to generate profiles
 - env
   - added nodejs npm path
+
+### Fixed
+
+- Bash
+  - Added missing env snippet
 
 ## [1.4.0]
 
