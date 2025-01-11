@@ -51,6 +51,8 @@ readonly SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
 # SysDen64 / Version placeholder
 readonly SYSDEN64_PATH_VERSION='.sysden64'
+# SysDen64 / External repositories
+readonly SYSDEN64_PATH_REPOS='repos'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
@@ -179,7 +181,9 @@ function devbin64_setup() {
     "${DEV_PATH_DOCS}" "${home}/${SYSDEN64_PREFIX}docs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_SRC}" "${home}/${SYSDEN64_PREFIX}src" "$BL64_VAR_ON" &&
-      bl64_fs_symlink_create \
+    bl64_fs_symlink_create \
+      "${DEV_PATH_ROOT}/${SYSDEN64_PATH_REPOS}" "${home}/${SYSDEN64_PREFIX}repos" "$BL64_VAR_ON"
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAULT}" "${home}/${SYSDEN64_PREFIX}vault" "$BL64_VAR_ON" &&
@@ -223,7 +227,9 @@ function deploy_sysden() {
   # shellcheck disable=SC2059
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$repository" &&
+    "$repository" \
+    "${repository}/${SYSDEN64_PATH_REPOS}" &&
+    bl64_fs_file_create "${repository}/${SYSDEN64_PATH_REPOS}/.gitkeep" &&
     cd "$repository" &&
     printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
     "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
@@ -351,7 +357,7 @@ bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
 'deploy_profile') deploy_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE";;
+'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'deploy_sysden') deploy_sysden "$SYSDEN64_REPOSITORY" ;;
 'switch_profile') switch_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
