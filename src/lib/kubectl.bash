@@ -1,7 +1,9 @@
+# Version: 1.0.0
 function sysden64_kubectl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.kube"
+  local config='.kube'
+  local target="${home}/${config}"
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/kubectl"
 
@@ -17,6 +19,7 @@ function sysden64_kubectl_setup() {
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
     "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env
 
+  config_backup "$target" || return $?
   bl64_msg_show_task "setup KubeCTL (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/kubectl"
@@ -42,5 +45,5 @@ function sysden64_kubectl_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.kube/config"
+    "${model}/${config}/config"
 }

@@ -1,7 +1,9 @@
+# Version: 1.0.0
 function sysden64_docker_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.docker"
+  local config='.docker'
+  local target="${home}/${config}"
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/docker"
 
@@ -18,6 +20,7 @@ function sysden64_docker_setup() {
     "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
     return $?
 
+  config_backup "$target" || return $?
   bl64_msg_show_task "setup Docker CLI (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/docker"
@@ -34,6 +37,7 @@ function sysden64_docker_setup() {
       "$target" ||
       return $?
   fi
+
   [[ -f "${target}/config.json" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
@@ -43,5 +47,5 @@ function sysden64_docker_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.docker/config.json"
+    "${model}/${config}/config.json"
 }

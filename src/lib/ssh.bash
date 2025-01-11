@@ -1,7 +1,9 @@
+# Version: 1.0.0
 function sysden64_ssh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.ssh"
+  local config='.ssh'
+  local target="${home}/${config}"
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/ssh"
 
@@ -9,6 +11,7 @@ function sysden64_ssh_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare OpenSSH'
 
+  config_backup "$target" || return $?
   bl64_msg_show_task "setup OpenSSH (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/ssh"
@@ -25,6 +28,7 @@ function sysden64_ssh_setup() {
       "$target" ||
       return $?
   fi
+
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
@@ -34,5 +38,5 @@ function sysden64_ssh_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.ssh/config"
+    "${model}/${config}/config"
 }
