@@ -50,9 +50,11 @@ readonly SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
 # SysDen64 / Version placeholder
-readonly SYSDEN64_PATH_VERSION='.sysden64'
+readonly SYSDEN64_FILE_VERSION='.sysden64'
 # SysDen64 / External repositories
 readonly SYSDEN64_PATH_REPOS='repos'
+# SysDen64 / Home config Backup
+declare SYSDEN64_PATH_BACKUP='home-bkp'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
@@ -132,7 +134,7 @@ export DEV_PROFILE=''
 function version_register() {
   bl64_dbg_app_show_function "$@"
   local destination="$1"
-  local registry="${destination}/${SYSDEN64_PATH_VERSION}"
+  local registry="${destination}/${SYSDEN64_FILE_VERSION}"
   bl64_msg_show_task "register sysden64 version (${registry})"
   echo "$SYSDEN64_VERSION" >"$registry"
 }
@@ -141,6 +143,17 @@ function module_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
+
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    SYSDEN64_PATH_BACKUP="${DEV_PATH_TMP}/${SYSDEN64_PATH_BACKUP}"
+  else
+    SYSDEN64_PATH_BACKUP="${home}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
+  fi
+  bl64_msg_show_task "create previous home configuration backup repository (${SYSDEN64_PATH_BACKUP})"
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$SYSDEN64_PATH_BACKUP" ||
+    return $?
 
   for module in $SYSDEN64_MODULE_LIST_BASE; do
     # shellcheck disable=SC1090
@@ -333,7 +346,7 @@ declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '5.0.0'
+bl64_lib_script_version_set '5.1.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-w> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the DevOps/SRE/CloudAdmin/SysAdmin nomad'
 # shellcheck disable=SC2016

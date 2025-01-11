@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SysDen64
   - Dedicated directory for external git repos (repos/)
   - Git ignore profile homes
+  - Backup previous home cfg
 
 ## [1.6.0]
 
