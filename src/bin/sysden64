@@ -19,7 +19,7 @@
 # Imports
 #
 
-readonly SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
+declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
 # shellcheck source-path=SCRIPTDIR/../../lib/bl64
 source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
@@ -39,9 +39,9 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.6.0'
+readonly SYSDEN64_VERSION='1.7.0'
 # SysDen64 / Installation path
-readonly SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
+declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
 # SysDen64 / Application configuration setup modules
 readonly SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
 # SysDen64 / Application configuration boilerplates
@@ -50,7 +50,11 @@ readonly SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
 # SysDen64 / Version placeholder
-readonly SYSDEN64_PATH_VERSION='.sysden64'
+declare SYSDEN64_PATH_VERSION='.sysden64'
+# SysDen64 / External repositories
+readonly SYSDEN64_PATH_REPOS='repos'
+# SysDen64 / Home config Backup
+declare SYSDEN64_PATH_BACKUP='home-bkp'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
@@ -101,7 +105,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='tmux '
 SYSDEN64_MODULE_LIST_TOOLS+='zellij '
 
 # DevBin64 / Installation path
-readonly SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
+declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
 # DevBin64 / Env Set script
 readonly SYSDEN64_CMD_DEVBIN64_SET='./bin/dev-set'
 # DevBin64 / Profile set script
@@ -127,16 +131,43 @@ export DEV_PROFILE=''
 # Functions
 #
 
+function config_backup() {
+  bl64_dbg_app_show_function "$@"
+  local source=''
+
+  if [[ -f "$SYSDEN64_PATH_VERSION" ]]; then
+    bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
+    return 0
+  fi
+
+  for source in "$@"; do
+    if [[ -f "$source" || -d "$source" ]]; then
+      bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
+      bl64_fs_run_mv \
+        "$BL64_FS_SET_MV_FORCE" \
+        "$source" \
+        "$SYSDEN64_PATH_BACKUP" ||
+        return $?
+    fi
+  done
+}
+
 function version_register() {
   bl64_dbg_app_show_function "$@"
-  local home="$1"
-  echo "$SYSDEN64_VERSION" >"${home}/${SYSDEN64_PATH_VERSION}"
+  bl64_msg_show_task "register sysden64 version (${SYSDEN64_PATH_VERSION})"
+  echo "$SYSDEN64_VERSION" >"$SYSDEN64_PATH_VERSION"
 }
 
 function module_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
+
+  bl64_msg_show_task "create previous home configuration backup repository (${SYSDEN64_PATH_BACKUP})"
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$SYSDEN64_PATH_BACKUP" ||
+    return $?
 
   for module in $SYSDEN64_MODULE_LIST_BASE; do
     # shellcheck disable=SC1090
@@ -179,7 +210,9 @@ function devbin64_setup() {
     "${DEV_PATH_DOCS}" "${home}/${SYSDEN64_PREFIX}docs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_SRC}" "${home}/${SYSDEN64_PREFIX}src" "$BL64_VAR_ON" &&
-      bl64_fs_symlink_create \
+    bl64_fs_symlink_create \
+      "${DEV_PATH_ROOT}/${SYSDEN64_PATH_REPOS}" "${home}/${SYSDEN64_PREFIX}repos" "$BL64_VAR_ON" &&
+    bl64_fs_symlink_create \
       "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAULT}" "${home}/${SYSDEN64_PREFIX}vault" "$BL64_VAR_ON" &&
@@ -197,6 +230,39 @@ function xdg_setup() {
   bl64_msg_show_phase 'prepare XDG'
   bl64_iam_xdg_create \
     "$home"
+}
+
+function deploy_sysden_repository() {
+  bl64_dbg_app_show_function "$@"
+  local repository="$1"
+
+  # shellcheck disable=SC2059
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$repository" \
+    "${repository}/${SYSDEN64_PATH_REPOS}" &&
+    bl64_fs_file_create "${repository}/${SYSDEN64_PATH_REPOS}/.gitkeep" &&
+    cd "$repository" &&
+    printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
+    "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
+    deploy_sysden_ignore "$repository" &&
+    "$SYSDEN64_CMD_DEVBIN64_SYSDEN64"
+}
+
+function deploy_sysden_ignore() {
+  bl64_dbg_app_show_function "$@"
+  local repository="$1"
+  local path_gitignore="${repository}/.gitignore"
+
+  bl64_txt_search_line \
+    "$path_gitignore" \
+    '/var/prof/*/home' &&
+    return 0
+
+  bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
+  bl64_txt_run_sed -i \
+    '/# Keep placeholder for empty directories/i\/var/prof/*/home\n' \
+    "$path_gitignore"
 }
 
 function deploy_home() {
@@ -219,15 +285,8 @@ function deploy_home() {
 function deploy_sysden() {
   bl64_dbg_app_show_function "$@"
   local repository="$1"
-
-  # shellcheck disable=SC2059
-  bl64_fs_dir_create \
-    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$repository" &&
-    cd "$repository" &&
-    printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
-    "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
-    "$SYSDEN64_CMD_DEVBIN64_SYSDEN64"
+  deploy_sysden_repository "$repository" &&
+    version_register "$repository"
 }
 
 function deploy_profile() {
@@ -236,9 +295,9 @@ function deploy_profile() {
   local repository="$2"
   local profile="$3"
 
-  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
-  deploy_sysden "$SYSDEN64_REPOSITORY" &&
-    deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE"
+  deploy_sysden_repository "$SYSDEN64_REPOSITORY" &&
+    deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" &&
+    version_register "$repository"
 }
 
 function switch_profile() {
@@ -247,8 +306,6 @@ function switch_profile() {
   local repository="$2"
   local profile="$3"
 
-  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
-  SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
   devbin64_setup "$home" "$repository" "$profile" &&
     module_setup "$home"
 }
@@ -278,18 +335,37 @@ function initialize() {
         return $?
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'switch_profile' ]]; then
+    SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    # shellcheck disable=SC2034
+    SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_PROFILE}" ||
       return $?
-  elif [[ "$SYSDEN64_COMMAND" =~ (deploy_sysden|deploy_profile) ]]; then
+  elif [[ "$SYSDEN64_COMMAND" == 'deploy_sysden' ]]; then
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "target directory must not exist (${SYSDEN64_REPOSITORY})"
+      bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
       # shellcheck disable=SC2086
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
+  elif [[ "$SYSDEN64_COMMAND" == 'deploy_profile' ]]; then
+    SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
+      return $?
+    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+      bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
+      # shellcheck disable=SC2086
+      return $BL64_LIB_ERROR_TASK_FAILED
+    fi
+  fi
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
+    SYSDEN64_PATH_BACKUP="${SYSDEN64_REPOSITORY}/tmp/${SYSDEN64_PATH_BACKUP}"
+  else
+    SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
+    SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
   fi
   bl64_check_directory "$SYSDEN64_PATH_ETC" &&
     bl64_check_directory "$SYSDEN64_PATH_LIB"
@@ -307,7 +383,7 @@ declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '5.0.0'
+bl64_lib_script_version_set '5.1.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-w> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the DevOps/SRE/CloudAdmin/SysAdmin nomad'
 # shellcheck disable=SC2016
@@ -351,7 +427,7 @@ bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
 'deploy_profile') deploy_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE";;
+'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'deploy_sysden') deploy_sysden "$SYSDEN64_REPOSITORY" ;;
 'switch_profile') switch_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;

@@ -1,7 +1,9 @@
+# Version: 1.0.0
 function sysden64_awscli_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.aws"
+  local config='.aws'
+  local target="${home}/${config}"
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/aws"
 
@@ -18,6 +20,7 @@ function sysden64_awscli_setup() {
     "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
     return $?
 
+  config_backup "$target" || return $?
   bl64_msg_show_task "setup AWS CLI (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/aws"
@@ -34,6 +37,7 @@ function sysden64_awscli_setup() {
       "$target" ||
       return $?
   fi
+
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
@@ -43,5 +47,5 @@ function sysden64_awscli_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.aws/config"
+    "${model}/${config}/config"
 }

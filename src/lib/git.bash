@@ -1,8 +1,10 @@
+# Version: 1.0.0
 function sysden64_git_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local model="${SYSDEN64_PATH_ETC}/git"
   local target="${home}"
+  local config='.gitconfig'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
@@ -19,7 +21,7 @@ function sysden64_git_setup() {
     "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
     return $?
 
-  [[ -f "${target}/.gitconfig" ]] &&
+  [[ -f "${target}/${config}" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
 
@@ -29,5 +31,5 @@ function sysden64_git_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${model}/.gitconfig"
+    "${model}/${config}"
 }
