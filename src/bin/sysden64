@@ -211,9 +211,9 @@ function devbin64_setup() {
     bl64_fs_symlink_create \
       "${DEV_PATH_SRC}" "${home}/${SYSDEN64_PREFIX}src" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
-      "${DEV_PATH_ROOT}/${SYSDEN64_PATH_REPOS}" "${home}/${SYSDEN64_PREFIX}repos" "$BL64_VAR_ON"
-  bl64_fs_symlink_create \
-    "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
+      "${DEV_PATH_ROOT}/${SYSDEN64_PATH_REPOS}" "${home}/${SYSDEN64_PREFIX}repos" "$BL64_VAR_ON" &&
+    bl64_fs_symlink_create \
+      "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAULT}" "${home}/${SYSDEN64_PREFIX}vault" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
