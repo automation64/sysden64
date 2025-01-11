@@ -135,6 +135,10 @@ function config_backup() {
   bl64_dbg_app_show_function "$@"
   local source="$1"
 
+  if [[ -f "$SYSDEN64_PATH_VERSION" ]]; then
+    bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
+    return 0
+  fi
   if [[ -e "$source" ]]; then
     bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
     bl64_fs_run_mv \
@@ -255,9 +259,9 @@ function deploy_sysden() {
     cd "$repository" &&
     printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
     "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
-    "$SYSDEN64_CMD_DEVBIN64_SYSDEN64" &&
     deploy_sysden_ignore "$repository" &&
-    version_register "$repository"
+    version_register "$repository" &&
+    "$SYSDEN64_CMD_DEVBIN64_SYSDEN64"
 }
 
 function deploy_sysden_ignore() {
@@ -336,7 +340,7 @@ function initialize() {
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'deploy_profile' ]]; then
-  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
