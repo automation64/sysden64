@@ -50,7 +50,7 @@ readonly SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
 # SysDen64 / Version placeholder
-readonly SYSDEN64_FILE_VERSION='.sysden64'
+declare SYSDEN64_PATH_VERSION='.sysden64'
 # SysDen64 / External repositories
 readonly SYSDEN64_PATH_REPOS='repos'
 # SysDen64 / Home config Backup
@@ -131,12 +131,24 @@ export DEV_PROFILE=''
 # Functions
 #
 
+function config_backup() {
+  bl64_dbg_app_show_function "$@"
+  local source="$1"
+
+  if [[ -e "$source" ]]; then
+    bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
+    bl64_fs_run_mv \
+      "$BL64_FS_SET_MV_FORCE" \
+      "${source}" \
+      "${SYSDEN64_PATH_BACKUP}" ||
+      return $?
+  fi
+}
+
 function version_register() {
   bl64_dbg_app_show_function "$@"
-  local destination="$1"
-  local registry="${destination}/${SYSDEN64_FILE_VERSION}"
-  bl64_msg_show_task "register sysden64 version (${registry})"
-  echo "$SYSDEN64_VERSION" >"$registry"
+  bl64_msg_show_task "register sysden64 version (${SYSDEN64_PATH_VERSION})"
+  echo "$SYSDEN64_VERSION" >"$SYSDEN64_PATH_VERSION"
 }
 
 function module_setup() {
@@ -144,11 +156,6 @@ function module_setup() {
   local home="$1"
   local module=''
 
-  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
-    SYSDEN64_PATH_BACKUP="${DEV_PATH_TMP}/${SYSDEN64_PATH_BACKUP}"
-  else
-    SYSDEN64_PATH_BACKUP="${home}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
-  fi
   bl64_msg_show_task "create previous home configuration backup repository (${SYSDEN64_PATH_BACKUP})"
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -275,7 +282,6 @@ function deploy_profile() {
   local repository="$2"
   local profile="$3"
 
-  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
   deploy_sysden "$SYSDEN64_REPOSITORY" &&
     deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE"
 }
@@ -286,8 +292,6 @@ function switch_profile() {
   local repository="$2"
   local profile="$3"
 
-  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
-  SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
   devbin64_setup "$home" "$repository" "$profile" &&
     module_setup "$home"
 }
@@ -317,18 +321,36 @@ function initialize() {
         return $?
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'switch_profile' ]]; then
+    SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_PROFILE}" ||
       return $?
-  elif [[ "$SYSDEN64_COMMAND" =~ (deploy_sysden|deploy_profile) ]]; then
+  elif [[ "$SYSDEN64_COMMAND" == 'deploy_sysden' ]]; then
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "target directory must not exist (${SYSDEN64_REPOSITORY})"
+      bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
       # shellcheck disable=SC2086
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
+  elif [[ "$SYSDEN64_COMMAND" == 'deploy_profile' ]]; then
+  SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
+      return $?
+    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+      bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
+      # shellcheck disable=SC2086
+      return $BL64_LIB_ERROR_TASK_FAILED
+    fi
+  fi
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
+    SYSDEN64_PATH_BACKUP="${SYSDEN64_REPOSITORY}/tmp/${SYSDEN64_PATH_BACKUP}"
+  else
+    SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
+    SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
   fi
   bl64_check_directory "$SYSDEN64_PATH_ETC" &&
     bl64_check_directory "$SYSDEN64_PATH_LIB"
