@@ -132,8 +132,9 @@ export DEV_PROFILE=''
 function version_register() {
   bl64_dbg_app_show_function "$@"
   local destination="$1"
-  bl64_msg_show_task "register sysden64 version (${SYSDEN64_PATH_VERSION})"
-  echo "$SYSDEN64_VERSION" >"${destination}/${SYSDEN64_PATH_VERSION}"
+  local registry="${destination}/${SYSDEN64_PATH_VERSION}"
+  bl64_msg_show_task "register sysden64 version (${registry})"
+  echo "$SYSDEN64_VERSION" >"$registry"
 }
 
 function module_setup() {
@@ -184,8 +185,8 @@ function devbin64_setup() {
       "${DEV_PATH_SRC}" "${home}/${SYSDEN64_PREFIX}src" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_ROOT}/${SYSDEN64_PATH_REPOS}" "${home}/${SYSDEN64_PREFIX}repos" "$BL64_VAR_ON"
-    bl64_fs_symlink_create \
-      "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
+  bl64_fs_symlink_create \
+    "${DEV_PATH_PROF_LOGS}" "${home}/${SYSDEN64_PREFIX}logs" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
       "${DEV_PATH_PROF_VAULT}" "${home}/${SYSDEN64_PREFIX}vault" "$BL64_VAR_ON" &&
     bl64_fs_symlink_create \
@@ -235,7 +236,24 @@ function deploy_sysden() {
     printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
     "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
     "$SYSDEN64_CMD_DEVBIN64_SYSDEN64" &&
-    version_register
+    deploy_sysden_ignore "$repository" &&
+    version_register "$repository"
+}
+
+function deploy_sysden_ignore() {
+  bl64_dbg_app_show_function "$@"
+  local repository="$1"
+  local path_gitignore="${repository}/.gitignore"
+
+  bl64_txt_search_line \
+    "$path_gitignore" \
+    '/var/prof/*/home' &&
+    return 0
+
+  bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
+  bl64_txt_run_sed -i \
+    '/# Keep placeholder for empty directories/i\/var/prof/*/home\n' \
+    "$path_gitignore"
 }
 
 function deploy_profile() {
