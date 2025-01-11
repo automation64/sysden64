@@ -47,8 +47,7 @@ function dev_prep_normalize() {
     "$DEV_PATH_SRC" \
     "$DEV_PATH_TEST" \
     "$DEV_PATH_ETC" \
-    "$DEV_BASE_ENV" \
-    "$DEV_BASE_POST"
+    "$DEV_BASE_ENV"
 }
 
 function dev_prep_initialize() {
