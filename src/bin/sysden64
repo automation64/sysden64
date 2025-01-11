@@ -19,7 +19,7 @@
 # Imports
 #
 
-readonly SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
+declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
 # shellcheck source-path=SCRIPTDIR/../../lib/bl64
 source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
@@ -39,9 +39,9 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.6.0'
+readonly SYSDEN64_VERSION='1.7.0'
 # SysDen64 / Installation path
-readonly SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
+declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
 # SysDen64 / Application configuration setup modules
 readonly SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
 # SysDen64 / Application configuration boilerplates
@@ -101,7 +101,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='tmux '
 SYSDEN64_MODULE_LIST_TOOLS+='zellij '
 
 # DevBin64 / Installation path
-readonly SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
+declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
 # DevBin64 / Env Set script
 readonly SYSDEN64_CMD_DEVBIN64_SET='./bin/dev-set'
 # DevBin64 / Profile set script
