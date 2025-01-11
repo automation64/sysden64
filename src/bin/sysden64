@@ -336,6 +336,7 @@ function initialize() {
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'switch_profile' ]]; then
     SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
+    # shellcheck disable=SC2034
     SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}" &&
