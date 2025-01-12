@@ -39,7 +39,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.7.0'
+readonly SYSDEN64_VERSION='1.7.1'
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
 # SysDen64 / Application configuration setup modules
@@ -86,7 +86,6 @@ SYSDEN64_MODULE_LIST_TOOLS+='btop '
 SYSDEN64_MODULE_LIST_TOOLS+='delta '
 SYSDEN64_MODULE_LIST_TOOLS+='docker '
 SYSDEN64_MODULE_LIST_TOOLS+='duf '
-SYSDEN64_MODULE_LIST_TOOLS+='eza '
 SYSDEN64_MODULE_LIST_TOOLS+='fd '
 SYSDEN64_MODULE_LIST_TOOLS+='gcloud '
 SYSDEN64_MODULE_LIST_TOOLS+='git '
@@ -103,6 +102,9 @@ SYSDEN64_MODULE_LIST_TOOLS+='ssh '
 SYSDEN64_MODULE_LIST_TOOLS+='terraform '
 SYSDEN64_MODULE_LIST_TOOLS+='tmux '
 SYSDEN64_MODULE_LIST_TOOLS+='zellij '
+
+# Optional
+# OFF # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
 # DevBin64 / Installation path
 declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-/opt/devbin64}"
