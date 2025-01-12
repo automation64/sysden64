@@ -11,6 +11,7 @@ function sysden64_awscli_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare AWS CLI'
 
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
@@ -41,6 +42,8 @@ function sysden64_awscli_setup() {
   [[ -f "${target}/config" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
+
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

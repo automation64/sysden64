@@ -1,7 +1,9 @@
+# Version: 1.0.0
 function sysden64_gcloud_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.config/gcloud"
+  local config='gcloud'
+  local target="${home}/.config/${config}"
   local vault=''
   local model="${SYSDEN64_PATH_ETC}/gcloud"
 
@@ -9,6 +11,7 @@ function sysden64_gcloud_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare GCloud CLI'
 
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
@@ -39,11 +42,12 @@ function sysden64_gcloud_setup() {
   [[ -f "${target}/configurations/config_default" ]] &&
     bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
     return 0
-  bl64_fs_path_copy \
+  bl64_msg_show_task "promote configuration from model (${model}/.config/${config})"
+ww  bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${target}/configurations" \
-    "${model}/.config/gcloud/configurations/config_default"
+    "${model}/.config/${config}/configurations/config_default"
 }

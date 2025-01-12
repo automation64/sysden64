@@ -1,9 +1,11 @@
+# Version: 1.0.0
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
 function sysden64_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local config='.tmux.conf'
   local plugins_path="${home}/.tmux/plugins"
   local model="${SYSDEN64_PATH_ETC}/tmux"
 
@@ -13,13 +15,15 @@ function sysden64_tmux_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare TMUX'
 
+  config_backup "${home}/${config}" || return $?
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${model}/.tmux.conf" ||
+    "${model}/${config}" ||
     return $?
 
   [[ -d "$plugins_path" ]] && return 0
