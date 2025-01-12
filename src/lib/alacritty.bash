@@ -12,6 +12,7 @@ function sysden64_alacritty_setup() {
   bl64_msg_show_phase 'prepare Alacritty'
 
   config_backup "${home}/${config}" || return $?
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

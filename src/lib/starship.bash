@@ -1,8 +1,9 @@
 function sysden64_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local model="${SYSDEN64_PATH_ETC}/starship"
   local profile="${home}/.bash_profile"
-  local config="${home}/.config"
+  local config='starship.toml'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
@@ -17,12 +18,12 @@ function sysden64_starship_setup() {
       >>"$profile"
   fi
 
-  bl64_msg_show_task "Setup Starship (${config})"
+  bl64_msg_show_task "promote configuration from model (${model}/.config/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "${config}" \
-    "${SYSDEN64_PATH_ETC}/starship/.config/starship.toml"
+    "${home}/.config" \
+    "${model}/.config/${config}"
 }

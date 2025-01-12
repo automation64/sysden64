@@ -12,6 +12,7 @@ function sysden64_ansible_setup() {
   bl64_msg_show_phase 'prepare Ansible'
 
   config_backup "${home}/${config}"
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

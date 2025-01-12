@@ -1,3 +1,4 @@
+# Version: 1.0.0
 declare SYSDEN64_GIT_OMZ='https://github.com/ohmyzsh/ohmyzsh.git'
 declare SYSDEN64_GIT_OMZ_PLUGINS=''
 SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'
@@ -23,12 +24,7 @@ function sysden64_omz_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
 
-  bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
-  if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
-    "$BL64_OS_CMD_CAT" \
-      "${model}/oh-my-zsh.snippet" >>"$profile"
-  fi
-
+  config_backup "$omz_path" || return $?
   [[ -d "$omz_path" ]] && return 0
   bl64_msg_show_task "download Oh-My-ZSH (${omz_path})"
   bl64_vcs_git_clone \
@@ -37,6 +33,13 @@ function sysden64_omz_setup() {
     'master' \
     "$local_repo" ||
     return $?
+
+  bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
+  if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
+    "$BL64_OS_CMD_CAT" \
+      "${model}/oh-my-zsh.snippet" >>"$profile" ||
+      return $?
+  fi
 
   sysden64_omz_setup_plugins "$home" "$local_repo"
 }

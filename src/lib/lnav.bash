@@ -1,8 +1,10 @@
+# Version: 1.0.0
 function sysden64_lnav_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local target="${home}/.config/lnav"
-  local model="${SYSDEN64_PATH_ETC}/lnav"
+  local config='lnav'
+  local target="${home}/.config/${config}"
+  local model="${SYSDEN64_PATH_ETC}/${config}"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
@@ -10,7 +12,8 @@ function sysden64_lnav_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare LNAV'
 
-  bl64_msg_show_task "setup LNAV (${target})"
+  config_backup "${home}/.config/${config}"
+  bl64_msg_show_task "promote configuration from model (${model}/.config/${config})"
   [[ -d "$target" ]] && bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" && return 0
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
@@ -18,5 +21,5 @@ function sysden64_lnav_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/.config" \
-    "${model}/.config/lnav"
+    "${model}/.config/${config}"
 }
