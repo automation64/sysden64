@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 1.0.1
 function sysden64_lnav_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -14,7 +14,6 @@ function sysden64_lnav_setup() {
 
   config_backup "${home}/.config/${config}"
   bl64_msg_show_task "promote configuration from model (${model}/.config/${config})"
-  [[ -d "$target" ]] && bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" && return 0
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
