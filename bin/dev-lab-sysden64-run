@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lab / SysDen64 / Open sandbox environment
 #
-# * Version: 4.0.1
+# * Version: 4.0.2
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -49,7 +49,7 @@ function dev_lab_open() {
 
   bl64_msg_show_task "open sanbox environment ($DEV_PROFILE: ${image})"
   if [[ -n "$DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE" ]]; then
-    bl64_fs_create_dir \
+    bl64_fs_dir_create \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$DEV_LAB_SYSDEN64_PATH_DEN" &&
       bl64_cnt_run_interactive \
