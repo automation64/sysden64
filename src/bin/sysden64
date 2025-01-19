@@ -448,7 +448,7 @@ case "$SYSDEN64_COMMAND" in
 'deploy_home') deploy_home "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'deploy_sysden') deploy_sysden "$SYSDEN64_REPOSITORY" ;;
 'switch_profile') switch_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'upgrade_module') deploy_sysden "$SYSDEN64_HOME" ;;
+'upgrade_module') upgrade_module "$SYSDEN64_HOME" ;;
 *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
 esac
 bl64_msg_show_batch_finish $? "$SYSDEN64_COMMAND"
