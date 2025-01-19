@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 1.1.0
 function sysden64_git_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -21,6 +21,8 @@ function sysden64_git_setup() {
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
     "${model}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
     return $?
+
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE" && return 0
 
   config_backup "${home}/${config}"
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
