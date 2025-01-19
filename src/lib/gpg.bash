@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 1.1.0
 function sysden64_gpg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -9,6 +9,8 @@ function sysden64_gpg_setup() {
   ! bl64_bsh_command_is_executable 'gpg' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare GNUPG'
+
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE" && return 0
 
   config_backup "$target" || return $?
   bl64_msg_show_task "setup GNUPG (${target})"
