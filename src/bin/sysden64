@@ -39,7 +39,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.7.1'
+readonly SYSDEN64_VERSION='1.8.0'
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
 # SysDen64 / Application configuration setup modules
@@ -95,6 +95,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='hwatch '
 SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
 SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
 SYSDEN64_MODULE_LIST_TOOLS+='lnav '
+SYSDEN64_MODULE_LIST_TOOLS+='lsd '
 SYSDEN64_MODULE_LIST_TOOLS+='mc '
 SYSDEN64_MODULE_LIST_TOOLS+='nvim '
 SYSDEN64_MODULE_LIST_TOOLS+='ripgrep '
@@ -385,7 +386,7 @@ declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '5.1.0'
+bl64_lib_script_version_set '5.2.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-w> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the DevOps/SRE/CloudAdmin/SysAdmin nomad'
 # shellcheck disable=SC2016
