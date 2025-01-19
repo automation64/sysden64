@@ -5,7 +5,7 @@
 # * Loads DevBin64 environment variables
 # * To be used by DevBin64 scripts
 # * Warning: Bash is the only supported shell. Other shells may work as long as they are compatible with Bash syntax
-# * Version: 8.3.0
+# * Version: 8.3.1
 #
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
@@ -180,9 +180,6 @@ function dev_set_initialize() {
 #
 # Main
 #
-
-# If asked, override current profile
-export DEV_PROFILE="${1:-$DEV_PROFILE}"
 
 # shellcheck disable=SC2015
 dev_set_initialize &&
