@@ -19,7 +19,11 @@
 # Imports
 #
 
-declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-/opt/bl64}"
+# Automation64 / Root path
+declare SYSDEN64_PATH_AT64="${HOME}/at64"
+[[ ! -d "$SYSDEN64_PATH_AT64" ]] && SYSDEN64_PATH_AT64='/opt'
+
+declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-${SYSDEN64_PATH_AT64}/bl64}"
 # shellcheck source-path=SCRIPTDIR/../../lib/bl64
 source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
@@ -39,9 +43,9 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.9.0'
+readonly SYSDEN64_VERSION='1.9.2'
 # SysDen64 / Installation path
-declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-/opt/sysden64}"
+declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64}"
 # SysDen64 / Application configuration setup modules
 readonly SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
 # SysDen64 / Application configuration boilerplates
