@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# * Version: 1.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -18,37 +19,15 @@
 
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
-# shellcheck source-path=bin
-source ./bin/dev-env-gitleaks || exit 1
-# shellcheck source-path=lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
-
-#
-# Functions
-#
-
-function dev_lib_download() {
-  bl64_dbg_app_show_function
-  INST64_GITLEAKS_TARGET="$DEV_LIB_GITLEAKS_TARGET" \
-    INST64_GITLEAKS_VERSION="$DEV_LIB_GITLEAKS_VERSION" \
-    INST64_SYSTEM_WIDE='NO' \
-    "${DEV_LIB_GITLEAKS_INSTALLER}"
-}
-
-function dev_lib_initialize() {
-  bl64_dbg_app_show_function
-  bl64_check_file "$DEV_LIB_GITLEAKS_INSTALLER"
-}
+# shellcheck source=bin/dev-env-bash
+source ./bin/dev-env-bash || exit 1
 
 #
 # Main
 #
 
-[[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_all_enable_verbose
+[[ -n "$DEV_CICD_DEBUG" ]] && set -x
 
-bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-dev_lib_initialize &&
-  dev_lib_download
-bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
+echo 'dev-lib-bash: Task: install Bash Latest'
+[[ "$(uname -s)" != 'Darwin' ]] && exit 0
+brew install bash

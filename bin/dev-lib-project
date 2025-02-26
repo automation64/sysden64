@@ -4,7 +4,7 @@
 #
 # * Use to download dev time tools
 # * Tools are installed locally, repository wide
-# * Version: X_VERSION_PLACEHOLDER_X
+# * Version: 1.0.1
 # * Template: 3.0.0
 #
 #######################################
@@ -44,7 +44,7 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
 
 function dev_lib_download() {
   bl64_dbg_app_show_function
-  export INST64_DEVBIN64_SYSTEM_WIDE='OFF'
+  export INST64_SYSTEM_WIDE='OFF'
   export INST64_DEVBIN64_TARGET="$SYSDEN64_PATH_DEVBIN64"
   "${DEV_LIB_INSTALLER64_TARGET}/install-devbin64"
 }

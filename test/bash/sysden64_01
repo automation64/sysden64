@@ -6,4 +6,4 @@ if [[ "$DEV_TEST_BASH_CONTAINER_ENVIRONMENT" != 'ON' ]]; then
 fi
 
 source ./test/lib/test.env &&
-./src/bin/sysden64 -h
+./src/bin/sysden64 -h > /dev/null
