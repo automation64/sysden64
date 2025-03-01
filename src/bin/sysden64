@@ -115,13 +115,13 @@ SYSDEN64_MODULE_LIST_TOOLS+='zellij '
 # DevBin64 / Installation path
 declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-${SYSDEN64_PATH_ROOT}/devbin64}"
 # DevBin64 / Env Set script
-readonly SYSDEN64_CMD_DEVBIN64_SET='./bin/dev-set'
+declare SYSDEN64_CMD_DEVBIN64_SET=''
 # DevBin64 / Profile set script
-readonly SYSDEN64_CMD_DEVBIN64_PROFILE='./bin/dev-profile-create'
+declare SYSDEN64_CMD_DEVBIN64_PROFILE=''
 # DevBin64 / Bootstrap path
 readonly SYSDEN64_CMD_DEVBIN64_BOOTSTRAP="${SYSDEN64_PATH_DEVBIN64}/bin/dev-bootstrap"
 # DevBin64 / Dev SysDen64
-readonly SYSDEN64_CMD_DEVBIN64_SYSDEN64='./bin/dev-lib-sysden64'
+declare SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64=''
 # DevBin64 / Modules File
 readonly SYSDEN64_FILE_DEVBIN64_MODULE='.devbin64-modules'
 # DevBin64 / Modules
@@ -138,6 +138,14 @@ export DEV_PROFILE=''
 #
 # Functions
 #
+
+function sysden64_upgrade() {
+  bl64_dbg_app_show_function
+  cd "$SYSDEN64_REPOSITORY" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64"
+}
 
 function config_backup() {
   bl64_dbg_app_show_function "$@"
@@ -256,7 +264,7 @@ function create_user_wide_repository() {
     printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
     "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
     create_user_wide_ignore "$repository" &&
-    "$SYSDEN64_CMD_DEVBIN64_SYSDEN64"
+    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64"
 }
 
 function create_user_wide_ignore() {
@@ -270,7 +278,7 @@ function create_user_wide_ignore() {
     return 0
 
   bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
-  bl64_txt_run_sed -i 'bkp' \
+  bl64_txt_run_sed -ibkp \
     '/# Keep placeholder for empty directories/i\
 /var/prof/*/home\
 /repos/*\
@@ -382,6 +390,9 @@ function initialize() {
   elif [[ "$SYSDEN64_COMMAND" == 'deploy_user_wide' ]]; then
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_UPGRADE="$BL64_VAR_ON"
+  elif [[ "$SYSDEN64_COMMAND" == 'sysden64_upgrade' ]]; then
+    bl64_check_directory "$SYSDEN64_REPOSITORY" ||
+      return $?
   fi
   if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
     SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
@@ -390,8 +401,18 @@ function initialize() {
     SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
     SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
   fi
+  SYSDEN64_CMD_DEVBIN64_SET="${SYSDEN64_REPOSITORY}/bin/dev-set"
+  SYSDEN64_CMD_DEVBIN64_PROFILE="${SYSDEN64_REPOSITORY}/bin/dev-profile-create"
+  SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64="${SYSDEN64_REPOSITORY}/bin/dev-lib-sysden64"
+  SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64="${SYSDEN64_REPOSITORY}/bin/dev-lib-installer64"
+  SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64="${SYSDEN64_REPOSITORY}/bin/dev-lib-bashlib64"
   bl64_check_directory "$SYSDEN64_PATH_ETC_SYSTEM" &&
-    bl64_check_directory "$SYSDEN64_PATH_LIB_SYSTEM"
+    bl64_check_directory "$SYSDEN64_PATH_LIB_SYSTEM" &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'SYSDEN64_COMMAND' \
+      'SYSDEN64_HOME' \
+      'SYSDEN64_PROFILE' \
+      'SYSDEN64_REPOSITORY'
 }
 
 #
@@ -407,7 +428,7 @@ declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
 bl64_lib_script_version_set '5.3.1'
-bl64_msg_help_usage_set '<-s|-l|-c|-w|-u> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
@@ -416,6 +437,7 @@ bl64_msg_help_parameters_set \
 -l         : Deploy system-wide configuration
 -c         : Create user-wide configuration
 -w         : Switch active profile
+-g         : Upgrade user-wide SysDen64 modules
 -d         : Use SysDen64 repository for persistence. Valid for -l and -w only
 -h         : Show help
 -o Home    : Full path to the user home directory. Default: $HOME
@@ -424,13 +446,14 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':scldwuo:i:p:V:D:h' SYSDEN64_OPTION; do
+while getopts ':scldwugo:i:p:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
   s) SYSDEN64_COMMAND='create_deploy_user_wide' ;;
   l) SYSDEN64_COMMAND='deploy_system_wide' ;;
   c) SYSDEN64_COMMAND='create_user_wide' ;;
   u) SYSDEN64_COMMAND='deploy_user_wide' ;;
   w) SYSDEN64_COMMAND='switch_profile' ;;
+  g) SYSDEN64_COMMAND='sysden64_upgrade' ;;
   d) SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON" ;;
   o) SYSDEN64_HOME="$OPTARG" ;;
   i) SYSDEN64_REPOSITORY="$OPTARG" ;;
@@ -441,13 +464,7 @@ while getopts ':scldwuo:i:p:V:D:h' SYSDEN64_OPTION; do
   *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize "$SYSDEN64_COMMAND" "$SYSDEN64_REPOSITORY" || exit $?
-
-bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-  'SYSDEN64_COMMAND' \
-  'SYSDEN64_HOME' \
-  'SYSDEN64_PROFILE' \
-  'SYSDEN64_REPOSITORY'
+bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
@@ -456,6 +473,7 @@ case "$SYSDEN64_COMMAND" in
 'create_user_wide') create_user_wide "$SYSDEN64_REPOSITORY" ;;
 'switch_profile') switch_profile "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'deploy_user_wide') deploy_user_wide "$SYSDEN64_HOME" ;;
+'sysden64_upgrade') sysden64_upgrade ;;
 *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
 esac
 bl64_msg_show_batch_finish $? "$SYSDEN64_COMMAND"

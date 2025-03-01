@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.10.0]
 
+### Added
+
+- SysDen
+  - Upgrade user-wide Sysden64
+
 ### Fixed
 
 - SysDen
