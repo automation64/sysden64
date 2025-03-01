@@ -46,10 +46,10 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 readonly SYSDEN64_VERSION='1.10.0'
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64}"
-# SysDen64 / Application configuration setup modules
-readonly SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
-# SysDen64 / Application configuration boilerplates
-readonly SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
+# SysDen64 / Application configuration setup modules - System wide
+readonly SYSDEN64_PATH_LIB_SYSTEM="${SYSDEN64_PATH_ROOT}/lib"
+# SysDen64 / Application configuration boilerplates - System wide
+readonly SYSDEN64_PATH_ETC_SYSTEM="${SYSDEN64_PATH_ROOT}/etc"
 # SysDen64 / Shell modules repository
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
@@ -181,15 +181,15 @@ function module_setup() {
 
   for module in $SYSDEN64_MODULE_LIST_BASE; do
     # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+    bl64_check_file "${SYSDEN64_PATH_LIB_SYSTEM}/${module}.bash" &&
+      source "${SYSDEN64_PATH_LIB_SYSTEM}/${module}.bash" &&
       "sysden64_${module}_setup" "$home" ||
       return $?
   done
   for module in $SYSDEN64_MODULE_LIST_TOOLS; do
     # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+    bl64_check_file "${SYSDEN64_PATH_LIB_SYSTEM}/${module}.bash" &&
+      source "${SYSDEN64_PATH_LIB_SYSTEM}/${module}.bash" &&
       "sysden64_${module}_setup" "$home" ||
       return $?
   done
@@ -390,8 +390,8 @@ function initialize() {
     SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
     SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
   fi
-  bl64_check_directory "$SYSDEN64_PATH_ETC" &&
-    bl64_check_directory "$SYSDEN64_PATH_LIB"
+  bl64_check_directory "$SYSDEN64_PATH_ETC_SYSTEM" &&
+    bl64_check_directory "$SYSDEN64_PATH_LIB_SYSTEM"
 }
 
 #
