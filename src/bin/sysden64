@@ -412,10 +412,10 @@ bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
   '-s         : Create and deploy user-wide configuration profile
--l         : Deploy from system-wide configuration profile
+-u         : Deploy user-wide configuration profile
+-l         : Deploy system-wide configuration profile
 -c         : Create user-wide configuration profile
 -w         : Switch active configuration profile
--u         : Upgrade configuration modules
 -d         : Use SysDen64 repository for persistense. Valid for -l and -w only
 -h         : Show help
 -o Home    : Full path to the user home directory. Default: $HOME
