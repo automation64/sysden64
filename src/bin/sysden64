@@ -404,14 +404,14 @@ declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
 bl64_lib_script_version_set '5.3.1'
 bl64_msg_help_usage_set '<-s|-l|-c|-w|-u> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the DevOps/SRE/CloudAdmin/SysAdmin nomad'
+bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-  '-s         : Create persistent profile and deploy to home directory
--l         : Deploy configuration files to home directory
--c         : Create SysDen64 repository
--w         : Change current profile to a different one
--u         : Upgrade shared module configurations
+  '-s         : Create and deploy user-wide configuration profile
+-l         : Deploy from system-wide configuration profile
+-c         : Create user-wide configuration profile
+-w         : Switch active configuration profile
+-u         : Upgrade configuration modules
 -d         : Use SysDen64 repository for persistense. Valid for -l and -w only
 -h         : Show help
 -o Home    : Full path to the user home directory. Default: $HOME
