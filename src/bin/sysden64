@@ -270,8 +270,12 @@ function deploy_sysden_ignore() {
     return 0
 
   bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
-  bl64_txt_run_sed -i \
-    '/# Keep placeholder for empty directories/i\/var/prof/*/home\n/repos/*\n\n' \
+  bl64_txt_run_sed -i 'bkp' \
+    '/# Keep placeholder for empty directories/i\
+/var/prof/*/home\
+/repos/*\
+\
+' \
     "$path_gitignore"
 }
 

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - SysDen
-  - DevBin64 path
+  - DevBin64 path, sed expression
 
 ## [1.9.2]
 
