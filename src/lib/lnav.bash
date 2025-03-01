@@ -4,7 +4,7 @@ function sysden64_lnav_setup() {
   local home="$1"
   local config='lnav'
   local target="${home}/.config/${config}"
-  local model="${SYSDEN64_PATH_ETC}/${config}"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/${config}"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

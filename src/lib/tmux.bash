@@ -7,7 +7,7 @@ function sysden64_tmux_setup() {
   local home="$1"
   local config='.tmux.conf'
   local plugins_path="${home}/.tmux/plugins"
-  local model="${SYSDEN64_PATH_ETC}/tmux"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/tmux"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

@@ -2,7 +2,7 @@
 function sysden64_git_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC}/git"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/git"
   local target="${home}"
   local config='.gitconfig'
 

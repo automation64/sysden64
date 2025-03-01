@@ -2,7 +2,7 @@
 function sysden64_ripgrep_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC}/ripgrep"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/ripgrep"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

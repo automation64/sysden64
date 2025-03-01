@@ -3,7 +3,7 @@ function sysden64_keepassx_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local target="${home}/.config/keepassx"
-  local model="${SYSDEN64_PATH_ETC}/keepassx"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/keepassx"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

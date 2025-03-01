@@ -1,7 +1,7 @@
 function sysden64_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC}/starship"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/starship"
   local profile="${home}/.bash_profile"
   local config='starship.toml'
 

@@ -3,7 +3,7 @@ function sysden64_nvim_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local config='nvim'
-  local model="${SYSDEN64_PATH_ETC}/${config}"
+  local model="${SYSDEN64_PATH_ETC_SYSTEM}/${config}"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
