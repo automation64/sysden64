@@ -2,7 +2,7 @@
 function sysden64_ansible_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/ansible"
+  local model="${SYSDEN64_PATH_ETC}/ansible"
   local config='.ansible.cfg'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0

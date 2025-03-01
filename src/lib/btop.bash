@@ -4,7 +4,7 @@ function sysden64_btop_setup() {
   local home="$1"
   local config='btop'
   local target="${home}/.config/${config}"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/btop"
+  local model="${SYSDEN64_PATH_ETC}/btop"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

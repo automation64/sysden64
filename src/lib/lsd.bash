@@ -4,7 +4,7 @@ function sysden64_lsd_setup() {
   local home="$1"
   local config='lsd'
   local target="${home}/.config/${config}"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/lsd"
+  local model="${SYSDEN64_PATH_ETC}/lsd"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

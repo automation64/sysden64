@@ -2,7 +2,7 @@
 function sysden64_eza_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/eza"
+  local model="${SYSDEN64_PATH_ETC}/eza"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

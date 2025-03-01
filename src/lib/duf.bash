@@ -1,7 +1,7 @@
 function sysden64_duf_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/duf"
+  local model="${SYSDEN64_PATH_ETC}/duf"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

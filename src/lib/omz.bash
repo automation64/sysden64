@@ -15,7 +15,7 @@ function sysden64_omz_setup() {
   local home="$1"
   local local_repo='.oh-my-zsh'
   local profile="${home}/.zshrc"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/oh-my-zsh"
+  local model="${SYSDEN64_PATH_ETC}/oh-my-zsh"
   local omz_path="${home}/${local_repo}"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0

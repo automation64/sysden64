@@ -3,7 +3,7 @@ function sysden64_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local profile="${home}/.zshrc"
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/powerlevel10k"
+  local model="${SYSDEN64_PATH_ETC}/powerlevel10k"
   local config='.p10k.zsh'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0

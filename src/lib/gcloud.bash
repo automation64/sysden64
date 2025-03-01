@@ -5,7 +5,7 @@ function sysden64_gcloud_setup() {
   local config='gcloud'
   local target="${home}/.config/${config}"
   local vault=''
-  local model="${SYSDEN64_PATH_ETC_SYSTEM}/gcloud"
+  local model="${SYSDEN64_PATH_ETC}/gcloud"
 
   ! bl64_bsh_command_is_executable 'gcloud' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
