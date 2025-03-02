@@ -68,7 +68,7 @@ readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
 declare SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_OFF"
 # SysDen64 / Module upgrade marker
-declare SYSDEN64_FLAG_MODULE_UPGRADE="$BL64_VAR_OFF"
+declare SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_OFF"
 # SysDen64 / Flag for devbin repo
 declare SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_OFF"
 
@@ -382,7 +382,7 @@ function initialize() {
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'configuration_sync' ]]; then
     # shellcheck disable=SC2034
-    SYSDEN64_FLAG_MODULE_UPGRADE="$BL64_VAR_ON"
+    SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
     [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
   elif [[ "$SYSDEN64_COMMAND" == 'sysden64_upgrade' ]]; then
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
