@@ -20,6 +20,27 @@
 # Functions
 #
 
+function config_backup() {
+  bl64_dbg_app_show_function "$@"
+  local source=''
+
+  if [[ -f "$SYSDEN64_PATH_VERSION" ]]; then
+    bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
+    return 0
+  fi
+
+  for source in "$@"; do
+    if [[ -f "$source" || -d "$source" ]]; then
+      bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
+      bl64_fs_run_mv \
+        "$BL64_FS_SET_MV_FORCE" \
+        "$source" \
+        "$SYSDEN64_PATH_BACKUP" ||
+        return $?
+    fi
+  done
+}
+
 function module_check_type() {
   bl64_dbg_app_show_function "$@"
   local module_type="$1"

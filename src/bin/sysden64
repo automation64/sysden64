@@ -149,27 +149,6 @@ function sysden64_upgrade() {
     "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64"
 }
 
-function config_backup() {
-  bl64_dbg_app_show_function "$@"
-  local source=''
-
-  if [[ -f "$SYSDEN64_PATH_VERSION" ]]; then
-    bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
-    return 0
-  fi
-
-  for source in "$@"; do
-    if [[ -f "$source" || -d "$source" ]]; then
-      bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
-      bl64_fs_run_mv \
-        "$BL64_FS_SET_MV_FORCE" \
-        "$source" \
-        "$SYSDEN64_PATH_BACKUP" ||
-        return $?
-    fi
-  done
-}
-
 function version_register() {
   bl64_dbg_app_show_function "$@"
   bl64_msg_show_task "register sysden64 version (${SYSDEN64_PATH_VERSION})"
