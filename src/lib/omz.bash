@@ -10,33 +10,40 @@ SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/joshskidmore/zsh-fzf-history-sear
 declare SYSDEN64_GIT_OMZ_THEMES=''
 SYSDEN64_GIT_OMZ_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
 
-function sysden64_omz_setup() {
+function module_omz_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
+  local model='oh-my-zsh'
+  local config='.oh-my-zsh'
+  local target="${home}/${config}"
   local local_repo='.oh-my-zsh'
   local profile="${home}/.zshrc"
-  local model="${SYSDEN64_PATH_ETC}/oh-my-zsh"
   local omz_path="${home}/${local_repo}"
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+  module_profile_switch_allow "$module_type" && return 0
 
   ! bl64_bsh_command_is_executable 'zsh' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
 
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE"; then
+  module_create_shared "$module_type" "$model" &&
+  source="$(module_set_model "$module_type" "$model")" ||
+  return $?
+
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
     if [[ -d "$omz_path" ]]; then
-      sysden64_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
+      module_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
       return 0
     fi
   fi
-  config_backup "$omz_path" &&
-  sysden64_omz_setup_main "$home" "$local_repo" &&
-  sysden64_omz_setup_plugins "$home" "$local_repo" &&
-  sysden64_omz_setup_zsh "$profile" "$omz_path" "$model"
+  module_config_backup "$model" "$target" &&
+  module_omz_setup_main "$home" "$local_repo" &&
+  module_omz_setup_plugins "$home" "$local_repo" &&
+  module_omz_setup_zsh "$profile" "$omz_path" "$model"
 }
 
-function sysden64_omz_setup_zsh() {
+function module_omz_setup_zsh() {
   bl64_dbg_app_show_function "$@"
   local profile="$1"
   local omz_path="$2"
@@ -45,14 +52,15 @@ function sysden64_omz_setup_zsh() {
   bl64_check_directory "$omz_path" || return $?
   if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
     "$BL64_OS_CMD_CAT" \
-      "${model}/oh-my-zsh.snippet" >>"$profile" ||
+      "${source}/oh-my-zsh.snippet" >>"$profile" ||
       return $?
   fi
 }
 
-function sysden64_omz_setup_main() {
+function module_omz_setup_main() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local local_repo="$2"
 
   bl64_msg_show_task "deploy Oh-My-ZSH (${omz_path})"
@@ -65,9 +73,10 @@ function sysden64_omz_setup_main() {
     return $?
 }
 
-function sysden64_omz_setup_plugins() {
+function module_omz_setup_plugins() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local local_repo="$2"
   local omz_custom_path="${home}/${local_repo}/custom"
   local omz_custom_plugins_path="${omz_custom_path}/plugins"
