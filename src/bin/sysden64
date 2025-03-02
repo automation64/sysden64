@@ -340,7 +340,7 @@ function system_wide_update() {
     version_register "$home"
 }
 
-function user_wide_create_update() {
+function user_wide_create() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local repository="$2"
@@ -399,7 +399,7 @@ function initialize() {
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}" &&
       bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_PROFILE}" ||
       return $?
-  elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create_update' ]]; then
+  elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
     SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
@@ -479,7 +479,7 @@ bl64_msg_help_parameters_set \
 
 while getopts ':slwugo:i:p:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
-  s) SYSDEN64_COMMAND='user_wide_create_update' ;;
+  s) SYSDEN64_COMMAND='user_wide_create' ;;
   l) SYSDEN64_COMMAND='system_wide_update' ;;
   u) SYSDEN64_COMMAND='user_wide_update' ;;
   w) SYSDEN64_COMMAND='profile_switch' ;;
@@ -497,7 +497,7 @@ bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" &
 
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
-'user_wide_create_update') user_wide_create_update "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
+'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'user_wide_update') user_wide_update "$SYSDEN64_HOME" ;;
 'profile_switch') profile_switch "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
 'system_wide_update') system_wide_update "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
