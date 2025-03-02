@@ -29,7 +29,7 @@ function module_omz_setup() {
 
   if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE"; then
     if [[ -d "$omz_path" ]]; then
-      sysden64_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
+      module_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
       return 0
     fi
   fi
