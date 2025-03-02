@@ -14,7 +14,7 @@ function module_gpg_setup() {
 
   config_backup "$target" || return $?
   bl64_msg_show_task "setup GNUPG (${target})"
-  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
     vault="${DEV_PATH_PROF_VAULT}/gnupg"
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" &&

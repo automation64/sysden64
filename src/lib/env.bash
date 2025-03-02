@@ -3,7 +3,7 @@ function module_env_setup() {
   local home="$1"
   local model='env'
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
 
   bl64_msg_show_phase 'prepare shell-env'
 

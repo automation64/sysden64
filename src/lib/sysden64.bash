@@ -21,7 +21,7 @@
 function module_create_shared() {
   bl64_dbg_app_show_function "$@"
   local module="$1"
-  bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64" || return 0
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64" || return 0
   if [[ ! -d "${SYSDEN64_PATH_SHARED}/${module}" ]]; then
     bl64_fs_path_copy \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -33,7 +33,7 @@ function module_create_shared() {
 
 function module_set_model() {
   local module="$1"
-  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
     echo "${SYSDEN64_PATH_SHARED}/${module}"
   else
     echo "$SYSDEN64_PATH_ETC/$module"

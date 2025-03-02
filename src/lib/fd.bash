@@ -4,7 +4,7 @@ function module_fd_setup() {
   local home="$1"
   local model='fd'
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
 
   ! bl64_bsh_command_is_executable 'fd' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0

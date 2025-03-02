@@ -5,7 +5,7 @@ function module_mc_setup() {
   local target="${home}/.config/mc"
   local model='mc'
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
 
   ! bl64_bsh_command_is_executable 'mc' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
