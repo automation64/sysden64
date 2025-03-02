@@ -4,13 +4,16 @@ function sysden64_btop_setup() {
   local home="$1"
   local config='btop'
   local target="${home}/.config/${config}"
-  local model="${SYSDEN64_PATH_ETC}/btop"
+  local model='btop'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
   ! bl64_bsh_command_is_executable 'btop' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare BTop'
+
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
 
   config_backup "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"

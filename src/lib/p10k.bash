@@ -3,7 +3,7 @@ function sysden64_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local profile="${home}/.zshrc"
-  local model="${SYSDEN64_PATH_ETC}/powerlevel10k"
+  local model='powerlevel10k'
   local config='.p10k.zsh'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
@@ -11,6 +11,9 @@ function sysden64_p10k_setup() {
   ! bl64_bsh_command_is_executable 'zsh' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare PowerLevel10K'
+
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
 
   config_backup "${home}/${config}"
   bl64_msg_show_task 'setup PowerLevel10K'

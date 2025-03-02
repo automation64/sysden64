@@ -24,6 +24,9 @@ function sysden64_omz_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
 
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
+
   if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE"; then
     if [[ -d "$omz_path" ]]; then
       sysden64_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?

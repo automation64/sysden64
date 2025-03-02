@@ -60,7 +60,7 @@ readonly SYSDEN64_PATH_REPOS='repos'
 # SysDen64 / Home config Backup
 declare SYSDEN64_PATH_BACKUP='home-bkp'
 # SysDen64 / Shared configs
-declare SYSDEN64_PATH_SHARED_MODULES='shared'
+declare SYSDEN64_PATH_SHARED='shared'
 # SysDen64 / Prefix
 readonly SYSDEN64_PREFIX='sd64'
 # SysDen64 / Profile switch marker
@@ -145,6 +145,28 @@ export DEV_PROFILE=''
 # Functions
 #
 
+function module_create_shared() {
+  bl64_dbg_app_show_function "$@"
+  local module="$1"
+  bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64" || return 0
+  if [[ ! -d "${SYSDEN64_PATH_SHARED}/${module}" ]]; then
+    bl64_fs_path_copy \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$SYSDEN64_PATH_SHARED" \
+      "${SYSDEN64_PATH_ETC}/${module}" ||
+      return $?
+  fi
+}
+
+function module_set_model() {
+  local module="$1"
+  if bl64_lib_flag_is_enabled "$SYSDEN64_USE_DEVBIN64"; then
+    echo "${SYSDEN64_PATH_SHARED}/${module}"
+  else
+    echo "$SYSDEN64_PATH_ETC/$module"
+  fi
+}
+
 function sysden64_upgrade() {
   bl64_dbg_app_show_function
   cd "$SYSDEN64_REPOSITORY" &&
@@ -228,10 +250,10 @@ function devbin64_setup() {
   "$SYSDEN64_CMD_DEVBIN64_PROFILE" ||
     return $?
 
-  bl64_msg_show_task "create shared configuration store (${SYSDEN64_PATH_SHARED_MODULES})"
+  bl64_msg_show_task "create shared configuration store (${SYSDEN64_PATH_SHARED})"
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$SYSDEN64_PATH_SHARED_MODULES" ||
+    "$SYSDEN64_PATH_SHARED" ||
     return $?
 
   bl64_msg_show_task "create/update home links to profile (${profile})"
@@ -417,6 +439,7 @@ function initialize() {
     SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64}"
     SYSDEN64_PATH_LIB="${SYSDEN64_REPOSITORY}/lib/sd64/lib"
     SYSDEN64_PATH_ETC="${SYSDEN64_REPOSITORY}/lib/sd64/etc"
+    SYSDEN64_PATH_SHARED="${SYSDEN64_REPOSITORY}/etc/${SYSDEN64_PATH_SHARED}"
   else
     SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
     SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
@@ -431,7 +454,6 @@ function initialize() {
       bl64_check_directory "$SYSDEN64_PATH_LIB" ||
       return $?
   fi
-  SYSDEN64_PATH_SHARED_MODULES="${SYSDEN64_REPOSITORY}/etc/${SYSDEN64_PATH_SHARED_MODULES}"
 
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'SYSDEN64_COMMAND' \

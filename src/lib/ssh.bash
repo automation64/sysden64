@@ -5,11 +5,14 @@ function sysden64_ssh_setup() {
   local config='.ssh'
   local target="${home}/${config}"
   local vault=''
-  local model="${SYSDEN64_PATH_ETC}/ssh"
+  local model='ssh'
 
   ! bl64_bsh_command_is_executable 'ssh' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare OpenSSH'
+
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE" && return 0
 

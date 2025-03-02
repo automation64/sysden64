@@ -12,6 +12,9 @@ function sysden64_lnav_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare LNAV'
 
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
+
   config_backup "${home}/.config/${config}"
   bl64_msg_show_task "promote configuration from model (${model}/.config/${config})"
   bl64_fs_path_copy \

@@ -5,11 +5,14 @@ function sysden64_kubectl_setup() {
   local config='.kube'
   local target="${home}/${config}"
   local vault=''
-  local model="${SYSDEN64_PATH_ETC}/kubectl"
+  local model='kubectl'
 
   ! bl64_bsh_command_is_executable 'kubectl' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare KubeCTL'
+
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \

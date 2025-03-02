@@ -7,13 +7,16 @@ function sysden64_tmux_setup() {
   local home="$1"
   local config='.tmux.conf'
   local plugins_path="${home}/.tmux/plugins"
-  local model="${SYSDEN64_PATH_ETC}/tmux"
+  local model='tmux'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 
   ! bl64_bsh_command_is_executable 'tmux' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare TMUX'
+
+  module_create_shared "$model" || return $?
+  model="$(module_set_model "$model")"
 
   config_backup "${home}/${config}" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
