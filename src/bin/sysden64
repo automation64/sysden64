@@ -144,12 +144,35 @@ export DEV_PROFILE=''
 # Functions
 #
 
+function module_upgrade() {
+  bl64_dbg_app_show_function
+  local module=''
+
+  bl64_msg_show_task "upgrade source shared configuration modules (${SYSDEN64_PATH_SHARED})"
+  bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
+    return $?
+
+  # shellcheck disable=SC2164
+  for module in $(
+    cd "$SYSDEN64_PATH_SHARED"
+    echo *
+  ); do
+    bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
+    bl64_fs_path_copy \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$SYSDEN64_PATH_SHARED" \
+      "${SYSDEN64_PATH_ETC}/${module}" ||
+      return $?
+  done
+}
+
 function sysden64_upgrade() {
   bl64_dbg_app_show_function
   cd "$SYSDEN64_REPOSITORY" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
-    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64"
+    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64" &&
+    module_upgrade
 }
 
 function version_register() {
@@ -350,16 +373,12 @@ function initialize() {
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
     SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
-    # if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-    #   bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
-    #   # shellcheck disable=SC2086
-    #   return $BL64_LIB_ERROR_TASK_FAILED
-    # fi
   elif [[ "$SYSDEN64_COMMAND" == 'configuration_sync' ]]; then
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
     [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
   elif [[ "$SYSDEN64_COMMAND" == 'sysden64_upgrade' ]]; then
+    SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   fi
@@ -415,7 +434,7 @@ bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment
 bl64_msg_help_parameters_set \
   '-s         : Create user-wide configuration
 -l         : Create system-wide configuration
--u         : Sync configuration. Works for both user-wide and system-wide
+-u         : Sync configuration
 -w         : Switch user-wide profile
 -g         : Upgrade user-wide modules
 -h         : Show help
