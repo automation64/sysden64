@@ -71,7 +71,7 @@ function module_create_shared() {
   bl64_check_parameter 'model' &&
     module_check_type "$module_type" ||
     return $?
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     bl64_dbg_app_show_info 'user-wide is disabled. No further action taken'
     return 0
   fi
@@ -96,7 +96,7 @@ function module_set_model() {
   local module="$2"
   module_check_type "$module_type" ||
     return $?
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
       echo "$SYSDEN64_PATH_ETC/$module"
     elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
@@ -125,7 +125,7 @@ function module_profile_switch_allow() {
   local module_type="$1"
   module_check_type "$module_type" ||
     exit $?
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
       bl64_dbg_app_show_info 'not a shared module. Always switch profile'
       return 1

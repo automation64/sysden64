@@ -21,7 +21,7 @@ function module_ssh_setup() {
   module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "setup OpenSSH (${target})"
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     vault="${DEV_PATH_PROF_VAULT}/ssh"
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$vault" &&

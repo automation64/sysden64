@@ -73,7 +73,7 @@ declare SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_OFF"
 # SysDen64 / Module upgrade marker
 declare SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_OFF"
 # SysDen64 / Flag for devbin repo
-declare SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_OFF"
+declare SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_OFF"
 
 # SysDen64 / Modules
 declare SYSDEN64_MODULE_LIST_BASE=''
@@ -366,24 +366,24 @@ function initialize() {
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
   elif [[ "$SYSDEN64_COMMAND" == 'profile_switch' ]]; then
-    SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
-    SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
   elif [[ "$SYSDEN64_COMMAND" == 'configuration_sync' ]]; then
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
-    [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
+    [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
   elif [[ "$SYSDEN64_COMMAND" == 'sysden64_upgrade' ]]; then
-    SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   fi
 
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
     SYSDEN64_PATH_BACKUP="${SYSDEN64_REPOSITORY}/tmp/${SYSDEN64_PATH_BACKUP}"
     SYSDEN64_CMD_DEVBIN64_SET="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}"
@@ -412,8 +412,10 @@ function initialize() {
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'SYSDEN64_COMMAND' \
     'SYSDEN64_HOME' \
+    'SYSDEN64_FLAG_USER_WIDE' \
     'SYSDEN64_PROFILE' \
-    'SYSDEN64_REPOSITORY'
+    'SYSDEN64_REPOSITORY' \
+    'SYSDEN64_PATH_SHARED'
 }
 
 #
