@@ -53,8 +53,10 @@ declare SYSDEN64_PATH_ETC=''
 # SysDen64 / Shell modules repository
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
-# SysDen64 / Version placeholder
+# SysDen64 / Version marker
 declare SYSDEN64_PATH_VERSION='.sysden64'
+# SysDen64 / Current profile marker
+declare SYSDEN64_PATH_PROFILE='.sysden64-profile'
 # SysDen64 / External repositories
 readonly SYSDEN64_PATH_REPOS='repos'
 # SysDen64 / Home config Backup
@@ -220,7 +222,8 @@ function devbin64_setup() {
     return $?
 
   bl64_msg_show_task "create/update profile (${profile})"
-  "$SYSDEN64_CMD_DEVBIN64_PROFILE" ||
+  "$SYSDEN64_CMD_DEVBIN64_PROFILE" &&
+    echo "$profile" >"$SYSDEN64_PATH_PROFILE" ||
     return $?
 
   bl64_msg_show_task "create shared configuration store (${SYSDEN64_PATH_SHARED})"
@@ -327,7 +330,16 @@ function profile_switch() {
   local home="$1"
   local repository="$2"
   local profile="$3"
+  local current=''
 
+  if [[ -f "$SYSDEN64_PATH_PROFILE" ]]; then
+    current="$(<"$SYSDEN64_PATH_PROFILE")" ||
+      return $?
+    if [[ "$current" == "$profile" ]]; then
+      bl64_msg_show_warning "Profile already activated. No further action taken (${profile})"
+      return 0
+    fi
+  fi
   devbin64_setup "$home" "$repository" "$profile" &&
     module_setup "$home"
 }
@@ -365,8 +377,7 @@ function initialize() {
     SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
     # shellcheck disable=SC2034
     SYSDEN64_PROFILE_SWITCH="$BL64_VAR_ON"
-    bl64_check_directory "$SYSDEN64_REPOSITORY" &&
-      bl64_check_file "${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}" ||
+    bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
     SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON"
@@ -396,6 +407,7 @@ function initialize() {
     SYSDEN64_PATH_LIB="${SYSDEN64_REPOSITORY}/lib/sd64/lib"
     SYSDEN64_PATH_ETC="${SYSDEN64_REPOSITORY}/lib/sd64/etc"
     SYSDEN64_PATH_SHARED="${SYSDEN64_REPOSITORY}/etc/${SYSDEN64_PATH_SHARED}"
+    SYSDEN64_PATH_PROFILE="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_PROFILE}"
   else
     SYSDEN64_PATH_VERSION="${SYSDEN64_HOME}/${SYSDEN64_PATH_VERSION}"
     SYSDEN64_PATH_BACKUP="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}-${SYSDEN64_PATH_BACKUP}"
@@ -436,7 +448,7 @@ bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment
 bl64_msg_help_parameters_set \
   '-s         : * Create user-wide configuration
 -u         : * Sync active profile
--w         : Switch active profile
+-w         : * Switch user-wide profile. Not available for system-wide
 -l         : Update system-wide configuration
 -g         : Upgrade user-wide SysDen64 modules
 -h         : Show help
