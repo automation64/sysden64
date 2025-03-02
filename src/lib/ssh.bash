@@ -34,9 +34,8 @@ function module_ssh_setup() {
       return $?
   fi
 
-  [[ -f "${target}/config" ]] &&
-    bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" &&
-    return 0
+  module_sync_allow "$module_type" && return 0
+  config_backup "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \

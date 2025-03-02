@@ -29,12 +29,11 @@ function module_git_setup() {
   module_sync_allow "$module_type" && return 0
   config_backup "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  [[ -f "${target}" ]] && bl64_msg_show_warning "$SYSDEN64_TXT_CONFIGURED" && return 0
-  bl64_fs_file_copy \
+  bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target" \
+    "$home" \
     "${model}/${config}"
 }
