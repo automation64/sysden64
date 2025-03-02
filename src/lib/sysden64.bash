@@ -23,6 +23,7 @@ function module_create_shared() {
   local module="$1"
   bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64" || return 0
   if [[ ! -d "${SYSDEN64_PATH_SHARED}/${module}" ]]; then
+    bl64_msg_show_task "create shared user-wide configuration model (${SYSDEN64_PATH_SHARED}/${model})"
     bl64_fs_path_copy \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$SYSDEN64_PATH_SHARED" \
