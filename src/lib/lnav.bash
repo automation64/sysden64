@@ -1,10 +1,10 @@
 # Version: 1.0.1
-function sysden64_lnav_setup() {
+function module_lnav_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local config='lnav'
   local target="${home}/.config/${config}"
-  local model="${SYSDEN64_PATH_ETC}/${config}"
+  local model='lnav'
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
 

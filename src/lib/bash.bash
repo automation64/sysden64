@@ -1,5 +1,5 @@
 # Version: 1.0.0
-function sysden64_bash_setup() {
+function module_bash_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local path_bash_profile="${home}/.bash_profile"

@@ -1,4 +1,4 @@
-function sysden64_duf_setup() {
+function module_duf_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local model='duf'

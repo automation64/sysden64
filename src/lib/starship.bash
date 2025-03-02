@@ -1,4 +1,4 @@
-function sysden64_starship_setup() {
+function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local model='starship'

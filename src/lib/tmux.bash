@@ -2,7 +2,7 @@
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
-function sysden64_tmux_setup() {
+function module_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local config='.tmux.conf'

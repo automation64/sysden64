@@ -10,12 +10,12 @@ SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/joshskidmore/zsh-fzf-history-sear
 declare SYSDEN64_GIT_OMZ_THEMES=''
 SYSDEN64_GIT_OMZ_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
 
-function sysden64_omz_setup() {
+function module_omz_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_repo='.oh-my-zsh'
   local profile="${home}/.zshrc"
-  local model="${SYSDEN64_PATH_ETC}/oh-my-zsh"
+  local model='oh-my-zsh'
   local omz_path="${home}/${local_repo}"
 
   bl64_lib_flag_is_enabled "$SYSDEN64_PROFILE_SWITCH" && return 0
@@ -34,12 +34,12 @@ function sysden64_omz_setup() {
     fi
   fi
   config_backup "$omz_path" &&
-  sysden64_omz_setup_main "$home" "$local_repo" &&
-  sysden64_omz_setup_plugins "$home" "$local_repo" &&
-  sysden64_omz_setup_zsh "$profile" "$omz_path" "$model"
+  module_omz_setup_main "$home" "$local_repo" &&
+  module_omz_setup_plugins "$home" "$local_repo" &&
+  module_omz_setup_zsh "$profile" "$omz_path" "$model"
 }
 
-function sysden64_omz_setup_zsh() {
+function module_omz_setup_zsh() {
   bl64_dbg_app_show_function "$@"
   local profile="$1"
   local omz_path="$2"
@@ -53,7 +53,7 @@ function sysden64_omz_setup_zsh() {
   fi
 }
 
-function sysden64_omz_setup_main() {
+function module_omz_setup_main() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_repo="$2"
@@ -68,7 +68,7 @@ function sysden64_omz_setup_main() {
     return $?
 }
 
-function sysden64_omz_setup_plugins() {
+function module_omz_setup_plugins() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local local_repo="$2"

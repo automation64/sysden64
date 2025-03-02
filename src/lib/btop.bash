@@ -1,5 +1,5 @@
 # Version: 1.0.0
-function sysden64_btop_setup() {
+function module_btop_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local config='btop'

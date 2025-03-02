@@ -1,5 +1,5 @@
 # Version: 1.1.0
-function sysden64_ssh_setup() {
+function module_ssh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local config='.ssh'
