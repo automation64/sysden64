@@ -2,15 +2,17 @@
 function module_bash_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local path_bash_profile="${home}/.bash_profile"
   local path_bash_rc="${home}/.bashrc"
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
+  module_profile_switch_allow "$module_type" && return 0
 
   ! bl64_bsh_command_is_executable 'bash' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Bash'
 
+  module_sync_allow "$module_type" && return 0
   config_backup "${path_bash_profile}" "${path_bash_rc}" || return $?
   bl64_msg_show_task "Setup user's bash profile (${home})"
   echo "$SYSDEN64_TXT_WATERMARK" >"$path_bash_profile" &&

@@ -2,15 +2,16 @@
 function module_delta_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='delta'
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
+  module_profile_switch_allow "$module_type" && return 0
 
   ! bl64_bsh_command_is_executable 'delta' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Delta'
 
-  module_create_shared "$model" || return $?
+  module_create_shared "$model" "$module_type" || return $?
   model="$(module_set_model "$model")"
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"

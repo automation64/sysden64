@@ -13,27 +13,30 @@ SYSDEN64_GIT_OMZ_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
 function module_omz_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
+  local model='oh-my-zsh'
+  local config='.oh-my-zsh'
+  local target="${home}/${config}"
   local local_repo='.oh-my-zsh'
   local profile="${home}/.zshrc"
-  local model='oh-my-zsh'
   local omz_path="${home}/${local_repo}"
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH" && return 0
+  module_profile_switch_allow "$module_type" && return 0
 
   ! bl64_bsh_command_is_executable 'zsh' &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
 
-  module_create_shared "$model" || return $?
+  module_create_shared "$model" "$module_type" || return $?
   model="$(module_set_model "$model")"
 
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_UPGRADE"; then
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
     if [[ -d "$omz_path" ]]; then
       module_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
       return 0
     fi
   fi
-  config_backup "$omz_path" &&
+  config_backup "$target" &&
   module_omz_setup_main "$home" "$local_repo" &&
   module_omz_setup_plugins "$home" "$local_repo" &&
   module_omz_setup_zsh "$profile" "$omz_path" "$model"
@@ -56,6 +59,7 @@ function module_omz_setup_zsh() {
 function module_omz_setup_main() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local local_repo="$2"
 
   bl64_msg_show_task "deploy Oh-My-ZSH (${omz_path})"
@@ -71,6 +75,7 @@ function module_omz_setup_main() {
 function module_omz_setup_plugins() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local local_repo="$2"
   local omz_custom_path="${home}/${local_repo}/custom"
   local omz_custom_plugins_path="${omz_custom_path}/plugins"
