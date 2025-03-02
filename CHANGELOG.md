@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - SysDen
   - **breaking-change** Option: `-d`. Now managed by system vs user wide feature
+  - **breaking-change** Option: `-c`. Now managed by system vs user wide feature
 
 ### Fixed
 
