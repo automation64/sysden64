@@ -163,14 +163,6 @@ function module_setup() {
   local home="$1"
   local module=''
 
-  if [[ ! -f "$SYSDEN64_PATH_VERSION" ]]; then
-    bl64_msg_show_task "create configuration backup repository (${SYSDEN64_PATH_BACKUP})"
-    bl64_fs_dir_create \
-      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$SYSDEN64_PATH_BACKUP" ||
-      return $?
-  fi
-
   bl64_msg_show_separator 'configure base modules'
   for module in $SYSDEN64_MODULE_LIST_BASE; do
     # shellcheck disable=SC1090

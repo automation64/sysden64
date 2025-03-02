@@ -27,17 +27,19 @@ function module_config_backup() {
 
   shift
   bl64_check_parameter 'model' || return $?
-  if [[ -f "$SYSDEN64_PATH_VERSION" ]]; then
+
+  target="${SYSDEN64_PATH_BACKUP}/${model}"
+  if [[ ! -d "$target" ]]; then
+    bl64_msg_show_task "create configuration backup repository (${SYSDEN64_PATH_BACKUP})"
+    bl64_fs_dir_create \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$SYSDEN64_PATH_BACKUP" \
+      "$target" ||
+      return $?
+  else
     bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
     return 0
   fi
-
-  target="${SYSDEN64_PATH_BACKUP}/${model}"
-  bl64_msg_show_task "create module backup store (${target})"
-  bl64_fs_dir_create \
-    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$target" ||
-    return $?
 
   for source in "$@"; do
     if [[ -f "$source" || -d "$source" ]]; then
@@ -95,7 +97,11 @@ function module_set_model() {
   module_check_type "$module_type" ||
     return $?
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
-    echo "${SYSDEN64_PATH_SHARED}/${module}"
+    if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
+      echo "$SYSDEN64_PATH_ETC/$module"
+    elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
+      echo "${SYSDEN64_PATH_SHARED}/${module}"
+    fi
   else
     echo "$SYSDEN64_PATH_ETC/$module"
   fi
