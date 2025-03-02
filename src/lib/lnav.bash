@@ -4,6 +4,8 @@ function module_lnav_setup() {
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='lnav'
+  local source=''
+
   local config='.config/lnav'
   local target="${home}/${config}"
 
@@ -13,10 +15,11 @@ function module_lnav_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare LNAV'
 
-  module_create_shared "$model" "$module_type" || return $?
-  model="$(module_set_model "$model")"
+  module_create_shared "$module_type" "$model" &&
+  source="$(module_set_model "$module_type" "$model")" ||
+  return $?
 
-  config_backup "$target" || return $?
+  module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
@@ -24,5 +27,5 @@ function module_lnav_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/.config" \
-    "${model}/${config}"
+    "${source}/${config}"
 }

@@ -12,8 +12,8 @@ function module_X_MODULE_ID_X_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare X_MODULE_NAME_X'
 
-  module_create_shared "$model" "$module_type" "$module_type" || return $?
-  model="$(module_set_model "$model")"
+  module_create_shared "$module_type" "$model" "$module_type" || return $?
+  model="$(module_set_model "$module_type" "$model")"
 
   # X_SHELL_ENV_PLACECHOLDER_X
 

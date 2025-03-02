@@ -27,8 +27,9 @@ function module_omz_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Oh-My-ZSH'
 
-  module_create_shared "$model" "$module_type" || return $?
-  model="$(module_set_model "$model")"
+  module_create_shared "$module_type" "$model" &&
+  source="$(module_set_model "$module_type" "$model")" ||
+  return $?
 
   if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
     if [[ -d "$omz_path" ]]; then
@@ -36,7 +37,7 @@ function module_omz_setup() {
       return 0
     fi
   fi
-  config_backup "$target" &&
+  module_config_backup "$model" "$target" &&
   module_omz_setup_main "$home" "$local_repo" &&
   module_omz_setup_plugins "$home" "$local_repo" &&
   module_omz_setup_zsh "$profile" "$omz_path" "$model"
@@ -51,7 +52,7 @@ function module_omz_setup_zsh() {
   bl64_check_directory "$omz_path" || return $?
   if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '/oh-my-zsh.sh' "$profile"; then
     "$BL64_OS_CMD_CAT" \
-      "${model}/oh-my-zsh.snippet" >>"$profile" ||
+      "${source}/oh-my-zsh.snippet" >>"$profile" ||
       return $?
   fi
 }

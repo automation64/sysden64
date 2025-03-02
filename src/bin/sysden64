@@ -36,7 +36,10 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-fs.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-rnd.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-iam.bash" &&
-  source "${SYSDEN64_PATH_BL64}/bashlib64-core.bash" || exit 1
+  source "${SYSDEN64_PATH_BL64}/bashlib64-core.bash" || exit $?
+
+# shellcheck source-path=SCRIPTDIR/../lib
+source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 
 #
 # Globals
@@ -160,7 +163,6 @@ function module_setup() {
   local home="$1"
   local module=''
 
-  source "${SYSDEN64_PATH_LIB}/sysden64.bash" || return $?
   if [[ ! -f "$SYSDEN64_PATH_VERSION" ]]; then
     bl64_msg_show_task "create configuration backup repository (${SYSDEN64_PATH_BACKUP})"
     bl64_fs_dir_create \
@@ -169,6 +171,7 @@ function module_setup() {
       return $?
   fi
 
+  bl64_msg_show_separator 'configure base modules'
   for module in $SYSDEN64_MODULE_LIST_BASE; do
     # shellcheck disable=SC1090
     bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
@@ -176,6 +179,7 @@ function module_setup() {
       "module_${module}_setup" "$home" ||
       return $?
   done
+  bl64_msg_show_separator 'configure optional modules'
   for module in $SYSDEN64_MODULE_LIST_TOOLS; do
     # shellcheck disable=SC1090
     bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
@@ -354,11 +358,11 @@ function initialize() {
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
     SYSDEN64_FLAG_USE_DEVBIN64="$BL64_VAR_ON"
-    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
-      # shellcheck disable=SC2086
-      return $BL64_LIB_ERROR_TASK_FAILED
-    fi
+    # if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+    #   bl64_msg_show_error "target directory must be new (${SYSDEN64_REPOSITORY})"
+    #   # shellcheck disable=SC2086
+    #   return $BL64_LIB_ERROR_TASK_FAILED
+    # fi
   elif [[ "$SYSDEN64_COMMAND" == 'configuration_sync' ]]; then
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
@@ -394,7 +398,6 @@ function initialize() {
       bl64_check_directory "$SYSDEN64_PATH_LIB" ||
       return $?
   fi
-
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'SYSDEN64_COMMAND' \
     'SYSDEN64_HOME' \
