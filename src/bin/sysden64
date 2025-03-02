@@ -43,7 +43,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='1.10.0'
+readonly SYSDEN64_VERSION='2.0.0'
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64}"
 # SysDen64 / Application configuration setup modules
@@ -67,6 +67,8 @@ readonly SYSDEN64_PREFIX='sd64'
 declare SYSDEN64_PROFILE_SWITCH="$BL64_VAR_OFF"
 # SysDen64 / Module upgrade marker
 declare SYSDEN64_FLAG_MODULE_UPGRADE="$BL64_VAR_OFF"
+# SysDen64 / Flag for devbin repo
+declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 
 # SysDen64 / Common messages
 # shellcheck disable=SC2034
@@ -459,8 +461,7 @@ function initialize() {
     'SYSDEN64_COMMAND' \
     'SYSDEN64_HOME' \
     'SYSDEN64_PROFILE' \
-    'SYSDEN64_REPOSITORY' \
-    'SYSDEN64_USE_DEVBIN64'
+    'SYSDEN64_REPOSITORY'
 }
 
 #
@@ -473,20 +474,18 @@ declare SYSDEN64_OPTION=''
 declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
-declare SYSDEN64_USE_DEVBIN64="$BL64_VAR_OFF"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '5.3.1'
-bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-d] [-V Verbose] [-D Debug] [-h]'
+bl64_lib_script_version_set '6.0.0'
+bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-  '-s         : Create and update user-wide configuration
+  '-s         : Create user-wide configuration
 -c         : Create user-wide configuration
 -u         : Update user-wide configuration
 -w         : Switch active profile
 -l         : Update system-wide configuration
 -g         : Upgrade user-wide SysDen64 modules
--d         : Use SysDen64 repository for persistence. Valid for -l and -w only
 -h         : Show help
 -o Home    : Full path to the user home directory. Default: $HOME
 -i Repo    : SysDen64 repository path. Default: $HOME/sd64
@@ -494,7 +493,7 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':scldwugo:i:p:V:D:h' SYSDEN64_OPTION; do
+while getopts ':sclwugo:i:p:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
   s) SYSDEN64_COMMAND='user_wide_create_update' ;;
   l) SYSDEN64_COMMAND='system_wide_update' ;;
@@ -502,7 +501,6 @@ while getopts ':scldwugo:i:p:V:D:h' SYSDEN64_OPTION; do
   u) SYSDEN64_COMMAND='user_wide_update' ;;
   w) SYSDEN64_COMMAND='profile_switch' ;;
   g) SYSDEN64_COMMAND='sysden64_upgrade' ;;
-  d) SYSDEN64_USE_DEVBIN64="$BL64_VAR_ON" ;;
   o) SYSDEN64_HOME="$OPTARG" ;;
   i) SYSDEN64_REPOSITORY="$OPTARG" ;;
   p) SYSDEN64_PROFILE="$OPTARG" ;;
