@@ -21,7 +21,17 @@
 function module_create_shared() {
   bl64_dbg_app_show_function "$@"
   local module="$1"
-  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64" || return 0
+  local shared="${2:-$BL64_VAR_OFF}"
+
+  if ! bl64_lib_flag_is_enabled "$shared"; then
+    bl64_dbg_app_show_info 'shared configuration is disabled for the module. No further action taken'
+    return 0
+  fi
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USE_DEVBIN64"; then
+    bl64_dbg_app_show_info 'user-wide is disabled. No further action taken'
+    return 0
+  fi
+
   if [[ ! -d "${SYSDEN64_PATH_SHARED}/${module}" ]]; then
     bl64_msg_show_task "create shared user-wide configuration model (${SYSDEN64_PATH_SHARED}/${model})"
     bl64_fs_path_copy \
