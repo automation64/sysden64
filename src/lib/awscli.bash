@@ -5,7 +5,6 @@ function module_awscli_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='aws'
   local source=''
-
   local config='.aws'
   local target="${home}/${config}"
   local vault=''

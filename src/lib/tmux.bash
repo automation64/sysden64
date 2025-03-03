@@ -8,7 +8,6 @@ function module_tmux_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='tmux'
   local source=''
-
   local config='.tmux.conf'
   local target="${home}/${config}"
   local plugins_path="${home}/.tmux/plugins"

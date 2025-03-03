@@ -5,7 +5,6 @@ function module_ssh_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='ssh'
   local source=''
-
   local config='.ssh'
   local target="${home}/${config}"
   local vault=''

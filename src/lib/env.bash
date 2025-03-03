@@ -4,7 +4,6 @@ function module_env_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='env'
   local source=''
-
   module_profile_switch_allow "$module_type" && return 0
 
   bl64_msg_show_phase 'prepare shell-env'

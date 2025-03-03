@@ -5,7 +5,6 @@ function module_alacritty_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='alacritty'
   local source=''
-
   local config='.alacritty.yml'
   local target="${home}/${config}"
 

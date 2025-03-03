@@ -5,7 +5,6 @@ function module_btop_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='btop'
   local source=''
-
   local config='.config/btop'
   local target="${home}/${config}"
 

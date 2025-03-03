@@ -5,7 +5,6 @@ function module_docker_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='docker'
   local source=''
-
   local config='.docker'
   local target="${home}/${config}"
   local vault=''

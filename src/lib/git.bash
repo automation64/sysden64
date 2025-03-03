@@ -5,7 +5,6 @@ function module_git_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='git'
   local source=''
-
   local config='.gitconfig'
   local target="${home}/${config}"
 

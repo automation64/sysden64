@@ -4,7 +4,6 @@ function module_starship_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='starship'
   local source=''
-
   local config='.config/starship.toml'
   local target="${home}/${config}"
   local profile="${home}/.bash_profile"

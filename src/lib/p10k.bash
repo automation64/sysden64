@@ -5,7 +5,6 @@ function module_p10k_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='powerlevel10k'
   local source=''
-
   local config='.p10k.zsh'
   local target="${home}/${config}"
   local profile="${home}/.zshrc"

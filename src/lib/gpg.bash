@@ -5,7 +5,6 @@ function module_gpg_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='gpg'
   local source=''
-
   local config='.gnupg'
   local target="${home}/${config}"
   local vault=''

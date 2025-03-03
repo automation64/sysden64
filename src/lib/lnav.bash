@@ -5,7 +5,6 @@ function module_lnav_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='lnav'
   local source=''
-
   local config='.config/lnav'
   local target="${home}/${config}"
 

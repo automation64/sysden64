@@ -5,7 +5,6 @@ function module_mc_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='mc'
   local source=''
-
   local config='.config/mc'
   local target="${home}/${config}"
 
