@@ -41,7 +41,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-iam.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-core.bash" || exit $?
 
-# shellcheck source-path=SCRIPTDIR/../lib
+# shellcheck source-path=SCRIPTDIR/../lib disable=SC1091
 source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 
 #
@@ -49,7 +49,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='2.0.2'
+readonly SYSDEN64_VERSION='2.1.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB=''
 # SysDen64 / Application configuration boilerplates
@@ -99,6 +99,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='git '
 SYSDEN64_MODULE_LIST_TOOLS+='github '
 SYSDEN64_MODULE_LIST_TOOLS+='gpg '
 SYSDEN64_MODULE_LIST_TOOLS+='hwatch '
+SYSDEN64_MODULE_LIST_TOOLS+='homebrew '
 SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
 SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
 SYSDEN64_MODULE_LIST_TOOLS+='lnav '
@@ -286,14 +287,16 @@ function create_user_wide_ignore() {
     '/var/prof/*/home' &&
     return 0
 
-  bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
-  bl64_txt_run_sed -ibkp \
-    '/# Keep placeholder for empty directories/i\
+  if ! bl64_txt_search_line "$path_gitignore" '/var/prof/*/home'; then
+    bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
+    bl64_txt_run_sed -ibkp \
+      '/# Keep placeholder for empty directories/i\
 /var/prof/*/home\
 /repos/*\
 \
 ' \
-    "$path_gitignore"
+      "$path_gitignore"
+  fi
 }
 
 function system_wide_create() {
@@ -430,7 +433,7 @@ declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '6.0.2'
+bl64_lib_script_version_set '6.1.0'
 bl64_msg_help_usage_set '<-s|-l|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016

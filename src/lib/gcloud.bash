@@ -5,7 +5,6 @@ function module_gcloud_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='gcloud'
   local source=''
-
   local config='.config/gcloud'
   local target="${home}/${config}"
   local vault=''

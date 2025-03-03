@@ -5,7 +5,6 @@ function module_kubectl_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='kubectl'
   local source=''
-
   local config='.kube'
   local target="${home}/${config}"
   local vault=''

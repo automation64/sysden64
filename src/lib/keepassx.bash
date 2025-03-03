@@ -5,7 +5,6 @@ function module_keepassx_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='keepassx'
   local source=''
-
   local config='.config/keepassx'
   local target="${home}/${config}"
 

@@ -6,7 +6,6 @@ function module_nvim_setup() {
   local config='.config/nvim'
   local model='nvim'
   local source=''
-
   local target="${home}/${config}"
 
   module_profile_switch_allow "$module_type" && return 0

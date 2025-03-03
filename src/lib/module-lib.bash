@@ -24,7 +24,6 @@ function module_config_backup() {
   local model="$1"
   local target=''
   local source=''
-
   shift
   bl64_check_parameter 'model' || return $?
 

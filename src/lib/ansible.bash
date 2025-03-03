@@ -5,7 +5,6 @@ function module_ansible_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='ansible'
   local source=''
-
   local config='.ansible.cfg'
   local target="${home}/${config}"
 

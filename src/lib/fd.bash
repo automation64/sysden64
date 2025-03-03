@@ -6,7 +6,6 @@ function module_fd_setup() {
   local model='fd'
   local source=''
 
-
   module_profile_switch_allow "$module_type" && return 0
 
   ! bl64_bsh_command_is_executable 'fd' &&
