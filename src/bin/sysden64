@@ -41,7 +41,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-iam.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-core.bash" || exit $?
 
-# shellcheck source-path=SCRIPTDIR/../lib
+# shellcheck source-path=SCRIPTDIR/../lib disable=SC1091
 source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 
 #
