@@ -21,7 +21,7 @@
 
 # Automation64 / Root path
 declare SYSDEN64_PATH_AT64="${HOME}/at64"
-[[ ! -d "$SYSDEN64_PATH_AT64" ]] && SYSDEN64_PATH_AT64='/opt'
+[[ ! -d "${SYSDEN64_PATH_AT64}/bl64" ]] && SYSDEN64_PATH_AT64='/opt'
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64}"
 
