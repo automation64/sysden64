@@ -283,14 +283,16 @@ function create_user_wide_ignore() {
   local repository="$1"
   local path_gitignore="${repository}/.gitignore"
 
-  if ! bl64_txt_run_grep -qFx  '/var/prof/*/home' "$path_gitignore"; then
+  if ! bl64_txt_run_grep -qFx '/var/prof/*/home' "$path_gitignore"; then
     bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
     bl64_txt_run_sed -i.bkp \
       '/# Keep placeholder for empty directories/i\
 /var/prof/*/home\
 /repos/*\
 ' \
-      "$path_gitignore"
+      "$path_gitignore" ||
+      return $?
+    bl64_fs_path_remove "${path_gitignore}.bkp"
   fi
 }
 
@@ -464,8 +466,7 @@ while getopts ':slwugo:i:p:V:D:h' SYSDEN64_OPTION; do
   esac
 done
 bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize || exit $?
-create_user_wide_ignore $HOME/sd64
-exit ## =X=
+
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
 'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
