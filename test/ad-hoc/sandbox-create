@@ -1,0 +1,4 @@
+declare TEST_USER=testusr
+sudo userdel -r $TEST_USER 2> /dev/null
+sudo useradd -m $TEST_USER &&
+sudo usermod -s /bin/zsh $TEST_USER

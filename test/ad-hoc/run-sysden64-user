@@ -1,13 +1,10 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
 export TEST_PROJECT_ROOT="/project"
-export TEST_HOME_ROOT="$HOME/sd64"
-export TEST_HOME_SYSDEN64="$HOME/sd64/lib/sd64"
 export SYSDEN64_PATH_ROOT="$TEST_PROJECT_ROOT/src"
 export SYSDEN64_PATH_BIN="$TEST_PROJECT_ROOT/src/bin"
 export SYSDEN64_PATH_BL64="$TEST_PROJECT_ROOT/lib/bl64"
 export SYSDEN64_PATH_DEVBIN64="$TEST_PROJECT_ROOT/lib/db64"
 export DEV_BOOTSTRAP_PATH_ROOT="$SYSDEN64_PATH_DEVBIN64"
 
-rm -Rf "$TEST_HOME_SYSDEN64/etc" &&
-rm -Rf "$TEST_HOME_SYSDEN64/lib" &&
-cp -Rf "$SYSDEN64_PATH_ROOT/etc" "$TEST_HOME_SYSDEN64/etc" &&
-cp -Rf "$SYSDEN64_PATH_ROOT/lib" "$TEST_HOME_SYSDEN64/lib"
+"$SYSDEN64_PATH_BIN/sysden64" "$@"
