@@ -29,5 +29,5 @@ function module_zsh_setup() {
     "$BL64_VAR_DEFAULT" \
     "$home" \
     "${source}/${config_env}" \
-    "${source}/${config_rc}"
+    "${source}/${BL64_OS_TYPE}/${config_rc}"
 }

@@ -49,7 +49,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.0.0'
+readonly SYSDEN64_VERSION='3.0.1'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB=''
 # SysDen64 / Application configuration boilerplates
@@ -105,6 +105,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
 SYSDEN64_MODULE_LIST_TOOLS+='lnav '
 SYSDEN64_MODULE_LIST_TOOLS+='lsd '
 SYSDEN64_MODULE_LIST_TOOLS+='mc '
+SYSDEN64_MODULE_LIST_TOOLS+='nodejs '
 SYSDEN64_MODULE_LIST_TOOLS+='nvim '
 SYSDEN64_MODULE_LIST_TOOLS+='ripgrep '
 SYSDEN64_MODULE_LIST_TOOLS+='ssh '
@@ -433,7 +434,7 @@ declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '6.1.0'
+bl64_lib_script_version_set '6.1.1'
 bl64_msg_help_usage_set '<-s|-l|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
