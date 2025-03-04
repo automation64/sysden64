@@ -49,7 +49,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='2.1.0'
+readonly SYSDEN64_VERSION='3.0.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB=''
 # SysDen64 / Application configuration boilerplates
