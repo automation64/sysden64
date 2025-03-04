@@ -1,11 +1,13 @@
-# Version: 1.0.1
+# Version: 2.0.0
 function module_zsh_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local config='.zshrc'
+  local config_env='.zshenv'
+  local config_rc='.zshrc'
   local model='zsh'
-  local target="${home}/${config}"
+  local target_env="${home}/${config_env}"
+  local target_rc="${home}/${config_rc}"
   local source=''
   module_profile_switch_allow "$module_type" && return 0
 
@@ -18,13 +20,14 @@ function module_zsh_setup() {
   return $?
 
   module_sync_allow "$module_type" && return 0
-  module_config_backup "$model" "$target" || return $?
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
+  module_config_backup "$model" "$target_env" "$target_rc" || return $?
+  bl64_msg_show_task "promote configuration from model (${model})"
   bl64_fs_path_copy \
     '0700' \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${source}/${config}"
+    "${source}/${config_env}" \
+    "${source}/${config_rc}"
 }

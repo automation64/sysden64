@@ -1,0 +1,2 @@
+declare TEST_USER=testusr
+sudo su - $TEST_USER
