@@ -49,7 +49,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.0.2'
+readonly SYSDEN64_VERSION='3.0.3'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB=''
 # SysDen64 / Application configuration boilerplates
@@ -257,7 +257,7 @@ function xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   bl64_msg_show_phase 'prepare XDG'
-  bl64_iam_xdg_create \
+  bl64_bsh_xdg_create \
     "$home"
 }
 
@@ -437,15 +437,15 @@ bl64_msg_help_usage_set '<-s|-l|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V V
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-  '-s         : Create user-wide configuration
--l         : Create system-wide configuration
--u         : Sync configuration
--w         : Switch user-wide profile
+  '-s         : Create a user-wide configuration
+-l         : Create a system-wide configuration
+-u         : Synchronize the current configuration
+-w         : Switch to the specified configuration profile. Requires the -p argument
 -g         : Upgrade user-wide modules
 -h         : Show help
--o Home    : Full path to the user home directory. Default: $HOME
--i Repo    : SysDen64 repository path. Default: $HOME/sd64
--p Profile : SysDen64 profile name. Required for -d and -w. Default: default
+-o Home    : Set the full path to the users home directory. Defaults to $HOME
+-i Repo    : Set the path to the configuration repository. Defaults to $HOME/sd64
+-p Profile : Specify the configuration profile name. Required for -w. Defaults to default.
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
