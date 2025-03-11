@@ -257,7 +257,7 @@ function xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   bl64_msg_show_phase 'prepare XDG'
-  bl64_iam_xdg_create \
+  bl64_bsh_xdg_create \
     "$home"
 }
 
