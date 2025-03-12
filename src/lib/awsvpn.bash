@@ -1,5 +1,5 @@
 function module_awsvpn_setup() {
-   bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='awsvpn'
@@ -9,7 +9,7 @@ function module_awsvpn_setup() {
 
   module_profile_switch_allow "$module_type" && return 0
 
-  [[ -z "$(bl64_bsh_command_locate 'X_COMMAND_X')" ]] &&
+  [[ ! -d '/Library/Application Support/AWSVPNClient' ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare AWS VPN'
 
