@@ -1,5 +1,5 @@
 function module_X_MODULE_ID_X_setup() {
-   bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='X_MODULE_ID_X'
