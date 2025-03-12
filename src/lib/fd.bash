@@ -8,7 +8,7 @@ function module_fd_setup() {
 
   module_profile_switch_allow "$module_type" && return 0
 
-  ! bl64_bsh_command_is_executable 'fd' &&
+  [[ -z "$(bl64_bsh_command_locate 'fd')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare FD'
 
