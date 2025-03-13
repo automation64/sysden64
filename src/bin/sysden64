@@ -49,7 +49,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.1.0'
+readonly SYSDEN64_VERSION='3.2.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB=''
 # SysDen64 / Application configuration boilerplates
@@ -75,47 +75,6 @@ declare SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_OFF"
 declare SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_OFF"
 # SysDen64 / Flag for devbin repo
 declare SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_OFF"
-
-# SysDen64 / Modules
-declare SYSDEN64_MODULE_LIST_BASE=''
-SYSDEN64_MODULE_LIST_BASE+='env '
-SYSDEN64_MODULE_LIST_BASE+='bash '
-SYSDEN64_MODULE_LIST_BASE+='starship '
-SYSDEN64_MODULE_LIST_BASE+='zsh '
-SYSDEN64_MODULE_LIST_BASE+='omz '
-SYSDEN64_MODULE_LIST_BASE+='p10k '
-declare SYSDEN64_MODULE_LIST_TOOLS=''
-SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
-SYSDEN64_MODULE_LIST_TOOLS+='ansible '
-SYSDEN64_MODULE_LIST_TOOLS+='awscli '
-SYSDEN64_MODULE_LIST_TOOLS+='bat '
-SYSDEN64_MODULE_LIST_TOOLS+='btop '
-SYSDEN64_MODULE_LIST_TOOLS+='delta '
-SYSDEN64_MODULE_LIST_TOOLS+='docker '
-SYSDEN64_MODULE_LIST_TOOLS+='duf '
-SYSDEN64_MODULE_LIST_TOOLS+='fd '
-SYSDEN64_MODULE_LIST_TOOLS+='gcloud '
-SYSDEN64_MODULE_LIST_TOOLS+='git '
-SYSDEN64_MODULE_LIST_TOOLS+='github '
-SYSDEN64_MODULE_LIST_TOOLS+='gpg '
-SYSDEN64_MODULE_LIST_TOOLS+='hwatch '
-SYSDEN64_MODULE_LIST_TOOLS+='homebrew '
-SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
-SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
-SYSDEN64_MODULE_LIST_TOOLS+='lnav '
-SYSDEN64_MODULE_LIST_TOOLS+='lsd '
-SYSDEN64_MODULE_LIST_TOOLS+='mc '
-SYSDEN64_MODULE_LIST_TOOLS+='nodejs '
-SYSDEN64_MODULE_LIST_TOOLS+='nvim '
-SYSDEN64_MODULE_LIST_TOOLS+='python '
-SYSDEN64_MODULE_LIST_TOOLS+='ripgrep '
-SYSDEN64_MODULE_LIST_TOOLS+='ssh '
-SYSDEN64_MODULE_LIST_TOOLS+='terraform '
-SYSDEN64_MODULE_LIST_TOOLS+='tmux '
-SYSDEN64_MODULE_LIST_TOOLS+='zellij '
-
-# Optional
-# OFF # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
 # DevBin64 / Installation path
 declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-${SYSDEN64_PATH_AT64}/devbin64}"
@@ -143,6 +102,51 @@ SYSDEN64_MODULE_DEVBIN64+='shellcheck\n'
 SYSDEN64_MODULE_DEVBIN64+='sysden64\n'
 # DevBin64 / Target profile
 export DEV_PROFILE=''
+
+#
+# SysDen64 / Modules
+#
+
+declare SYSDEN64_MODULE_LIST_BASE=''
+SYSDEN64_MODULE_LIST_BASE+='env '
+SYSDEN64_MODULE_LIST_BASE+='bash '
+SYSDEN64_MODULE_LIST_BASE+='starship '
+SYSDEN64_MODULE_LIST_BASE+='zsh '
+SYSDEN64_MODULE_LIST_BASE+='omz '
+SYSDEN64_MODULE_LIST_BASE+='p10k '
+
+declare SYSDEN64_MODULE_LIST_TOOLS=''
+SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
+SYSDEN64_MODULE_LIST_TOOLS+='ansible '
+SYSDEN64_MODULE_LIST_TOOLS+='awscli '
+SYSDEN64_MODULE_LIST_TOOLS+='bat '
+SYSDEN64_MODULE_LIST_TOOLS+='btop '
+SYSDEN64_MODULE_LIST_TOOLS+='delta '
+SYSDEN64_MODULE_LIST_TOOLS+='docker '
+SYSDEN64_MODULE_LIST_TOOLS+='duf '
+SYSDEN64_MODULE_LIST_TOOLS+='fd '
+SYSDEN64_MODULE_LIST_TOOLS+='gcloud '
+SYSDEN64_MODULE_LIST_TOOLS+='git '
+SYSDEN64_MODULE_LIST_TOOLS+='github '
+SYSDEN64_MODULE_LIST_TOOLS+='gpg '
+SYSDEN64_MODULE_LIST_TOOLS+='hwatch '
+SYSDEN64_MODULE_LIST_TOOLS+='homebrew '
+SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
+SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
+SYSDEN64_MODULE_LIST_TOOLS+='lnav '
+SYSDEN64_MODULE_LIST_TOOLS+='lsd '
+SYSDEN64_MODULE_LIST_TOOLS+='mc '
+SYSDEN64_MODULE_LIST_TOOLS+='nodejs '
+SYSDEN64_MODULE_LIST_TOOLS+='nvim '
+SYSDEN64_MODULE_LIST_TOOLS+='python '
+SYSDEN64_MODULE_LIST_TOOLS+='rd '
+SYSDEN64_MODULE_LIST_TOOLS+='ripgrep '
+SYSDEN64_MODULE_LIST_TOOLS+='ssh '
+SYSDEN64_MODULE_LIST_TOOLS+='terraform '
+SYSDEN64_MODULE_LIST_TOOLS+='tmux '
+SYSDEN64_MODULE_LIST_TOOLS+='zellij '
+
+# Optional # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
 #
 # Functions
@@ -363,7 +367,7 @@ function initialize() {
 
   if [[ "$SYSDEN64_COMMAND" == 'system_wide_create' ]]; then
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "The system-wide feature can not be used when user-wide is already deployed (${SYSDEN64_REPOSITORY})"
+      bl64_msg_show_error "The system-wide feature can not be used when user-wide configuration is already deployed (${SYSDEN64_REPOSITORY})"
       # shellcheck disable=SC2086
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
@@ -374,6 +378,10 @@ function initialize() {
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
+    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+      bl64_msg_show_warning 'The user-wide configuration was already deployed. Use the upgrade (-g) or sync (-u) options to maintain it.'
+      return 0
+    fi
     SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
@@ -419,7 +427,8 @@ function initialize() {
     'SYSDEN64_FLAG_USER_WIDE' \
     'SYSDEN64_PROFILE' \
     'SYSDEN64_REPOSITORY' \
-    'SYSDEN64_PATH_SHARED'
+    'SYSDEN64_PATH_SHARED' \
+    'SYSDEN64_PATH_BACKUP'
 }
 
 #
@@ -433,7 +442,7 @@ declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '6.2.0'
+bl64_lib_script_version_set '6.3.0'
 bl64_msg_help_usage_set '<-s|-l|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016

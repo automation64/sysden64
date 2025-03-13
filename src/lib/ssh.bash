@@ -9,7 +9,7 @@ function module_ssh_setup() {
   local target="${home}/${config}"
   local vault=''
 
-  ! bl64_bsh_command_is_executable 'ssh' &&
+  [[ -z "$(bl64_bsh_command_locate 'ssh')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare OpenSSH'
 

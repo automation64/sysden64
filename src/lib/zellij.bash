@@ -8,7 +8,7 @@ function module_zellij_setup() {
 
   module_profile_switch_allow "$module_type" && return 0
 
-  ! bl64_bsh_command_is_executable 'zellij' &&
+  [[ -z "$(bl64_bsh_command_locate 'zellij')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Zellij'
 
