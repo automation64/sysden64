@@ -76,7 +76,37 @@ declare SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_OFF"
 # SysDen64 / Flag for devbin repo
 declare SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_OFF"
 
+# DevBin64 / Installation path
+declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-${SYSDEN64_PATH_AT64}/devbin64}"
+# DevBin64 / Bootstrap path
+readonly SYSDEN64_CMD_DEVBIN64_BOOTSTRAP="${SYSDEN64_PATH_DEVBIN64}/bin/dev-bootstrap"
+# DevBin64 / Env Set script
+declare SYSDEN64_CMD_DEVBIN64_SET='bin/dev-set'
+# DevBin64 / Profile set script
+declare SYSDEN64_CMD_DEVBIN64_PROFILE='bin/dev-profile-create'
+# DevBin64 / SysDen64 local installer
+declare SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64='bin/dev-lib-sysden64'
+# DevBin64 / Installer64 local installer
+declare SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64='bin/dev-lib-installer64'
+# DevBin64 / Bashlib64 local installer
+declare SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64='bin/dev-lib-bashlib64'
+# DevBin64 / Modules File
+readonly SYSDEN64_FILE_DEVBIN64_MODULE='.devbin64-modules'
+# DevBin64 / Modules
+declare SYSDEN64_MODULE_DEVBIN64=''
+SYSDEN64_MODULE_DEVBIN64+='bash\n'
+SYSDEN64_MODULE_DEVBIN64+='git\n'
+SYSDEN64_MODULE_DEVBIN64+='github\n'
+SYSDEN64_MODULE_DEVBIN64+='gitleaks\n'
+SYSDEN64_MODULE_DEVBIN64+='shellcheck\n'
+SYSDEN64_MODULE_DEVBIN64+='sysden64\n'
+# DevBin64 / Target profile
+export DEV_PROFILE=''
+
+#
 # SysDen64 / Modules
+#
+
 declare SYSDEN64_MODULE_LIST_BASE=''
 SYSDEN64_MODULE_LIST_BASE+='env '
 SYSDEN64_MODULE_LIST_BASE+='bash '
@@ -84,6 +114,7 @@ SYSDEN64_MODULE_LIST_BASE+='starship '
 SYSDEN64_MODULE_LIST_BASE+='zsh '
 SYSDEN64_MODULE_LIST_BASE+='omz '
 SYSDEN64_MODULE_LIST_BASE+='p10k '
+
 declare SYSDEN64_MODULE_LIST_TOOLS=''
 SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
 SYSDEN64_MODULE_LIST_TOOLS+='ansible '
@@ -116,35 +147,7 @@ SYSDEN64_MODULE_LIST_TOOLS+='terraform '
 SYSDEN64_MODULE_LIST_TOOLS+='tmux '
 SYSDEN64_MODULE_LIST_TOOLS+='zellij '
 
-# Optional
-# OFF # SYSDEN64_MODULE_LIST_TOOLS+='eza '
-
-# DevBin64 / Installation path
-declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-${SYSDEN64_PATH_AT64}/devbin64}"
-# DevBin64 / Bootstrap path
-readonly SYSDEN64_CMD_DEVBIN64_BOOTSTRAP="${SYSDEN64_PATH_DEVBIN64}/bin/dev-bootstrap"
-# DevBin64 / Env Set script
-declare SYSDEN64_CMD_DEVBIN64_SET='bin/dev-set'
-# DevBin64 / Profile set script
-declare SYSDEN64_CMD_DEVBIN64_PROFILE='bin/dev-profile-create'
-# DevBin64 / SysDen64 local installer
-declare SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64='bin/dev-lib-sysden64'
-# DevBin64 / Installer64 local installer
-declare SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64='bin/dev-lib-installer64'
-# DevBin64 / Bashlib64 local installer
-declare SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64='bin/dev-lib-bashlib64'
-# DevBin64 / Modules File
-readonly SYSDEN64_FILE_DEVBIN64_MODULE='.devbin64-modules'
-# DevBin64 / Modules
-declare SYSDEN64_MODULE_DEVBIN64=''
-SYSDEN64_MODULE_DEVBIN64+='bash\n'
-SYSDEN64_MODULE_DEVBIN64+='git\n'
-SYSDEN64_MODULE_DEVBIN64+='github\n'
-SYSDEN64_MODULE_DEVBIN64+='gitleaks\n'
-SYSDEN64_MODULE_DEVBIN64+='shellcheck\n'
-SYSDEN64_MODULE_DEVBIN64+='sysden64\n'
-# DevBin64 / Target profile
-export DEV_PROFILE=''
+# Optional # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
 #
 # Functions
