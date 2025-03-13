@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Rancher Desktop
   - AWS VPN
 
+### Changed
+
+- SysDen64
+  - Skip already created user-wide repository (-s)
+
 ## [3.1.0]
 
 ### Added

@@ -365,7 +365,7 @@ function initialize() {
 
   if [[ "$SYSDEN64_COMMAND" == 'system_wide_create' ]]; then
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "The system-wide feature can not be used when user-wide is already deployed (${SYSDEN64_REPOSITORY})"
+      bl64_msg_show_error "The system-wide feature can not be used when user-wide configuration is already deployed (${SYSDEN64_REPOSITORY})"
       # shellcheck disable=SC2086
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
@@ -376,6 +376,10 @@ function initialize() {
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
   elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
+    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+      bl64_msg_show_warning 'The user-wide configuration was already deployed. Use the upgrade (-g) or sync (-u) options to maintain it.'
+      return 0
+    fi
     SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
