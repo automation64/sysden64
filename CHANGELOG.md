@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Env
   - Local bin search path
+- Module
+  - NVM
+- SysDen64
+  - Allow customization of module list (SYSDEN64_MODULE_LIST_TOOLS)
 
 ### Changed
 
