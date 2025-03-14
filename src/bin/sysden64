@@ -159,7 +159,7 @@ function module_upgrade() {
   bl64_dbg_app_show_function
   local module=''
 
-  bl64_msg_show_task "upgrade source shared configuration modules (${SYSDEN64_PATH_SHARED})"
+  bl64_msg_show_task "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
   bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
 
@@ -320,8 +320,8 @@ function user_wide_create() {
   local profile="$3"
 
   if [[ -d "$repository" ]]; then
-      bl64_msg_show_warning 'The user-wide configuration was already deployed. Use the upgrade (-g) or sync (-u) options to maintain it.'
-      return 0
+    bl64_msg_show_warning 'The user-wide configuration was already deployed. Use the upgrade (-g) or sync (-u) options to maintain it.'
+    return 0
   fi
   repository_create "$repository" &&
     xdg_setup "$home" &&
@@ -369,34 +369,41 @@ function configuration_sync() {
 function initialize() {
   bl64_dbg_app_show_function
 
-  bl64_check_parameter 'SYSDEN64_COMMAND' ||
-    { bl64_msg_help_show && return 1; }
-
-  if [[ "$SYSDEN64_COMMAND" == 'system_wide_create' ]]; then
+  case "$SYSDEN64_COMMAND" in
+  'system_wide_create')
     if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
       bl64_msg_show_error "The system-wide feature can not be used when user-wide configuration is already deployed (${SYSDEN64_REPOSITORY})"
       # shellcheck disable=SC2086
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
-  elif [[ "$SYSDEN64_COMMAND" == 'profile_switch' ]]; then
+    ;;
+  'profile_switch')
     SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
-  elif [[ "$SYSDEN64_COMMAND" == 'user_wide_create' ]]; then
+    ;;
+  'user_wide_create')
     SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
-  elif [[ "$SYSDEN64_COMMAND" == 'configuration_sync' ]]; then
+    ;;
+  'configuration_sync')
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
     [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
-  elif [[ "$SYSDEN64_COMMAND" == 'sysden64_upgrade' ]]; then
+    ;;
+  'sysden64_upgrade')
     SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
-  fi
+    ;;
+  *)
+    bl64_check_parameter 'SYSDEN64_COMMAND' ||
+      { bl64_msg_help_show && return 1; }
+    ;;
+  esac
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
