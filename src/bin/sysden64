@@ -107,49 +107,53 @@ export DEV_PROFILE=''
 # SysDen64 / Modules
 #
 
-declare SYSDEN64_MODULE_LIST_BASE=''
-SYSDEN64_MODULE_LIST_BASE+='env '
-SYSDEN64_MODULE_LIST_BASE+='bash '
-SYSDEN64_MODULE_LIST_BASE+='starship '
-SYSDEN64_MODULE_LIST_BASE+='zsh '
-SYSDEN64_MODULE_LIST_BASE+='omz '
-SYSDEN64_MODULE_LIST_BASE+='p10k '
+declare SYSDEN64_MODULES_BASE=''
+SYSDEN64_MODULES_BASE+='env '
+SYSDEN64_MODULES_BASE+='bash '
+SYSDEN64_MODULES_BASE+='starship '
+SYSDEN64_MODULES_BASE+='zsh '
+SYSDEN64_MODULES_BASE+='omz '
+SYSDEN64_MODULES_BASE+='p10k '
 
-declare SYSDEN64_MODULE_LIST_TOOLS_DEFAULT=''
-SYSDEN64_MODULE_LIST_TOOLS+='alacritty '
-SYSDEN64_MODULE_LIST_TOOLS+='ansible '
-SYSDEN64_MODULE_LIST_TOOLS+='awscli '
-SYSDEN64_MODULE_LIST_TOOLS+='bat '
-SYSDEN64_MODULE_LIST_TOOLS+='btop '
-SYSDEN64_MODULE_LIST_TOOLS+='delta '
-SYSDEN64_MODULE_LIST_TOOLS+='docker '
-SYSDEN64_MODULE_LIST_TOOLS+='duf '
-SYSDEN64_MODULE_LIST_TOOLS+='fd '
-SYSDEN64_MODULE_LIST_TOOLS+='gcloud '
-SYSDEN64_MODULE_LIST_TOOLS+='git '
-SYSDEN64_MODULE_LIST_TOOLS+='github '
-SYSDEN64_MODULE_LIST_TOOLS+='gpg '
-SYSDEN64_MODULE_LIST_TOOLS+='hwatch '
-SYSDEN64_MODULE_LIST_TOOLS+='homebrew '
-SYSDEN64_MODULE_LIST_TOOLS+='keepassx '
-SYSDEN64_MODULE_LIST_TOOLS+='kubectl '
-SYSDEN64_MODULE_LIST_TOOLS+='lnav '
-SYSDEN64_MODULE_LIST_TOOLS+='lsd '
-SYSDEN64_MODULE_LIST_TOOLS+='mc '
-SYSDEN64_MODULE_LIST_TOOLS+='nodejs '
-SYSDEN64_MODULE_LIST_TOOLS+='nvim '
-SYSDEN64_MODULE_LIST_TOOLS+='nvm '
-SYSDEN64_MODULE_LIST_TOOLS+='python '
-SYSDEN64_MODULE_LIST_TOOLS+='rd '
-SYSDEN64_MODULE_LIST_TOOLS+='ripgrep '
-SYSDEN64_MODULE_LIST_TOOLS+='ssh '
-SYSDEN64_MODULE_LIST_TOOLS+='terraform '
-SYSDEN64_MODULE_LIST_TOOLS+='tmux '
-SYSDEN64_MODULE_LIST_TOOLS+='zellij '
+declare SYSDEN64_MODULES_DEDICATED_DEFAULT=''
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' awscli'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' docker'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' gcloud'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' gpg'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' kubectl'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' ssh'
+
+declare SYSDEN64_MODULES_SHARED_DEFAULT=''
+SYSDEN64_MODULES_SHARED_DEFAULT+=' alacritty'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' ansible'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' bat'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' btop'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' delta'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' duf'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' eza'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' fd'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' git'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' github'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' homebrew'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' hwatch'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' keepassx'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' lnav'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' lsd'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' mc'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' nodejs'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' nvim'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' nvm'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' python'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' rd'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' ripgrep'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' terraform'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' tmux'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' zellij'
 
 # Optional # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
-declare SYSDEN64_MODULE_LIST_TOOLS="${SYSDEN64_MODULE_LIST_TOOLS:-$SYSDEN64_MODULE_LIST_TOOLS_DEFAULT}"
+declare SYSDEN64_MODULES_SHARED="${SYSDEN64_MODULES_SHARED:-$SYSDEN64_MODULES_SHARED_DEFAULT}"
+declare SYSDEN64_MODULES_DEDICATED="${SYSDEN64_MODULES_DEDICATED:-$SYSDEN64_MODULES_DEDICATED_DEFAULT}"
 
 #
 # Functions
@@ -159,15 +163,12 @@ function shared_module_upgrade() {
   bl64_dbg_app_show_function
   local module=''
 
-  bl64_msg_show_phase "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
+  bl64_msg_show_separator "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
   bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
 
   # shellcheck disable=SC2164
-  for module in $(
-    cd "$SYSDEN64_PATH_SHARED"
-    echo *
-  ); do
+  for module in $SYSDEN64_MODULES_SHARED; do
     bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
     bl64_fs_path_copy \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -179,7 +180,7 @@ function shared_module_upgrade() {
 
 function sysden64_upgrade() {
   bl64_dbg_app_show_function
-  bl64_msg_show_phase 'upgrade base tools'
+  bl64_msg_show_separator 'upgrade base tools'
   cd "$SYSDEN64_REPOSITORY" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
@@ -199,15 +200,23 @@ function module_setup() {
   local module=''
 
   bl64_msg_show_separator 'configure base modules'
-  for module in $SYSDEN64_MODULE_LIST_BASE; do
+  for module in $SYSDEN64_MODULES_BASE; do
     # shellcheck disable=SC1090
     bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
       source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
       "module_${module}_setup" "$home" ||
       return $?
   done
-  bl64_msg_show_separator 'configure optional modules'
-  for module in $SYSDEN64_MODULE_LIST_TOOLS; do
+  bl64_msg_show_separator 'configure shared modules'
+  for module in $SYSDEN64_MODULES_SHARED; do
+    # shellcheck disable=SC1090
+    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+      "module_${module}_setup" "$home" ||
+      return $?
+  done
+  bl64_msg_show_separator 'configure dedicated modules'
+  for module in $SYSDEN64_MODULES_DEDICATED; do
     # shellcheck disable=SC1090
     bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
       source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
@@ -222,7 +231,7 @@ function devbin64_setup() {
   local repository="$2"
   local profile="$3"
 
-  bl64_msg_show_phase 'prepare DevBin64'
+  bl64_msg_show_phase 'prepare configuration repository'
   bl64_msg_show_task "source environment (${repository} - ${profile})"
   DEV_PROFILE="$profile"
   unset DEV_PATH_ROOT
@@ -265,7 +274,7 @@ function devbin64_setup() {
 function xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  bl64_msg_show_phase 'prepare XDG'
+  bl64_msg_show_phase 'create XDG paths'
   bl64_bsh_xdg_create \
     "$home"
 }
@@ -294,14 +303,13 @@ function create_user_wide_ignore() {
 
   if ! bl64_txt_run_grep -qFx '/var/prof/*/home' "$path_gitignore"; then
     bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
-    bl64_txt_run_sed -i.bkp \
+    bl64_txt_line_replace_sed \
+      "$path_gitignore" \
       '/# Keep placeholder for empty directories/i\
 /var/prof/*/home\
 /repos/*\
-' \
-      "$path_gitignore" ||
+' ||
       return $?
-    bl64_fs_path_remove "${path_gitignore}.bkp"
   fi
 }
 
@@ -408,7 +416,7 @@ function initialize() {
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
     SYSDEN64_PATH_VERSION="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_VERSION}"
-    SYSDEN64_PATH_BACKUP="${SYSDEN64_REPOSITORY}/tmp/${SYSDEN64_PATH_BACKUP}"
+    SYSDEN64_PATH_BACKUP="${SYSDEN64_REPOSITORY}/var/${SYSDEN64_PATH_BACKUP}"
     SYSDEN64_CMD_DEVBIN64_SET="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_SET}"
     SYSDEN64_CMD_DEVBIN64_PROFILE="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_PROFILE}"
     SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64}"

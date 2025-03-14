@@ -14,12 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module
   - NVM
 - SysDen64
-  - Allow customization of module list (SYSDEN64_MODULE_LIST_TOOLS)
+  - Allow customization of module list (SYSDEN64_MODULES_SHARED, SYSDEN64_MODULES_DEDICATED)
 
 ### Changed
 
 - All
   - Normalized env file names
+- SysDen64
+  - Backups are now stored in var/ to allow git tracking
 
 ## [3.2.1]
 
