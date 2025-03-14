@@ -155,11 +155,11 @@ declare SYSDEN64_MODULE_LIST_TOOLS="${SYSDEN64_MODULE_LIST_TOOLS:-$SYSDEN64_MODU
 # Functions
 #
 
-function module_upgrade() {
+function shared_module_upgrade() {
   bl64_dbg_app_show_function
   local module=''
 
-  bl64_msg_show_task "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
+  bl64_msg_show_phase "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
   bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
 
@@ -179,11 +179,12 @@ function module_upgrade() {
 
 function sysden64_upgrade() {
   bl64_dbg_app_show_function
+  bl64_msg_show_phase 'upgrade base tools'
   cd "$SYSDEN64_REPOSITORY" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64" &&
-    module_upgrade
+    shared_module_upgrade
 }
 
 function version_register() {
