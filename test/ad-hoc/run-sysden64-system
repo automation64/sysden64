@@ -1,8 +1,8 @@
 [[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
 
-export TEST_PROJECT_ROOT="/project"
 export TEST_HOME_ROOT="/opt"
 export TEST_SD64_ROOT="$TEST_HOME_ROOT/sysden64"
-export TEST_SD64_SRC="$TEST_PROJECT_ROOT/src"
 
+cd "$HOME"
+/bin/rm -Rf "$HOME/sd64"
 "$TEST_SD64_ROOT/bin/sysden64" "$@"
