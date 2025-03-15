@@ -15,12 +15,15 @@ function module_X_MODULE_ID_X_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
-  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
+  module_sync_allow "$module_type" && return 0
+  module_config_backup "$model" "$target" || return $?
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
+  # shellcheck disable=SC2086
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env
+    "${home}/.config" \
+    "${source}/${config}"
 }
