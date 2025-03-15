@@ -14,7 +14,7 @@ function module_p10k_setup() {
   bl64_msg_show_phase 'prepare PowerLevel10K'
 
   source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+    return $?
 
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task 'setup PowerLevel10K'
@@ -29,8 +29,8 @@ function module_p10k_setup() {
     return $?
 
   bl64_msg_show_task "enable PowerLevel10K (${profile})"
-  if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" '# PowerLevel10K' "$profile"; then
-    "$BL64_OS_CMD_CAT" \
+  if ! bl64_txt_search_line '# PowerLevel10K' "$profile"; then
+    "$bl64_os_run_cat" \
       "${source}/p10k.snippet" >>"$profile"
   fi
 }
