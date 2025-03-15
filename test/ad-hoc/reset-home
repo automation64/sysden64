@@ -1,0 +1,5 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
+cd "$HOME"
+/bin/rm -Rf "$HOME/sd64"
+/bin/rm -f "$HOME/sd64"/*
