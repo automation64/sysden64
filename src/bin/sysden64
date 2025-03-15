@@ -301,15 +301,15 @@ function create_user_wide_ignore() {
   local repository="$1"
   local path_gitignore="${repository}/.gitignore"
 
-  if ! bl64_txt_run_grep -qFx '/var/prof/*/home' "$path_gitignore"; then
+  if ! bl64_txt_search_line "$path_gitignore" '/var/prof/*/home'; then
     bl64_msg_show_task "update .gitignore to ignore home profiles (${path_gitignore})"
-    bl64_txt_line_replace_sed \
-      "$path_gitignore" \
+    bl64_txt_run_sed -i"$BL64_LIB_SUFFIX_BACKUP" \
       '/# Keep placeholder for empty directories/i\
 /var/prof/*/home\
 /repos/*\
-' ||
+' "$path_gitignore" ||
       return $?
+    bl64_fs_path_remove "${path_gitignore}${BL64_LIB_SUFFIX_BACKUP}"
   fi
 }
 
@@ -447,7 +447,9 @@ function initialize() {
     'SYSDEN64_HOME' \
     'SYSDEN64_PROFILE' \
     'SYSDEN64_REPOSITORY' \
-    'SYSDEN64_MODULE_LIST_TOOLS' \
+    'SYSDEN64_MODULES_BASE' \
+    'SYSDEN64_MODULES_SHARED' \
+    'SYSDEN64_MODULES_DEDICATED' \
     'SYSDEN64_PATH_SHARED' \
     'SYSDEN64_PATH_BACKUP'
 }
