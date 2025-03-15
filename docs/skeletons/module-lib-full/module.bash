@@ -13,7 +13,7 @@ function module_X_MODULE_ID_X_setup() {
   bl64_msg_show_phase 'prepare X_APP_X'
 
   source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+    return $?
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \
