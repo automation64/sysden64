@@ -201,7 +201,7 @@ function version_check() {
 
 function repository_check() {
   bl64_dbg_app_show_function
-  if [[ ! -d "$SYSDEN64_PATH_REPOSITORY" ]]; then
+  if [[ ! -d "$SYSDEN64_REPOSITORY" ]]; then
     bl64_msg_show_error 'SysDen64 needs to be initialized. Please deploy a user-wide configuration first.'
     return 1
   fi
@@ -216,24 +216,27 @@ function version_register() {
 function module_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
+  local dedicated_only="${2:-$BL64_VAR_OFF}"
   local module=''
 
-  bl64_msg_show_separator 'configure base modules'
-  for module in $SYSDEN64_MODULES_BASE; do
-    # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      "module_${module}_setup" "$home" ||
-      return $?
-  done
-  bl64_msg_show_separator 'configure shared modules'
-  for module in $SYSDEN64_MODULES_SHARED; do
-    # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      "module_${module}_setup" "$home" ||
-      return $?
-  done
+  if ! bl64_lib_flag_is_enabled "$dedicated_only"; then
+    bl64_msg_show_separator 'configure base modules'
+    for module in $SYSDEN64_MODULES_BASE; do
+      # shellcheck disable=SC1090
+      bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+        source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+        "module_${module}_setup" "$home" ||
+        return $?
+    done
+    bl64_msg_show_separator 'configure shared modules'
+    for module in $SYSDEN64_MODULES_SHARED; do
+      # shellcheck disable=SC1090
+      bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+        source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+        "module_${module}_setup" "$home" ||
+        return $?
+    done
+  fi
   bl64_msg_show_separator 'configure dedicated modules'
   for module in $SYSDEN64_MODULES_DEDICATED; do
     # shellcheck disable=SC1090
@@ -382,7 +385,7 @@ function profile_switch() {
   fi
   devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
-    module_setup "$home"
+    module_setup "$home" "$BL64_VAR_ON"
 }
 
 function sysden64_upgrade() {

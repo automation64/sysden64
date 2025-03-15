@@ -27,6 +27,11 @@ function module_config_backup() {
   shift
   bl64_check_parameter 'model' || return $?
 
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH"; then
+    bl64_dbg_app_show_info 'Switching profiles. No backup required'
+    return 0
+  fi
+
   target="${SYSDEN64_PATH_BACKUP}/${model}"
   for source in "$@"; do
     if [[ -f "$source" || -d "$source" ]]; then
