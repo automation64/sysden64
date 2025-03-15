@@ -28,25 +28,17 @@ function module_config_backup() {
   bl64_check_parameter 'model' || return $?
 
   target="${SYSDEN64_PATH_BACKUP}/${model}"
-  if [[ ! -d "$target" ]]; then
-    bl64_msg_show_task "create configuration backup repository (${SYSDEN64_PATH_BACKUP})"
-    bl64_fs_dir_create \
-      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$SYSDEN64_PATH_BACKUP" \
-      "$target" ||
-      return $?
-  else
-    bl64_dbg_app_show_info 'detected previous sysden64 run, no cfg backups will be taken'
-    return 0
-  fi
-
   for source in "$@"; do
     if [[ -f "$source" || -d "$source" ]]; then
-      bl64_msg_show_task "backup previous configuration files (${source} -> ${SYSDEN64_PATH_BACKUP})"
-      bl64_fs_run_mv \
-        "$BL64_FS_SET_MV_FORCE" \
-        "$source" \
-        "$target" ||
+      bl64_msg_show_task "backup previous configuration files (${source} -> ${target})"
+      bl64_fs_dir_create \
+        "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+        "$SYSDEN64_PATH_BACKUP" \
+        "$target" &&
+        bl64_fs_run_mv \
+          "$BL64_FS_SET_MV_FORCE" \
+          "$source" \
+          "$target" ||
         return $?
     fi
   done

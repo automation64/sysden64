@@ -28,7 +28,8 @@ declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64
 # BashLib64 / Installation path
 declare SYSDEN64_PATH_BL64="${SYSDEN64_PATH_BL64:-${SYSDEN64_PATH_AT64}/bl64}"
 # shellcheck source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
+source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
+  source "${SYSDEN64_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${SYSDEN64_PATH_BL64}/bashlib64-module-bsh.bash" &&
@@ -159,6 +160,18 @@ declare SYSDEN64_MODULES_DEDICATED="${SYSDEN64_MODULES_DEDICATED:-$SYSDEN64_MODU
 # Functions
 #
 
+function backup_repository_create() {
+  bl64_dbg_app_show_function
+  local current_backup=''
+  bl64_msg_show_task "create configuration backup repository (${SYSDEN64_PATH_BACKUP})"
+  current_backup="${SYSDEN64_PATH_BACKUP}/$(bl64_tm_create_timestamp_file)" &&
+    bl64_fs_dir_create \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+      "$SYSDEN64_PATH_BACKUP" \
+      "$current_backup" &&
+    SYSDEN64_PATH_BACKUP="$current_backup"
+}
+
 function shared_module_upgrade() {
   bl64_dbg_app_show_function
   local module=''
@@ -178,18 +191,24 @@ function shared_module_upgrade() {
   done
 }
 
-function sysden64_upgrade() {
+function version_check() {
   bl64_dbg_app_show_function
-  bl64_msg_show_separator 'upgrade base tools'
-  cd "$SYSDEN64_REPOSITORY" &&
-    "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
-    "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
-    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64" &&
-    shared_module_upgrade
+  if [[ ! -s "SYSDEN64_PATH_VERSION" ]]; then
+    bl64_msg_show_error 'SysDen64 needs to be initialized. Please deploy a system-wide or user-wide configuration first.'
+    return 1
+  fi
+}
+
+function repository_check() {
+  bl64_dbg_app_show_function
+  if [[ ! -d "SYSDEN64_PATH_REPOSITORY" ]]; then
+    bl64_msg_show_error 'SysDen64 needs to be initialized. Please deploy a user-wide configuration first.'
+    return 1
+  fi
 }
 
 function version_register() {
-  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_show_function
   bl64_msg_show_task "register sysden64 version (${SYSDEN64_PATH_VERSION})"
   echo "$SYSDEN64_VERSION" >"$SYSDEN64_PATH_VERSION"
 }
@@ -231,7 +250,7 @@ function devbin64_setup() {
   local repository="$2"
   local profile="$3"
 
-  bl64_msg_show_phase 'prepare configuration repository'
+  bl64_msg_show_phase 'populate configuration repository'
   bl64_msg_show_task "source environment (${repository} - ${profile})"
   DEV_PROFILE="$profile"
   unset DEV_PATH_ROOT
@@ -283,6 +302,7 @@ function repository_create() {
   bl64_dbg_app_show_function "$@"
   local repository="$1"
 
+  bl64_msg_show_task "create user-wide configuration repository (${repository})"
   # shellcheck disable=SC2059
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -318,8 +338,9 @@ function system_wide_create() {
   local home="$1"
 
   xdg_setup "$home" &&
+    backup_repository_create &&
     module_setup "$home" &&
-    version_register "$home"
+    version_register
 }
 
 function user_wide_create() {
@@ -335,8 +356,9 @@ function user_wide_create() {
   repository_create "$repository" &&
     xdg_setup "$home" &&
     devbin64_setup "$home" "$repository" "$profile" &&
+    backup_repository_create &&
     module_setup "$home" &&
-    version_register "$repository"
+    version_register
 }
 
 function profile_switch() {
@@ -346,6 +368,9 @@ function profile_switch() {
   local profile="$3"
   local current=''
 
+  version_check &&
+    repository_check ||
+    return $?
   if [[ -f "$SYSDEN64_PATH_PROFILE" ]]; then
     current="$(<"$SYSDEN64_PATH_PROFILE")" ||
       return $?
@@ -355,13 +380,28 @@ function profile_switch() {
     fi
   fi
   devbin64_setup "$home" "$repository" "$profile" &&
+    backup_repository_create &&
     module_setup "$home"
+}
+
+function sysden64_upgrade() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_separator 'upgrade base tools'
+  version_check &&
+    cd "$SYSDEN64_REPOSITORY" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
+    "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64" &&
+    shared_module_upgrade
 }
 
 function configuration_sync() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  module_setup "$home"
+  version_check &&
+    repository_check &&
+    backup_repository_create &&
+    module_setup "$home"
 }
 
 #######################################
@@ -390,8 +430,6 @@ function initialize() {
     SYSDEN64_FLAG_USER_WIDE='ON'
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_ON"
-    bl64_check_directory "$SYSDEN64_REPOSITORY" ||
-      return $?
     ;;
   'user_wide_create')
     SYSDEN64_FLAG_USER_WIDE='ON'
@@ -405,8 +443,6 @@ function initialize() {
     ;;
   'sysden64_upgrade')
     SYSDEN64_FLAG_USER_WIDE='ON'
-    bl64_check_directory "$SYSDEN64_REPOSITORY" ||
-      return $?
     ;;
   *)
     bl64_check_parameter 'SYSDEN64_COMMAND' ||
