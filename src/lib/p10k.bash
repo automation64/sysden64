@@ -3,7 +3,7 @@ function module_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local model='powerlevel10k'
+  local model='p10k'
   local source=''
   local config='.p10k.zsh'
   local target="${home}/${config}"

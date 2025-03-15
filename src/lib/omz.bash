@@ -14,7 +14,7 @@ function module_omz_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local model='oh-my-zsh'
+  local model='omz'
   local source=''
   local config='.oh-my-zsh'
   local target="${home}/${config}"
