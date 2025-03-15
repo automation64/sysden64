@@ -1,3 +1,4 @@
+# Version: 1.0.1
 function module_nvm_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -7,11 +8,11 @@ function module_nvm_setup() {
   local target="${home}/${config}"
   local source=''
 
-  [[ -s "${HOME}/.nvm/nvm.sh" ]] &&
+  [[ ! -s "${HOME}/.nvm/nvm.sh" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare NVM'
 
-    source="$(module_set_model "$module_type" "$model")" ||
+  source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
