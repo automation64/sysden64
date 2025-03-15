@@ -340,6 +340,10 @@ function system_wide_create() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
 
+  if [[ -s "$SYSDEN64_PATH_VERSION" ]]; then
+    bl64_msg_show_warning 'The system-wide configuration was already deployed. Use the sync (-u) option to refresh the configuration.'
+    return 0
+  fi
   xdg_setup "$home" &&
     backup_repository_create &&
     module_setup "$home" &&
@@ -403,7 +407,6 @@ function configuration_sync() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   version_check &&
-    repository_check &&
     backup_repository_create &&
     module_setup "$home"
 }

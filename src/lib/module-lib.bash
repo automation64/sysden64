@@ -59,34 +59,6 @@ function module_check_type() {
   fi
 }
 
-function module_create_shared() {
-  bl64_dbg_app_show_function "$@"
-  local module_type="$1"
-  local module="$2"
-
-  bl64_check_parameter 'model' &&
-    module_check_type "$module_type" ||
-    return $?
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
-    bl64_dbg_app_show_info 'user-wide is disabled. No further action taken'
-    return 0
-  fi
-
-  if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
-    bl64_dbg_app_show_info 'shared configuration is disabled for the module. No further action taken'
-    return 0
-  fi
-
-  if [[ ! -d "${SYSDEN64_PATH_SHARED}/${module}" ]]; then
-    bl64_msg_show_task "create shared user-wide configuration model (${SYSDEN64_PATH_SHARED}/${model})"
-    bl64_fs_path_copy \
-      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$SYSDEN64_PATH_SHARED" \
-      "${SYSDEN64_PATH_ETC}/${module}" ||
-      return $?
-  fi
-}
-
 function module_set_model() {
   local module_type="$1"
   local module="$2"
@@ -112,24 +84,6 @@ function module_sync_allow() {
     bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"
   elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
     bl64_dbg_app_show_info 'shared module. Always allow sync'
-    return 1
-  fi
-}
-
-function module_profile_switch_allow() {
-  bl64_dbg_app_show_function "$@"
-  local module_type="$1"
-  module_check_type "$module_type" ||
-    exit $?
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
-    if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
-      bl64_dbg_app_show_info 'not a shared module. Always switch profile'
-      return 1
-    elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
-      bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH"
-    fi
-  else
-    bl64_dbg_app_show_info 'user-wide is disabled. Ignore profile switch'
     return 1
   fi
 }

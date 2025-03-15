@@ -13,7 +13,6 @@ function module_ssh_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare OpenSSH'
 
-  module_create_shared "$module_type" "$model" &&
   source="$(module_set_model "$module_type" "$model")" ||
   return $?
 
