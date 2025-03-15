@@ -9,6 +9,7 @@ function module_zsh_setup() {
   local target_env="${home}/${config_env}"
   local target_rc="${home}/${config_rc}"
   local source=''
+
   [[ -z "$(bl64_bsh_command_locate 'zsh')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare ZSH'
