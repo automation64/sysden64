@@ -64,7 +64,7 @@ declare SYSDEN64_PATH_PROFILE='.sysden64-profile'
 # SysDen64 / External repositories
 readonly SYSDEN64_PATH_REPOS='repos'
 # SysDen64 / Home config Backup
-declare SYSDEN64_PATH_BACKUP='home-bkp'
+declare SYSDEN64_PATH_BACKUP='backup'
 # SysDen64 / Shared configs
 declare SYSDEN64_PATH_SHARED='shared'
 # SysDen64 / Prefix
@@ -74,7 +74,7 @@ declare SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_OFF"
 # SysDen64 / Module upgrade marker
 declare SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_OFF"
 # SysDen64 / Flag for devbin repo
-declare SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_OFF"
+declare SYSDEN64_FLAG_USER_WIDE='OFF'
 
 # DevBin64 / Installation path
 declare SYSDEN64_PATH_DEVBIN64="${SYSDEN64_PATH_DEVBIN64:-${SYSDEN64_PATH_AT64}/devbin64}"
@@ -274,7 +274,7 @@ function devbin64_setup() {
 function xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  bl64_msg_show_phase 'create XDG paths'
+  bl64_msg_show_task 'create XDG paths'
   bl64_bsh_xdg_create \
     "$home"
 }
@@ -387,24 +387,24 @@ function initialize() {
     fi
     ;;
   'profile_switch')
-    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE='ON'
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_PROFILE_SWITCH="$BL64_VAR_ON"
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
     ;;
   'user_wide_create')
-    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE='ON'
     bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
       return $?
     ;;
   'configuration_sync')
     # shellcheck disable=SC2034
     SYSDEN64_FLAG_MODULE_SYNC="$BL64_VAR_ON"
-    [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
+    [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
     ;;
   'sysden64_upgrade')
-    SYSDEN64_FLAG_USER_WIDE="$BL64_VAR_ON"
+    SYSDEN64_FLAG_USER_WIDE='ON'
     bl64_check_directory "$SYSDEN64_REPOSITORY" ||
       return $?
     ;;
@@ -436,6 +436,8 @@ function initialize() {
     SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64="${SYSDEN64_PATH_DEVBIN64}/${SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64}"
     SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
     SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
+    SYSDEN64_PROFILE=''
+    SYSDEN64_PATH_SHARED=''
     bl64_check_directory "$SYSDEN64_PATH_ETC" &&
       bl64_check_directory "$SYSDEN64_PATH_LIB" ||
       return $?
