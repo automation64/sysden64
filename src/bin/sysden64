@@ -52,9 +52,9 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 # SysDen64 / Version
 readonly SYSDEN64_VERSION='3.3.0'
 # SysDen64 / Application configuration setup modules
-declare SYSDEN64_PATH_LIB=''
+declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
-declare SYSDEN64_PATH_ETC=''
+declare SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ETC:-}"
 # SysDen64 / Shell modules repository
 # shellcheck disable=SC2034
 readonly SYSDEN64_PATH_SHELLENV='.env.d'
@@ -193,7 +193,7 @@ function shared_module_upgrade() {
 
 function version_check() {
   bl64_dbg_app_show_function
-  if [[ ! -s "SYSDEN64_PATH_VERSION" ]]; then
+  if [[ ! -s "$SYSDEN64_PATH_VERSION" ]]; then
     bl64_msg_show_error 'SysDen64 needs to be initialized. Please deploy a system-wide or user-wide configuration first.'
     return 1
   fi
@@ -201,7 +201,7 @@ function version_check() {
 
 function repository_check() {
   bl64_dbg_app_show_function
-  if [[ ! -d "SYSDEN64_PATH_REPOSITORY" ]]; then
+  if [[ ! -d "$SYSDEN64_PATH_REPOSITORY" ]]; then
     bl64_msg_show_error 'SysDen64 needs to be initialized. Please deploy a user-wide configuration first.'
     return 1
   fi
@@ -357,6 +357,7 @@ function user_wide_create() {
     xdg_setup "$home" &&
     devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
+    shared_module_upgrade &&
     module_setup "$home" &&
     version_register
 }
@@ -386,8 +387,8 @@ function profile_switch() {
 
 function sysden64_upgrade() {
   bl64_dbg_app_show_function
-  bl64_msg_show_separator 'upgrade base tools'
   version_check &&
+    bl64_msg_show_separator 'upgrade base tools' &&
     cd "$SYSDEN64_REPOSITORY" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64" &&
@@ -458,8 +459,8 @@ function initialize() {
     SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64}"
     SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64}"
     SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64="${SYSDEN64_REPOSITORY}/${SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64}"
-    SYSDEN64_PATH_LIB="${SYSDEN64_REPOSITORY}/lib/sd64/lib"
-    SYSDEN64_PATH_ETC="${SYSDEN64_REPOSITORY}/lib/sd64/etc"
+    SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-${SYSDEN64_REPOSITORY}/lib/sd64/lib}"
+    SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ETC:-${SYSDEN64_REPOSITORY}/lib/sd64/etc}"
     SYSDEN64_PATH_SHARED="${SYSDEN64_REPOSITORY}/etc/${SYSDEN64_PATH_SHARED}"
     SYSDEN64_PATH_PROFILE="${SYSDEN64_REPOSITORY}/${SYSDEN64_PATH_PROFILE}"
   else
@@ -470,14 +471,24 @@ function initialize() {
     SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64="${SYSDEN64_PATH_DEVBIN64}/${SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64}"
     SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64="${SYSDEN64_PATH_DEVBIN64}/${SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64}"
     SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64="${SYSDEN64_PATH_DEVBIN64}/${SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64}"
-    SYSDEN64_PATH_LIB="${SYSDEN64_PATH_ROOT}/lib"
-    SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ROOT}/etc"
+    SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-${SYSDEN64_PATH_ROOT}/lib}"
+    SYSDEN64_PATH_ETC="${SYSDEN64_PATH_ETC:-${SYSDEN64_PATH_ROOT}/etc}"
     SYSDEN64_PROFILE=''
     SYSDEN64_PATH_SHARED=''
     bl64_check_directory "$SYSDEN64_PATH_ETC" &&
       bl64_check_directory "$SYSDEN64_PATH_LIB" ||
       return $?
   fi
+  bl64_dbg_app_show_vars \
+    'SYSDEN64_PATH_VERSION' \
+    'SYSDEN64_CMD_DEVBIN64_SET' \
+    'SYSDEN64_CMD_DEVBIN64_PROFILE' \
+    'SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64' \
+    'SYSDEN64_CMD_DEVBIN64_LIB_INSTALLER64' \
+    'SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64' \
+    'SYSDEN64_PATH_AT64' \
+    'SYSDEN64_PATH_ROOT' \
+    'SYSDEN64_PATH_BL64'
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'SYSDEN64_VERSION' \
     'SYSDEN64_COMMAND' \
@@ -485,6 +496,8 @@ function initialize() {
     'SYSDEN64_HOME' \
     'SYSDEN64_PROFILE' \
     'SYSDEN64_REPOSITORY' \
+    'SYSDEN64_PATH_ETC' \
+    'SYSDEN64_PATH_LIB' \
     'SYSDEN64_MODULES_BASE' \
     'SYSDEN64_MODULES_SHARED' \
     'SYSDEN64_MODULES_DEDICATED' \
