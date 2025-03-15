@@ -1,3 +1,4 @@
+# Version: 1.1.0
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -6,14 +7,23 @@ function module_starship_setup() {
   local source=''
   local config='.config/starship.toml'
   local target="${home}/${config}"
-  local profile="${home}/.bash_profile"
 
-  [[ -z "$(bl64_bsh_command_locate 'starship')" ]] &&
+  [[ -z "$(bl64_bsh_command_locate 'starship')" || -z "$(bl64_bsh_command_locate 'bash')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare Starship'
 
   source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+    return $?
+
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${SYSDEN64_PATH_SHELLENV}" \
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
+    return $?
 
   module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
@@ -24,13 +34,5 @@ function module_starship_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/.config" \
-    "${source}/${config}" ||
-  return $?
-
-  bl64_msg_show_task "Enable Starship (${profile})"
-  if ! bl64_txt_run_egrep "$BL64_TXT_SET_GREP_QUIET" 'starship init bash' "$profile"; then
-    printf \
-      '\neval "$(starship init bash)"\n' \
-      >>"$profile"
-  fi
+    "${source}/${config}"
 }

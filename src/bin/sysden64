@@ -50,7 +50,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.3.2'
+readonly SYSDEN64_VERSION='3.3.3'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -181,7 +181,7 @@ function shared_module_upgrade() {
     return $?
 
   # shellcheck disable=SC2164
-  for module in $SYSDEN64_MODULES_SHARED; do
+  for module in $SYSDEN64_MODULES_BASE $SYSDEN64_MODULES_SHARED; do
     bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
     bl64_fs_path_copy \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
