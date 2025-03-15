@@ -49,7 +49,7 @@ function module_omz_setup_zsh() {
   local profile="$4"
   bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
   bl64_check_directory "$omz_path" || return $?
-  if ! bl64_txt_search_line '# OhMyZSH' "$profile"; then
+  if ! bl64_txt_search_line "$profile" '# OhMyZSH'; then
     bl64_os_run_cat \
       "${source}/oh-my-zsh.snippet" >>"$profile"
   fi

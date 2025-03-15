@@ -29,8 +29,8 @@ function module_p10k_setup() {
     return $?
 
   bl64_msg_show_task "enable PowerLevel10K (${profile})"
-  if ! bl64_txt_search_line '# PowerLevel10K' "$profile"; then
-    "$bl64_os_run_cat" \
+  if ! bl64_txt_search_line "$profile" '# PowerLevel10K'; then
+    bl64_os_run_cat \
       "${source}/p10k.snippet" >>"$profile"
   fi
 }
