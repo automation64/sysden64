@@ -3,10 +3,10 @@ function module_lsd_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local config='.config/lsd'
-  local target="${home}/${config}"
   local model='lsd'
   local source=''
+  local config='.config/lsd'
+  local target="${home}/${config}"
 
   [[ -z "$(bl64_bsh_command_locate 'lsd')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0

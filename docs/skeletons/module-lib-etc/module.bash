@@ -24,6 +24,6 @@ function module_X_MODULE_ID_X_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "${home}/.config" \
+    "${home}/X_BASE_TARGET_X" \
     "${source}/${config}"
 }

@@ -3,9 +3,9 @@ function module_rd_setup() {
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='rd'
+  local source=''
   local config='rd'
   local target="${home}/${config}"
-  local source=''
 
   [[ ! -x "$HOME/.rd/bin/docker" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
