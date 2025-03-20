@@ -9,8 +9,7 @@ function module_vscode_setup() {
   local target="${home}/${config}"
   local extra_locations='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
 
-  # shellcheck disable=SC2086
-  [[ -z "$(bl64_bsh_command_locate 'code' $extra_locations)" ]] &&
+  [[ -z "$(bl64_bsh_command_locate 'code' "$extra_locations")" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare VSCode'
 
