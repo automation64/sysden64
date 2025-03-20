@@ -50,7 +50,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.3.5'
+readonly SYSDEN64_VERSION='3.4.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -94,13 +94,13 @@ declare SYSDEN64_CMD_DEVBIN64_LIB_BASHLIB64='bin/dev-lib-bashlib64'
 # DevBin64 / Modules File
 readonly SYSDEN64_FILE_DEVBIN64_MODULE='.devbin64-modules'
 # DevBin64 / Modules
-declare SYSDEN64_MODULE_DEVBIN64=''
-SYSDEN64_MODULE_DEVBIN64+='bash\n'
-SYSDEN64_MODULE_DEVBIN64+='git\n'
-SYSDEN64_MODULE_DEVBIN64+='github\n'
-SYSDEN64_MODULE_DEVBIN64+='gitleaks\n'
-SYSDEN64_MODULE_DEVBIN64+='shellcheck\n'
-SYSDEN64_MODULE_DEVBIN64+='sysden64\n'
+declare SYSDEN64_DEVBIN64_MODULE=''
+SYSDEN64_DEVBIN64_MODULE+='bash\n'
+SYSDEN64_DEVBIN64_MODULE+='git\n'
+SYSDEN64_DEVBIN64_MODULE+='github\n'
+SYSDEN64_DEVBIN64_MODULE+='gitleaks\n'
+SYSDEN64_DEVBIN64_MODULE+='shellcheck\n'
+SYSDEN64_DEVBIN64_MODULE+='sysden64\n'
 # DevBin64 / Target profile
 export DEV_PROFILE=''
 
@@ -108,6 +108,7 @@ export DEV_PROFILE=''
 # SysDen64 / Modules
 #
 
+declare SYSDEN64_MODULES_CUSTOM='custom'
 declare SYSDEN64_MODULES_BASE=''
 SYSDEN64_MODULES_BASE+='env '
 SYSDEN64_MODULES_BASE+='bash '
@@ -115,6 +116,7 @@ SYSDEN64_MODULES_BASE+='starship '
 SYSDEN64_MODULES_BASE+='zsh '
 SYSDEN64_MODULES_BASE+='omz '
 SYSDEN64_MODULES_BASE+='p10k '
+SYSDEN64_MODULES_BASE+="${SYSDEN64_MODULES_CUSTOM} "
 
 declare SYSDEN64_MODULES_DEDICATED_DEFAULT=''
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' awscli'
@@ -149,6 +151,7 @@ SYSDEN64_MODULES_SHARED_DEFAULT+=' rd'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' ripgrep'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' terraform'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' tmux'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' vscode'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' zellij'
 
 # Optional # SYSDEN64_MODULE_LIST_TOOLS+='eza '
@@ -182,7 +185,11 @@ function shared_module_upgrade() {
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_BASE $SYSDEN64_MODULES_SHARED; do
-    bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
+    if [[ "$module" == "$SYSDEN64_MODULES_CUSTOM" ]]; then
+      [[ -d "${SYSDEN64_PATH_SHARED}/${module}" ]] && continue
+    else
+      bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
+    fi
     bl64_fs_path_copy \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$SYSDEN64_PATH_SHARED" \
@@ -313,7 +320,7 @@ function repository_create() {
     "${repository}/${SYSDEN64_PATH_REPOS}" &&
     bl64_fs_file_create "${repository}/${SYSDEN64_PATH_REPOS}/.gitkeep" &&
     cd "$repository" &&
-    printf "$SYSDEN64_MODULE_DEVBIN64" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
+    printf "$SYSDEN64_DEVBIN64_MODULE" >"${repository}/${SYSDEN64_FILE_DEVBIN64_MODULE}" &&
     "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" &&
     create_user_wide_ignore "$repository" &&
     "$SYSDEN64_CMD_DEVBIN64_LIB_SYSDEN64"
