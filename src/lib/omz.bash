@@ -1,4 +1,4 @@
-# Version: 1.0.2
+# Version: 1.0.3
 declare SYSDEN64_GIT_OMZ='https://github.com/ohmyzsh/ohmyzsh.git'
 declare SYSDEN64_GIT_OMZ_PLUGINS=''
 SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'
@@ -38,7 +38,7 @@ function module_omz_setup() {
   module_config_backup "$model" "$target" &&
     module_omz_setup_main "$home" "$local_repo" "$omz_path" &&
     module_omz_setup_plugins "$home" "$local_repo" &&
-    module_omz_setup_zsh "$profile" "$omz_path" "$model" "$profile"
+    module_omz_setup_zsh "$profile" "$omz_path" "$model"
 }
 
 function module_omz_setup_zsh() {
@@ -46,7 +46,6 @@ function module_omz_setup_zsh() {
   local profile="$1"
   local omz_path="$2"
   local model="$3"
-  local profile="$4"
   bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
   bl64_check_directory "$omz_path" || return $?
   if ! bl64_txt_search_line "$profile" '# OhMyZSH'; then
