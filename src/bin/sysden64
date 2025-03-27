@@ -50,7 +50,7 @@ source "${SYSDEN64_PATH_ROOT}/lib/module-lib.bash" || exit $?
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='3.5.1'
+readonly SYSDEN64_VERSION='3.5.2'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -114,10 +114,10 @@ export DEV_PROFILE=''
 
 declare SYSDEN64_MODULES_CUSTOM='custom'
 declare SYSDEN64_MODULES_BASE=''
-SYSDEN64_MODULES_BASE+=' xdg'
 SYSDEN64_MODULES_BASE+=' env'
 SYSDEN64_MODULES_BASE+=' bash'
 SYSDEN64_MODULES_BASE+=' zsh'
+SYSDEN64_MODULES_BASE+=' xdg'
 SYSDEN64_MODULES_BASE+=" ${SYSDEN64_MODULES_CUSTOM}"
 
 declare SYSDEN64_MODULES_DEDICATED_DEFAULT=''
@@ -548,7 +548,7 @@ declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX}"
 declare SYSDEN64_PROFILE='default'
-bl64_lib_script_version_set '6.5.0'
+bl64_lib_script_version_set '6.5.1'
 bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
