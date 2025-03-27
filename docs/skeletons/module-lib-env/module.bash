@@ -5,8 +5,6 @@ function module_X_MODULE_ID_X_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='X_MODULE_ID_X'
   local source=''
-  local config='X_CONFIG_X'
-  local target="${home}/${config}"
 
   [[ -z "$(bl64_bsh_command_locate 'X_COMMAND_X')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
