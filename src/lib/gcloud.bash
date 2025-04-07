@@ -27,6 +27,7 @@ function module_gcloud_setup() {
       "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
       return $?
   fi
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC" && return 0
 
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "setup GCloud CLI (${target})"

@@ -16,6 +16,8 @@ function module_gpg_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC" && return 0
+
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "setup GNUPG (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
