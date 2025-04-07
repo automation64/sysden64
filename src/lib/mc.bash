@@ -13,7 +13,7 @@ function module_mc_setup() {
   bl64_msg_show_phase 'prepare MC'
 
   source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+    return $?
 
   module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?

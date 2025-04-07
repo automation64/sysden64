@@ -1,4 +1,4 @@
-# Version: 1.1.0
+# Version: 1.1.1
 function module_env_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -13,6 +13,7 @@ function module_env_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
+  module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
 
   bl64_msg_show_task "Populate env store (${SYSDEN64_PATH_SHELLENV})"

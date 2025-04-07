@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 1.0.1
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
@@ -19,6 +19,7 @@ function module_tmux_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
   return $?
 
+  module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
