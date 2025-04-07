@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 2.0.0
 function module_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -7,7 +7,6 @@ function module_p10k_setup() {
   local source=''
   local config='.p10k.zsh'
   local target="${home}/${config}"
-  local profile="${home}/.zshrc"
 
   [[ -z "$(bl64_bsh_command_locate 'zsh')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
@@ -16,21 +15,24 @@ function module_p10k_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${SYSDEN64_PATH_SHELLENV}" \
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.zsh ||
+    return $?
+
+  module_sync_allow "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
-  bl64_msg_show_task 'setup PowerLevel10K'
-  # shellcheck disable=SC2086
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$home" \
-    "${source}/${config}" ||
-    return $?
-
-  bl64_msg_show_task "enable PowerLevel10K (${profile})"
-  if ! bl64_txt_search_line "$profile" '# PowerLevel10K'; then
-    bl64_os_run_cat \
-      "${source}/p10k.snippet" >>"$profile"
-  fi
+    "${source}/${config}"
 }

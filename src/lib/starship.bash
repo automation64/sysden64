@@ -1,4 +1,4 @@
-# Version: 1.1.0
+# Version: 1.1.1
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -22,7 +22,7 @@ function module_starship_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.bash ||
     return $?
 
   module_sync_allow "$module_type" && return 0
