@@ -25,7 +25,7 @@ function module_kubectl_setup() {
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
     "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env
 
-  module_sync_allow "$module_type" && return 0
+  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "setup KubeCTL (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then

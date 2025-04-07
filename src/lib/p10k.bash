@@ -25,7 +25,7 @@ function module_p10k_setup() {
     "${source}/${SYSDEN64_PATH_SHELLENV}"/*.zsh ||
     return $?
 
-  module_sync_allow "$module_type" && return 0
+  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \

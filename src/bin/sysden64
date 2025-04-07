@@ -226,7 +226,7 @@ function module_set_model() {
   fi
 }
 
-function module_sync_allow() {
+function module_sync_is_requested() {
   bl64_dbg_app_show_function "$@"
   local module_type="$1"
   module_check_type "$module_type" ||
