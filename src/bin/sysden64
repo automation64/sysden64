@@ -229,10 +229,19 @@ function module_set_model() {
 function module_sync_is_requested() {
   bl64_dbg_app_show_function "$@"
   local module_type="$1"
+  local vault="${2:-}"
+
   module_check_type "$module_type" ||
     return $?
+
   if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
-    bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"
+    if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_PROFILE_SWITCH"; then
+      bl64_dbg_app_show_info 'switching profile. Allow sync if new profile'
+      [[ ! -d "$vault" ]]
+      return $?
+    fi
+    bl64_dbg_app_show_info 'allow sync if sync or user-wide deploy is requested'
+    return 0
   elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
     bl64_dbg_app_show_info 'shared module. Always allow sync'
     return 1

@@ -29,6 +29,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Starship
   - **breaking-change** Upgraded .env.d file format to new model
 
+### Fixed
+
+- AWSCLI
+  - Profile switch will not overwrite previous config
+- Docker
+  - Profile switch will not overwrite previous config
+- GCloud
+  - Profile switch will not overwrite previous config
+- KubeCTL
+  - Profile switch will not overwrite previous config
+- SSH
+  - Profile switch will not overwrite previous config
+
 ## [3.5.2]
 
 ### Added

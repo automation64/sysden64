@@ -14,21 +14,19 @@ function module_gpg_setup() {
   bl64_msg_show_phase 'prepare GNUPG'
 
   source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+    return $?
 
-  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "setup GNUPG (${target})"
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
-    bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$vault" &&
-      bl64_fs_symlink_create \
-        "$vault" \
-        "$target" \
-        "$BL64_VAR_ON"
+    if [[ ! -d "$vault" ]]; then
+      bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+        "$vault" ||
+        return $?
+    fi
+    bl64_fs_symlink_create "$vault" "$target" "$BL64_VAR_ON"
   else
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$target" ||
-      return $?
+      "$target"
   fi
 }
