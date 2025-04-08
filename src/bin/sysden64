@@ -303,8 +303,8 @@ function module_shared_upgrade() {
 
 function profile_list_get() {
   cd "$SYSDEN64_PATH_DEDICATED" &&
-  echo * &&
-  return 0
+    echo * &&
+    return 0
   bl64_msg_show_error "Unable to list profiles in ${SYSDEN64_PATH_DEDICATED}"
   return $BL64_LIB_ERROR_TASK_FAILED
 }
@@ -317,7 +317,7 @@ function module_dedicated_upgrade() {
 
   bl64_msg_show_separator "upgrade dedicated configuration modules (${SYSDEN64_PATH_DEDICATED})"
   bl64_check_directory "$SYSDEN64_PATH_SHARED" &&
-  profile_list="$(profile_list_get)" ||
+    profile_list="$(profile_list_get)" ||
     return $?
 
   # shellcheck disable=SC2164
@@ -493,7 +493,8 @@ function system_wide_create() {
   backup_repository_create &&
     module_setup_shared "$home" &&
     module_setup_dedicated "$home" &&
-    version_register
+    version_register &&
+    help_show_reload
 }
 
 function user_wide_create() {
@@ -513,7 +514,8 @@ function user_wide_create() {
     module_dedicated_upgrade &&
     module_setup_shared "$home" &&
     module_setup_dedicated "$home" &&
-    version_register
+    version_register &&
+    help_show_reload
 }
 
 function profile_switch() {
@@ -544,7 +546,8 @@ function profile_switch() {
 
   devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
-    module_setup_dedicated "$home"
+    module_setup_dedicated "$home" &&
+    help_show_reload
 }
 
 function sysden64_upgrade() {
@@ -561,7 +564,8 @@ function configuration_sync() {
   version_check &&
     backup_repository_create &&
     module_setup_shared "$home" &&
-    module_setup_dedicated "$home"
+    module_setup_dedicated "$home" &&
+    help_show_reload
 }
 
 function lab_create() {
@@ -571,6 +575,11 @@ function lab_create() {
   local profile="$3"
   configuration_sync "$home" &&
     profile_switch "$home" "$repository" "$profile"
+}
+
+function help_show_reload() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_info 'SysDen64 finished updating shell and tools configuration. Please reload your shell for the changes to take effect.'
 }
 
 #######################################
