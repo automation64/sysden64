@@ -39,7 +39,7 @@ function module_omz_setup() {
     return $?
 
   bl64_dbg_app_show_info 'avoid installation when synchronizing config' 
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC"; then
     module_omz_setup_main "$home" "$local_repo" "$omz_path" &&
       module_omz_setup_plugins "$home" "$local_repo"
   fi
