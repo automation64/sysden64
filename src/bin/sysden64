@@ -199,8 +199,8 @@ function module_config_backup() {
 
   target="${SYSDEN64_PATH_BACKUP}/${model}"
   for source in "$@"; do
-    if [[ -f "$source" || -d "$source" ]]; then
-      bl64_msg_show_task "backup previous configuration files (${source} -> ${target})"
+    if [[ -e "$source" ]]; then
+      bl64_msg_show_task "backup current configuration (${source} -> ${target})"
       bl64_fs_dir_create \
         "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
         "$SYSDEN64_PATH_BACKUP" \

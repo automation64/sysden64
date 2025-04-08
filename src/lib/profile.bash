@@ -21,13 +21,14 @@ function module_profile_setup() {
   fi
 }
 
-module_profile_setup_env() {
+function module_profile_setup_env() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local source="$2"
   local resource_list=''
   local resource=''
 
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   resource_list="$(cd "${source}/${SYSDEN64_PATH_SHELLENV}" && echo *)" ||
     return $?
   for resource in $resource_list; do
