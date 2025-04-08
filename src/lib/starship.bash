@@ -1,4 +1,4 @@
-# Version: 1.1.0
+# Version: 1.1.1
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -22,10 +22,10 @@ function module_starship_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env ||
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.bash ||
     return $?
 
-  module_sync_allow "$module_type" && return 0
+  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \

@@ -17,7 +17,7 @@ function module_zsh_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
   return $?
 
-  module_sync_allow "$module_type" && return 0
+  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target_env" "$target_rc" || return $?
   bl64_msg_show_task "promote configuration from model (${model})"
   bl64_fs_path_copy \

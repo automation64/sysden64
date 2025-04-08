@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0]
+
+### Added
+
+- Bash
+  - Load shell specific functions and settings from .env.d/*.bash
+- ZSH
+  - Load shell specific functions and settings from .env.d/*.zsh
+- Module
+  - Fish
+
+### Changed
+
+- SysDen64
+  - Use system-wide (/opt/) or user-wide (at64/) automation64 instead of repository-wide (sd64/lib/)
+- Custom
+  - **breaking-change** Changed .env.d/* file names to ensure custom module is the last one to be loaded
+- P10K
+  - **breaking-change** Migrated shell snippet to .env.d loaders
+- OMZ
+  - **breaking-change** Migrated shell snippet to .env.d loaders
+- Starship
+  - **breaking-change** Upgraded .env.d file format to new model
+
+### Fixed
+
+- AWSCLI
+  - Profile switch will not overwrite previous config
+- Docker
+  - Profile switch will not overwrite previous config
+- GCloud
+  - Profile switch will not overwrite previous config
+- KubeCTL
+  - Profile switch will not overwrite previous config
+- SSH
+  - Profile switch will not overwrite previous config
+
 ## [3.5.2]
 
 ### Added

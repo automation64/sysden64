@@ -24,7 +24,7 @@ function module_lsd_setup() {
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
     "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env
 
-  module_sync_allow "$module_type" && return 0
+  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   # shellcheck disable=SC2086

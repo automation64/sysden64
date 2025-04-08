@@ -1,4 +1,4 @@
-# Version: 1.0.3
+# Version: 2.0.0
 declare SYSDEN64_GIT_OMZ='https://github.com/ohmyzsh/ohmyzsh.git'
 declare SYSDEN64_GIT_OMZ_PLUGINS=''
 SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'
@@ -19,7 +19,6 @@ function module_omz_setup() {
   local config='.oh-my-zsh'
   local target="${home}/${config}"
   local local_repo='.oh-my-zsh'
-  local profile="${home}/.zshrc"
   local omz_path="${home}/${local_repo}"
 
   [[ -z "$(bl64_bsh_command_locate 'zsh')" ]] &&
@@ -29,28 +28,20 @@ function module_omz_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
-  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
-    if [[ -d "$omz_path" ]]; then
-      module_omz_setup_zsh "$profile" "$omz_path" "$model" || return $?
-      return 0
-    fi
-  fi
-  module_config_backup "$model" "$target" &&
-    module_omz_setup_main "$home" "$local_repo" "$omz_path" &&
-    module_omz_setup_plugins "$home" "$local_repo" &&
-    module_omz_setup_zsh "$profile" "$omz_path" "$model"
-}
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${SYSDEN64_PATH_SHELLENV}" \
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.{env,zsh} ||
+    return $?
 
-function module_omz_setup_zsh() {
-  bl64_dbg_app_show_function "$@"
-  local profile="$1"
-  local omz_path="$2"
-  local model="$3"
-  bl64_msg_show_task "enable Oh-My-ZSH (${profile})"
-  bl64_check_directory "$omz_path" || return $?
-  if ! bl64_txt_search_line "$profile" '# OhMyZSH'; then
-    bl64_os_run_cat \
-      "${source}/oh-my-zsh.snippet" >>"$profile"
+  bl64_dbg_app_show_info 'avoid installation when synchronizing config' 
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_MODULE_SYNC"; then
+    module_omz_setup_main "$home" "$local_repo" "$omz_path" &&
+      module_omz_setup_plugins "$home" "$local_repo"
   fi
 }
 

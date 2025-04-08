@@ -1,3 +1,4 @@
+# Version: 1.1.0
 function module_custom_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -17,5 +18,5 @@ function module_custom_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env
+    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.{env,bash,zsh,fish}
 }
