@@ -1,4 +1,4 @@
-# Version: 1.1.1
+# Version: 1.1.2
 function module_env_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -13,11 +13,16 @@ function module_env_setup() {
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
 
-  module_sync_is_requested "$module_type" && return 0
-  module_config_backup "$model" "$target" || return $?
+  module_config_backup "$model" "$target" &&
+    module_env_setup_env "$home" "$source"
+}
 
-  bl64_msg_show_task "Populate env store (${SYSDEN64_PATH_SHELLENV})"
-  # shellcheck disable=SC2086
+function module_env_setup_env() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local source="$2"
+
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
