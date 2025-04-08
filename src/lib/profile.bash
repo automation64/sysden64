@@ -13,6 +13,8 @@ function module_profile_setup() {
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
     module_profile_setup_env "$home" "$source"
+  elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC"; then
+    module_profile_setup_env "$home" "$source"
   elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_DEPLOY"; then
     ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE" && return 0
     module_profile_setup_env "$home" "$source"
