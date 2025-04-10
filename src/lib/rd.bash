@@ -5,7 +5,7 @@ function module_rd_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='rd'
   local source=''
-  local config='rd'
+  local config='profile'
   local target="${home}"
 
   [[ "$BL64_OS_TYPE" != "$BL64_OS_TYPE_MACOS" ]] &&
@@ -41,7 +41,7 @@ function module_rd_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target" \
-    "${source}/${config}/profile/${BL64_OS_TYPE}/${config_file}"
+    "${source}/${config}/${BL64_OS_TYPE}/${config_file}"
 }
 
 function module_rd_setup_env() {
