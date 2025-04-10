@@ -12,17 +12,8 @@ function module_p10k_setup() {
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare PowerLevel10K'
 
-  source="$(module_set_model "$module_type" "$model")" ||
-    return $?
-
-  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.zsh ||
+  source="$(module_set_model "$module_type" "$model")" &&
+    module_setup_env "$home" "$source" ||
     return $?
 
   module_sync_is_requested "$module_type" && return 0

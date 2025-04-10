@@ -48,12 +48,5 @@ function module_rd_setup_env() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local source="$2"
-  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"/*.env
+  module_setup_env "$home" "$source"
 }

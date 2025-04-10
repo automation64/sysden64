@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Module
+  - Fish
+  - Profile
+  - Java
 - Bash
   - Load shell specific functions and settings from .env.d/*.bash
 - ZSH
   - Load shell specific functions and settings from .env.d/*.zsh
-- Module
-  - Fish
-  - Profile
 - Zellij
   - Default config
 - Rancher Desktop
