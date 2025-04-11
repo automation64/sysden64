@@ -129,14 +129,17 @@ SYSDEN64_MODULES_SHARED_DEFAULT+=' git'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' github'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' homebrew'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' hwatch'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' java'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' keepassx'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' lnav'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' libpq'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' lsd'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' mc'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' nodejs'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' nvim'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' nvm'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' omz'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' openssl'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' p10k'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' python'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' rd'
@@ -183,14 +186,39 @@ declare SYSDEN64_MODULES_DEDICATED="${SYSDEN64_MODULES_DEDICATED:-$SYSDEN64_MODU
 }
 
 #
-# Functions
+# Module Functions
 #
+
+function module_setup_env() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local source="$2"
+
+  bl64_check_parameter 'home' &&
+    bl64_check_parameter 'home' || return $?
+
+  if [[ -d "${source}/${SYSDEN64_PATH_SHELLENV}/${BL64_OS_TYPE}" ]]; then
+    source="${source}/${SYSDEN64_PATH_SHELLENV}/${BL64_OS_TYPE}"
+  else
+    source="${source}/${SYSDEN64_PATH_SHELLENV}"
+  fi
+
+  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "$BL64_VAR_DEFAULT" \
+    "${home}/${SYSDEN64_PATH_SHELLENV}" \
+    "${source}"/??_*_*.*
+}
 
 function module_config_backup() {
   bl64_dbg_app_show_function "$@"
   local model="$1"
   local target=''
   local source=''
+
   shift
   bl64_check_parameter 'model' || return $?
 
@@ -219,6 +247,7 @@ function module_config_backup() {
 function module_check_type() {
   bl64_dbg_app_show_function "$@"
   local module_type="$1"
+  bl64_check_parameter 'module_type' || return $?
   if [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_DEDICATED" &&
     "$module_type" != "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
     bl64_msg_show_error "invalid module type (${module_type})"
@@ -267,6 +296,10 @@ function module_sync_is_requested() {
     return 1
   fi
 }
+
+#
+# Main Functions
+#
 
 function backup_repository_create() {
   bl64_dbg_app_show_function

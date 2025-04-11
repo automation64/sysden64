@@ -1,14 +1,15 @@
 # Version: 1.0.0
-function module_ripgrep_setup() {
+function module_openssl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local model='ripgrep'
+  local model='openssl'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'rg')" ]] &&
+  [[ "$BL64_OS_TYPE" != "$BL64_OS_TYPE_MACOS" ]] &&
+    [[ ! -d '/opt/homebrew/Cellar/openssl@3' ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare RipGrep'
+  bl64_msg_show_phase 'prepare PostgreSQL LibPQ'
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source"
