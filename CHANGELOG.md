@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Load shell specific functions and settings from .env.d/*.bash
 - ZSH
   - Load shell specific functions and settings from .env.d/*.zsh
+- VSCode
+  - Default config
 - Zellij
   - Default config
 - Rancher Desktop
