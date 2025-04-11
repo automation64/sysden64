@@ -22,7 +22,7 @@ function module_vscode_setup_config() {
   local source="$2"
   local model="$3"
   local target_base=''
-  local config='vscode/settingse'
+  local config='settings'
   local config_file='settings.json'
   local target=''
 
@@ -44,5 +44,5 @@ function module_vscode_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target_base" \
-    "${source}/${config}"
+    "${source}/${config}/${config_file}"
 }
