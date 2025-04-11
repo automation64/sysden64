@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Java
   - LibPQ
   - OpenSSL
+  - Helix
 - Bash
   - Load shell specific functions and settings from .env.d/*.bash
 - ZSH
@@ -27,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Default config
 - LSD
   - Color Theme
+- SysDen64
+  - Shell reload after config update
 
 ### Changed
 
