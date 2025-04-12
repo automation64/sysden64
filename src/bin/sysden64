@@ -302,13 +302,18 @@ function module_sync_is_requested() {
 # Main Functions
 #
 
-function shell_reload() {
+function shell_reload_exec() {
   bl64_dbg_app_show_function
-  if bl64_ui_confirmation_ask 'Restart current shell for activating updated environment variable values (YES/NO)?. Notice that any other terminal window must be manually restarted' 'YES'; then
+  if bl64_ui_confirmation_ask 'restart current shell for activating updated environment variable values (YES/NO)?. Notice that any other terminal window must be manually restarted' 'YES'; then
     exec "$SHELL" -l
   else
-    return 0
+    bl64_msg_show_warning 'automatic reload cancelled. Notice that all shell terminals still need to be manually restarted for activating updated environment variable values'
   fi
+}
+
+function shell_reload_warning() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_warning 'All shell terminals must be manually restarted in order to activate updated environment variable values'
 }
 
 function backup_repository_create() {
@@ -333,15 +338,7 @@ function module_shared_upgrade() {
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_BASE $SYSDEN64_MODULES_SHARED; do
-    if [[ "$module" == "$SYSDEN64_MODULES_CUSTOM" ]]; then
-      [[ -d "${SYSDEN64_PATH_SHARED}/${module}" ]] && continue
-    else
-      bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
-    fi
-    bl64_fs_path_copy \
-      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$SYSDEN64_PATH_SHARED" \
-      "${SYSDEN64_PATH_ETC}/${module}" ||
+    module_single_upgrade "$SYSDEN64_PATH_SHARED" "$module" ||
       return $?
   done
 }
@@ -354,30 +351,53 @@ function profile_list_get() {
   return $BL64_LIB_ERROR_TASK_FAILED
 }
 
+function module_single_upgrade() {
+  bl64_dbg_app_show_function
+  local path="$1"
+  local module="$2"
+
+  if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
+    [[ -d "${path}/${module}" ]] && return 0
+  fi
+
+  if [[ "$module" == "$SYSDEN64_MODULES_CUSTOM" ]]; then
+    [[ -d "${path}/${module}" ]] && return 0
+  elif [[ "$module" == "$SYSDEN64_MODULES_PROFILE" ]]; then
+    [[ -d "${path}/${module}" ]] && return 0
+  else
+    bl64_fs_path_remove "${path}/${module}"
+  fi
+  bl64_fs_path_copy \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$path" \
+    "${SYSDEN64_PATH_ETC}/${module}" ||
+    return $?
+}
+
 function module_dedicated_upgrade() {
   bl64_dbg_app_show_function
+  local profile="${1:-}"
   local module=''
-  local profile=''
   local profile_list=''
 
   bl64_msg_show_separator "upgrade dedicated configuration modules (${SYSDEN64_PATH_DEDICATED})"
-  bl64_check_directory "$SYSDEN64_PATH_SHARED" &&
-    profile_list="$(profile_list_get)" ||
+  bl64_check_parameter 'profile' &&
+  bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
+
+  if [[ "$profile" = 'all' ]]; then
+    profile_list="$(profile_list_get)" ||
+      return $BL64_LIB_ERROR_TASK_FAILED
+  else
+    profile_list="$profile"
+    profile=''
+  fi
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_PROFILE; do
     for profile in $profile_list; do
       profile="${SYSDEN64_PATH_DEDICATED}/${profile}"
-      if [[ "$module" == "$SYSDEN64_MODULES_PROFILE" ]]; then
-        [[ -d "${profile}/${module}" ]] && continue
-      else
-        bl64_fs_path_remove "${SYSDEN64_PATH_SHARED}/${module}"
-      fi
-      bl64_fs_path_copy \
-        "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-        "$profile" \
-        "${SYSDEN64_PATH_ETC}/${module}" ||
+      module_single_upgrade "$profile" "$module" ||
         return $?
     done
   done
@@ -405,7 +425,7 @@ function version_register() {
   echo "$SYSDEN64_VERSION" >"$SYSDEN64_PATH_TAG_VERSION"
 }
 
-function module_setup_shared() {
+function module_shared_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
@@ -428,7 +448,7 @@ function module_setup_shared() {
   done
 }
 
-function module_setup_dedicated() {
+function module_dedicated_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
@@ -536,10 +556,10 @@ function system_wide_create() {
     return 0
   fi
   backup_repository_create &&
-    module_setup_shared "$home" &&
-    module_setup_dedicated "$home" &&
+    module_shared_setup "$home" &&
+    module_dedicated_setup "$home" &&
     version_register &&
-    shell_reload
+    shell_reload_warning
 }
 
 function user_wide_create() {
@@ -556,11 +576,11 @@ function user_wide_create() {
     devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
     module_shared_upgrade &&
-    module_dedicated_upgrade &&
-    module_setup_shared "$home" &&
-    module_setup_dedicated "$home" &&
+    module_dedicated_upgrade 'all' &&
+    module_shared_setup "$home" &&
+    module_dedicated_setup "$home" &&
     version_register &&
-    shell_reload
+    shell_reload_warning
 }
 
 function profile_switch() {
@@ -591,8 +611,9 @@ function profile_switch() {
 
   devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
-    module_setup_dedicated "$home" &&
-    shell_reload
+    module_dedicated_upgrade "$profile" &&
+    module_dedicated_setup "$home" &&
+    shell_reload_exec
 }
 
 function sysden64_upgrade() {
@@ -600,7 +621,7 @@ function sysden64_upgrade() {
   version_check &&
     cd "$SYSDEN64_REPOSITORY" &&
     module_shared_upgrade &&
-    module_dedicated_upgrade
+    module_dedicated_upgrade 'all'
 }
 
 function configuration_sync() {
@@ -608,9 +629,9 @@ function configuration_sync() {
   local home="$1"
   version_check &&
     backup_repository_create &&
-    module_setup_shared "$home" &&
-    module_setup_dedicated "$home" &&
-    shell_reload
+    module_shared_setup "$home" &&
+    module_dedicated_setup "$home" &&
+    shell_reload_exec
 }
 
 function lab_create() {
