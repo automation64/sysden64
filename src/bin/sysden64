@@ -304,7 +304,7 @@ function module_sync_is_requested() {
 
 function shell_reload_exec() {
   bl64_dbg_app_show_function
-  if bl64_ui_confirmation_ask 'restart current shell for activating updated environment variable values (YES/NO)?. Notice that any other terminal window must be manually restarted' 'YES'; then
+  if bl64_ui_ask_confirmation 'restart current shell for activating updated environment variable values (YES/NO)?. Notice that any other terminal window must be manually restarted' 'YES'; then
     exec "$SHELL" -l
   else
     bl64_msg_show_warning 'automatic reload cancelled. Notice that all shell terminals still need to be manually restarted for activating updated environment variable values'
