@@ -1,4 +1,4 @@
-# Version: 1.0.1
+# Version: 1.0.2
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
@@ -8,18 +8,25 @@ function module_tmux_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='tmux'
   local source=''
-  local config='.tmux.conf'
-  local target="${home}/${config}"
-  local plugins_path="${home}/.tmux/plugins"
 
   [[ -z "$(bl64_bsh_command_locate 'tmux')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
   bl64_msg_show_phase 'prepare TMUX'
 
-  source="$(module_set_model "$module_type" "$model")" ||
-  return $?
+  source="$(module_set_model "$module_type" "$model")" &&
+    module_tmux_setup_config "$home" "$source" "$model"
+}
 
-  module_sync_is_requested "$module_type" && return 0
+function module_tmux_setup_config() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local source="$2"
+  local model="$3"
+  local target_base="${home}"
+  local config='conf'
+  local config_file='.tmux.conf'
+  local target="${target_base}/${config_file}"
+
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
@@ -27,14 +34,25 @@ function module_tmux_setup() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$home" \
-    "${source}/${config}" ||
+    "$target_base" \
+    "${source}/${config}/${config_file}" ||
     return $?
+
+  module_tmux_setup_plugins "$home"
+}
+
+function module_tmux_setup_plugins() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local tmux_path="${home}/.tmux"
+  local plugins_path="${tmux_path}/plugins"
+  local plugin=''
 
   [[ -d "$plugins_path" ]] && return 0
   bl64_msg_show_task "deploy plugins (${plugins_path})"
   bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "${home}/.tmux" ||
+    "$tmux_path" \
+    "$plugins_path" ||
     return $?
   for plugin in $SYSDEN64_GIT_TMUX_PLUGINS; do
     bl64_vcs_git_clone \
