@@ -1,0 +1,8 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
+export TEST_PROJECT_ROOT="/project"
+export TEST_HOME_ROOT="$HOME/at64"
+
+"${TEST_PROJECT_ROOT}/test/ad-hoc/at64-user-install" &&
+"${TEST_PROJECT_ROOT}/test/ad-hoc/tools-user-install" &&
+"${TEST_PROJECT_ROOT}/test/ad-hoc/sysden64-user-sync"

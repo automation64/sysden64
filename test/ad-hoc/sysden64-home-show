@@ -1,0 +1,26 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
+echo "
+==[HOME]========================================
+"
+lsd -la "$HOME"
+
+echo "
+==[ENV.D]========================================
+"
+lsd -l "$HOME/.env.d"
+
+echo "
+==[SHARED]========================================
+"
+lsd -a --tree "$HOME/sd64/etc/shared"
+
+echo "
+==[PROFILE]========================================
+"
+lsd -a --tree "$HOME/sd64/etc/prof"
+
+echo "
+==[PROFILE]========================================
+"
+lsd -a --tree "$HOME/.config"

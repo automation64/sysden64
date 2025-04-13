@@ -1,0 +1,7 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
+export INST64_SYSTEM_WIDE="YES"
+sudo -E /opt/inst64/install-helix &&
+sudo -E /opt/inst64/install-homebrew &&
+sudo -E /opt/inst64/install-nvm &&
+sudo -E /opt/inst64/install-ripgrep
