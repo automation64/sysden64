@@ -8,8 +8,13 @@
 # Normalize the TMP and TMPDIR environment variables
 #
 
-TMP='/tmp'
-export TMP
+set -gx  TMP '/tmp'
+set -gx  TMPDIR "$TMP"
 
-TMPDIR="$TMP"
-export TMPDIR
+#
+# Normalize terminal type
+#
+
+if test -z "$TERM"
+    set -gx  TERM "xterm-256color"
+end

@@ -19,7 +19,7 @@ function module_helix_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base="${home}/.config"
+  local target_base="${home}/.config/helix"
   local config='/.config/helix'
   local config_file='config.toml'
   local target="${home}/${config}/${config_file}"
@@ -29,11 +29,14 @@ function module_helix_setup_config() {
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   # shellcheck disable=SC2086
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$target_base" \
-    "${source}/${config}/${config_file}"
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$target_base" &&
+    bl64_fs_path_copy \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$BL64_VAR_DEFAULT" \
+      "$target_base" \
+      "${source}/${config}/${config_file}"
 }

@@ -4,8 +4,4 @@
 #   - apply updates: sysden64 -u
 # Version: 1.0.0
 
-MANPATH="/home/linuxbrew/.linuxbrew/share/man${MANPATH:+:$MANPATH}"
-INFOPATH="/home/linuxbrew/.linuxbrew/share/info${INFOPATH:+:$INFOPATH}"
-
-export MANPATH
-export INFOPATH
+fish_add_path /home/linuxbrew/.linuxbrew/bin /home/linuxbrew/.linuxbrew/sbin

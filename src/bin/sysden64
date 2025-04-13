@@ -99,7 +99,7 @@ export DEV_PROFILE=''
 
 declare SYSDEN64_MODULES_CUSTOM='custom'
 declare SYSDEN64_MODULES_BASE=''
-SYSDEN64_MODULES_BASE+=' env'
+SYSDEN64_MODULES_BASE+=' env' # Must be the first module in the list
 SYSDEN64_MODULES_BASE+=' bash'
 SYSDEN64_MODULES_BASE+=' fish'
 SYSDEN64_MODULES_BASE+=' zsh'
@@ -150,6 +150,7 @@ SYSDEN64_MODULES_SHARED_DEFAULT+=' terraform'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' tmux'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' vscode'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' zellij'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' zoxide'
 
 # Optional # SYSDEN64_MODULE_LIST_TOOLS+='eza '
 
@@ -202,6 +203,8 @@ function module_setup_env() {
     source="${source}/${SYSDEN64_PATH_SHELLENV}/${BL64_OS_TYPE}"
   else
     source="${source}/${SYSDEN64_PATH_SHELLENV}"
+    bl64_dbg_app_show_comments 'Allow empty env.d directory'
+    [[ -z "$(shopt -s nullglob; echo "${source}"/??_*_*.*)" ]] && return 0
   fi
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
@@ -304,7 +307,7 @@ function module_sync_is_requested() {
 
 function shell_reload_exec() {
   bl64_dbg_app_show_function
-  if bl64_ui_ask_confirmation 'restart current shell for activating updated environment variable values (YES/NO)?. Notice that any other terminal window must be manually restarted' 'YES'; then
+  if bl64_ui_ask_yesno 'restart current shell for activating updated environment variable values?. Notice that any other terminal window must be manually restarted'; then
     exec "$SHELL" -l
   else
     bl64_msg_show_warning 'automatic reload cancelled. Notice that all shell terminals still need to be manually restarted for activating updated environment variable values'
