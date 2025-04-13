@@ -2,7 +2,7 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u
-# Version: 2.0.0
+# Version: 2.1.0
 
 #
 # Content generated with: p10k configure
@@ -25,7 +25,6 @@
     os_icon                 # os identifier
     context                 # user@hostname
     sysden64
-
     newline                 # \n
     # =========================[ Line #2 ]=========================
     dir                     # current directory
@@ -56,8 +55,12 @@
   )
 
   function prompt_sysden64() {
-    [[ -d '/sysden64' ]] || return 0
-    p10k segment -f black -b green -i '⭐' -t 'SysDen64'
+    if [[ -d '/sysden64' ]]; then
+      p10k segment -f black -b blue -r -i RANGER_ICON -t 'SD64Lab'
+    fi
+    if [[ -d "$HOME/sd64" && -f "$HOME/sd64/.sysden64-profile" ]]; then
+      p10k segment -f black -b green -r -i RANGER_ICON -t "$(<$HOME/sd64/.sysden64-profile)"
+    fi
   }
 
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
