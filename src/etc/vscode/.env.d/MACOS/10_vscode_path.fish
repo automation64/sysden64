@@ -4,4 +4,4 @@
 #   - apply updates: sysden64 -u
 # Version: 1.0.0
 
-# Warning: No need to modify PATH, VSCode is already available in /usr/bin
+fish_add_path "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"

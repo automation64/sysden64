@@ -1,4 +1,4 @@
-# Version: 1.1.2
+# Version: 1.2.0
 function module_env_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -14,20 +14,25 @@ function module_env_setup() {
     return $?
 
   module_config_backup "$model" "$target" &&
-    module_env_setup_env "$home" "$source"
+    module_env_setup_config "$home" "$source" "$model" &&
+    module_setup_env "$home" "$source"
 }
 
-function module_env_setup_env() {
+function module_env_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local source="$2"
+  local model="$3"
+  local target_base="${home}"
+  local config='.env.d'
+  local target="${target_base}/${config}"
 
-  bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$home" \
-    "${source}/${SYSDEN64_PATH_SHELLENV}"
+  module_config_backup "$model" "$target" ||
+    return $?
+
+  bl64_msg_show_task "promote configuration from model (${model}/${config})"
+  # shellcheck disable=SC2086
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
+    "$target"
 }

@@ -5,5 +5,4 @@ export TEST_HOME_ROOT="/opt"
 export TEST_SD64_ROOT="$TEST_HOME_ROOT/sysden64"
 
 cd "$HOME"
-"${TEST_PROJECT_ROOT}/test/ad-hoc/sync-src-system" &&
 "$TEST_SD64_ROOT/bin/sysden64" "$@"

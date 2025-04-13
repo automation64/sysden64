@@ -22,7 +22,7 @@ function module_X_MODULE_ID_X_setup_config() {
   local target_base="${home}/X_BASE_TARGET_X"
   local config='X_CONFIG_X'
   # local config_file='X_CONFIG_FILE_X'
-  local target="${home}/${config}"
+  local target="${target_base}/${config}"
 
   module_config_backup "$model" "$target" ||
     return $?
