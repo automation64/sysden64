@@ -30,11 +30,12 @@ function module_custom_setup_env() {
 
     bl64_dbg_app_show_comments 'add new templates'
     bl64_fs_path_copy "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-      "$source_env" "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.zsh" &&
-      bl64_fs_path_copy "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-        "$source_env" "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.bash" &&
-      bl64_fs_path_copy "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-        "$source_env" "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.fish" ||
+      "$source_env" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/19_custom_path.fish" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/29_custom_var.fish" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.zsh" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.bash" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.fish" ||
       return $?
   fi
 

@@ -44,7 +44,7 @@ function module_gcloud_setup() {
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$target" \
       "${target}/configurations" &&
-      module_gcloud_setup_promote "$model" "$source" "$config" "$vault"
+      module_gcloud_setup_promote "$model" "$source" "$config" "$target"
   fi
 }
 function module_gcloud_setup_promote() {
