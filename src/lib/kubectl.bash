@@ -42,7 +42,7 @@ function module_kubectl_setup() {
   else
     bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "$target" &&
-      module_gcloud_setup_promote "$model" "$source" "$config" "$vault"
+      module_gcloud_setup_promote "$model" "$source" "$config" "$target"
   fi
 }
 
