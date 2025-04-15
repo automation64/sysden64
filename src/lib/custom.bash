@@ -20,7 +20,7 @@ function module_custom_setup_env() {
   local source="$2"
   local source_env="${source}/${SYSDEN64_PATH_SHELLENV}"
 
-  bl64_dbg_app_show_comments 'check if backward compatibility is needed'
+  bl64_dbg_app_show_comments 'check if v3.5 backward compatibility is needed'
   if [[ -f "${source_env}/10_custom_path.env" ]]; then
     bl64_dbg_app_show_comments 'replace templates with old content'
     bl64_fs_run_mv -f "${source_env}/10_custom_path.env" "${source_env}/19_custom_path.env" &&
@@ -35,7 +35,8 @@ function module_custom_setup_env() {
       "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/29_custom_var.fish" \
       "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.zsh" \
       "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.bash" \
-      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.fish" ||
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/79_custom_source.fish" \
+      "${SYSDEN64_PATH_ETC}/custom/${SYSDEN64_PATH_SHELLENV}/99_custom_alias.fish" ||
       return $?
   fi
 

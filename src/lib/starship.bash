@@ -1,4 +1,4 @@
-# Version: 1.1.1
+# Version: 1.1.2
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -16,7 +16,6 @@ function module_starship_setup() {
     module_setup_env "$home" "$source" ||
     return $?
 
-  module_sync_is_requested "$module_type" && return 0
   module_config_backup "$model" "$target" || return $?
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \

@@ -4,5 +4,9 @@
 #   - apply updates: sysden64 -u
 # Version: 1.0.0
 
-# Rancher Desktop User Path
-fish_add_path "$HOME/.rd/bin"
+#
+# Custom aliases definition
+#
+# * Use to add custom command aliases to the shell
+# * Shell specific code is allowed
+#
