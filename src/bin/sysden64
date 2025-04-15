@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.0.0'
+readonly SYSDEN64_VERSION='4.0.1'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -597,6 +597,7 @@ function user_wide_create() {
   repository_create "$repository" &&
     devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
+    locks_repository_create &&
     module_shared_upgrade &&
     module_dedicated_upgrade 'all' &&
     module_shared_setup "$home" &&
@@ -753,6 +754,10 @@ function initialize() {
     SYSDEN64_FLAG_USER_WIDE='ON'
     bl64_check_parameter 'SYSDEN64_MODULE' ||
       { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
+    if [[ "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_CUSTOM" || "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_PROFILE" ]]; then
+      bl64_msg_show_info "This module is permanently excluded from upgrades. There is no need to disable/reenable it (module: ${module})"
+      return 0
+    fi
     ;;
   *)
     bl64_check_parameter 'SYSDEN64_COMMAND' ||
