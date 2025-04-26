@@ -2,7 +2,7 @@
 // To update this file:
 //   - edit source: $HOME/sd64/etc/shared/MODULE/
 //   - apply updates: sysden64 -u
-// Version: 1.0.0
+// Version: 1.0.1
 {
     "editor.acceptSuggestionOnEnter": "off",
     "editor.bracketPairColorization.enabled": true,
@@ -30,10 +30,8 @@
     "remote.downloadExtensionsLocally": true,
     "search.followSymlinks": false,
     "search.useIgnoreFiles": true,
-    "terminal.integrated.defaultLocation": "editor",
     "update.mode": "manual",
     "update.showReleaseNotes": false,
     "window.closeWhenEmpty": false,
-    "workbench.startupEditor": "newUntitledFile",
     "workbench.tips.enabled": false,
 }
