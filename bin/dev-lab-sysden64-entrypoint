@@ -68,20 +68,21 @@ function dev_lab_user_create() {
 
 function dev_lab_user_setup() {
   bl64_dbg_app_show_function
-  local first_run_mark="${DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER}/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}/${DEV_LAB_SYSDEN64_PROFILE}"
-  if bl64_lib_flag_is_enabled "$DEV_LIB_SYSDEN64_REPLACE_ENABLED" || [[ ! -f "$first_run_mark" ]]; then
-    "$BL64_RBAC_CMD_SUDO" -E -H -u \
-      "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" \
-      "$DEV_LAB_SYSDEN64_SCRIPT_HOME" \
-      -l \
-      -d \
-      -p "$DEV_PROFILE" \
-      -i "$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
-      -V 'ALL' &&
-      echo "$DEV_PROFILE" >"$first_run_mark"
+  if bl64_lib_flag_is_enabled "$DEV_LIB_SYSDEN64_REPLACE_ENABLED"; then
+    bl64_msg_show_task 'Prepare to replace SysDen64 Lab Container configuration'
+    bl64_fs_path_remove "$DEV_LAB_SYSDEN64_CONTAINER_PROFILE"
   else
-    bl64_msg_show_warning "Lab Container already initialized with SysDen64 configuration files. Set DEV_LIB_SYSDEN64_REPLACE_ENABLED=ON to force replacement on next run."
+    [[ -s "$DEV_LAB_SYSDEN64_CONTAINER_PROFILE" ]] &&
+      bl64_msg_show_warning "SysDen64 Lab Container already initialized. Set DEV_LIB_SYSDEN64_REPLACE_ENABLED=ON to force replacement on next run." &&
+      return 0
   fi
+  "$BL64_RBAC_CMD_SUDO" -E -H -u \
+    "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME" \
+    "$DEV_LAB_SYSDEN64_SCRIPT_HOME" \
+    -c \
+    -o "$DEV_LAB_SYSDEN64_CONTAINER_USER_HOME" \
+    -i "$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
+    -p "$DEV_PROFILE"
 }
 
 function dev_lab_shell_open() {
@@ -97,6 +98,7 @@ function dev_lab_initialize() {
   bl64_check_export 'DEV_PROFILE' &&
     bl64_check_export 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' &&
     bl64_check_export 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' &&
+    bl64_check_export 'DEV_LAB_SYSDEN64_CONTAINER_USER_HOME' &&
     bl64_check_export 'DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER'
 }
 
@@ -105,7 +107,7 @@ function dev_lab_initialize() {
 #
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
-bl64_lib_script_version_set '3.0.1'
+bl64_lib_script_version_set '4.0.0'
 bl64_msg_all_enable_verbose
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

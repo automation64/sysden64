@@ -1,7 +1,7 @@
 #
 # GIT Ignore
 #
-# * Version: 1.1.0
+# * Version: 1.0.0
 # * Template: 2.0.1
 #
 
@@ -23,12 +23,7 @@
 # Project specific exclusions
 #
 
-# Remove next line if home content should be git tracked
-/var/prof/*/home
-
-# Use to test new content without affecting git repo
-/etc/prof/sandbox
-/var/prof/sandbox
+GEMINI.md
 
 # Keep placeholder for empty directories
 !/**/.gitkeep
