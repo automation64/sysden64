@@ -20,8 +20,8 @@
 #
 
 # Automation64 / Root path
-declare SYSDEN64_PATH_AT64="${HOME}/at64"
-[[ ! -d "${SYSDEN64_PATH_AT64}/bl64" ]] && SYSDEN64_PATH_AT64='/opt'
+declare SYSDEN64_PATH_AT64='/opt'
+[[ ! -d "$SYSDEN64_PATH_AT64/bl64" && -d "${HOME}/at64/bl64" ]] && SYSDEN64_PATH_AT64="${HOME}/at64"
 # SysDen64 / Installation path
 declare SYSDEN64_PATH_ROOT="${SYSDEN64_PATH_ROOT:-${SYSDEN64_PATH_AT64}/sysden64}"
 
@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.0.2'
+readonly SYSDEN64_VERSION='4.0.3'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -832,7 +832,7 @@ bl64_msg_help_parameters_set \
   '-s         : Create a user-wide configuration
 -l         : Create a system-wide configuration
 -c         : Create a lab container configuration
--u         : Synchronize the current configuration
+-u         : Apply current configuration
 -w         : Switch to the specified configuration profile. Requires the -p argument
 -g         : Upgrade user-wide modules
 -d         : Disable upgrade for the module. Requires the -m argument
