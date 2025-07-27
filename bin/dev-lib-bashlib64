@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# * Version: 4.3.1
+# * Version: 5.0.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -19,17 +19,6 @@
 
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
-# shellcheck source=bin/dev-env-installer64
-source ./bin/dev-env-installer64 || exit 1
-# shellcheck source=bin/dev-env-bashlib64
-source ./bin/dev-env-bashlib64 || exit 1
-
-#
-# Globals
-#
-
-# Lib / BashLib64 / Installer64 parameters
-export INST64_BASHLIB64_TARGET="$DEV_LIB_BASHLIB64_TARGET"
 
 #
 # Main
@@ -43,5 +32,5 @@ export INST64_BASHLIB64_TARGET="$DEV_LIB_BASHLIB64_TARGET"
 echo 'dev-lib-bashlib64: Task: remove BashLib64 older versions'
 [[ -d "$DEV_LIB_BASHLIB64_TARGET" ]] && rm -Rf "$DEV_LIB_BASHLIB64_TARGET"
 
-echo 'dev-lib-bashlib64: Task: download Installer64'
+echo 'dev-lib-bashlib64: Task: download BashLib64'
 "${DEV_LIB_INSTALLER64_TARGET}/install-bashlib64"
