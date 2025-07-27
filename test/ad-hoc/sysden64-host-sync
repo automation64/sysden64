@@ -1,0 +1,9 @@
+export TEST_PROJECT_ROOT="."
+export TEST_HOME_ROOT="/opt"
+export TEST_SD64_ROOT="$TEST_HOME_ROOT/sysden64"
+export TEST_SD64_SRC="$TEST_PROJECT_ROOT/src"
+
+sudo rm -Rf "$TEST_SD64_ROOT" &&
+sudo mkdir -p $TEST_SD64_ROOT &&
+sudo cp -Rf $TEST_SD64_SRC/* "$TEST_SD64_ROOT"
+sudo chmod 755 -Rf "$TEST_SD64_ROOT"
