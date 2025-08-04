@@ -193,6 +193,19 @@ declare SYSDEN64_MODULES_DEDICATED="${SYSDEN64_MODULES_DEDICATED:-$SYSDEN64_MODU
 }
 
 #
+# Internal variables
+#
+
+declare SYSDEN64_COMMAND=''
+declare SYSDEN64_DEBUG="$BL64_DBG_TARGET_NONE"
+declare SYSDEN64_OPTION=''
+declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
+declare SYSDEN64_HOME="$HOME"
+declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
+declare SYSDEN64_PROFILE='default'
+declare SYSDEN64_MODULE=''
+
+#
 # Module Functions
 #
 
@@ -214,6 +227,7 @@ function module_setup_env() {
       echo "${source}"/??_*_*.*
     )" ]] && return 0
   fi
+  bl64_dbg_app_show_info "source location: [${source}]"
 
   bl64_msg_show_task "setup environment variables (${home}/${SYSDEN64_PATH_SHELLENV})"
   bl64_fs_path_copy \
@@ -235,7 +249,7 @@ function module_config_backup() {
   bl64_check_parameter 'model' || return $?
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
-    bl64_dbg_app_show_info 'Switching profiles. No backup required'
+    bl64_dbg_app_show_comments 'Switching profiles. No backup required'
     return 0
   fi
 
@@ -297,14 +311,14 @@ function module_sync_is_requested() {
 
   if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
     if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
-      bl64_dbg_app_show_info 'switching profile. Allow sync if new profile'
+      bl64_dbg_app_show_comments 'switching profile. Allow sync if new profile'
       [[ ! -d "$vault" ]]
       return $?
     fi
-    bl64_dbg_app_show_info 'allow sync if sync or user-wide deploy is requested'
+    bl64_dbg_app_show_comments 'allow sync if sync or user-wide deploy is requested'
     return 0
   elif [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
-    bl64_dbg_app_show_info 'shared module. Always allow sync'
+    bl64_dbg_app_show_comments 'shared module. Always allow sync'
     return 1
   fi
 }
@@ -350,12 +364,13 @@ function module_shared_upgrade() {
   bl64_dbg_app_show_function
   local module=''
 
-  bl64_msg_show_separator "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
+  bl64_dbg_app_show_info "upgrade shared configuration modules (${SYSDEN64_PATH_SHARED})"
   bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_BASE $SYSDEN64_MODULES_SHARED; do
+    module_verify_required "$module" || continue
     module_single_upgrade "$SYSDEN64_PATH_SHARED" "$module" ||
       return $?
   done
@@ -403,7 +418,7 @@ function module_dedicated_upgrade() {
   local module=''
   local profile_list=''
 
-  bl64_msg_show_separator "upgrade dedicated configuration modules (${SYSDEN64_PATH_DEDICATED})"
+  bl64_dbg_app_show_info "upgrade dedicated configuration modules (${SYSDEN64_PATH_DEDICATED})"
   bl64_check_parameter 'profile' &&
     bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
     return $?
@@ -418,12 +433,25 @@ function module_dedicated_upgrade() {
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_PROFILE; do
+    module_verify_required "$module" || continue
     for profile in $profile_list; do
       profile="${SYSDEN64_PATH_DEDICATED}/${profile}"
       module_single_upgrade "$profile" "$module" ||
         return $?
     done
   done
+}
+
+function module_verify_required() {
+  bl64_dbg_app_show_function "$@"
+  local module="$1"
+  if [[ -n "$SYSDEN64_MODULE" ]]; then
+    if [[ "$module" != "$SYSDEN64_MODULE" ]]; then
+      bl64_dbg_app_show_info "module not requested, skip it (${module})"
+      return 1
+    fi
+  fi
+  return 0
 }
 
 function repository_check_init() {
@@ -452,20 +480,27 @@ function module_shared_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
+  local module_source=''
 
-  bl64_msg_show_separator 'configure base modules'
+  bl64_dbg_app_show_comments 'configure base modules'
   for module in $SYSDEN64_MODULES_BASE; do
+    module_verify_required "$module" || continue
+    module_source="${SYSDEN64_PATH_LIB}/${module}.bash"
+    bl64_dbg_app_show_info "module source location: [${module_source}]"
     # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+    bl64_check_file "$module_source" &&
+      source "$module_source" &&
       "module_${module}_setup" "$home" ||
       return $?
   done
-  bl64_msg_show_separator 'configure shared modules'
+  bl64_dbg_app_show_comments 'configure shared modules'
   for module in $SYSDEN64_MODULES_SHARED; do
+    module_verify_required "$module" || continue
+    module_source="${SYSDEN64_PATH_LIB}/${module}.bash"
+    bl64_dbg_app_show_info "module source location: [${module_source}]"
     # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+    bl64_check_file "$module_source" &&
+      source "$module_source" &&
       "module_${module}_setup" "$home" ||
       return $?
   done
@@ -475,12 +510,16 @@ function module_dedicated_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module=''
+  local module_source=''
 
-  bl64_msg_show_separator 'configure dedicated modules'
+  bl64_dbg_app_show_comments 'configure dedicated modules'
   for module in $SYSDEN64_MODULES_DEDICATED; do
+    module_verify_required "$module" || continue
+    module_source="${SYSDEN64_PATH_LIB}/${module}.bash"
+    bl64_dbg_app_show_info "module source location: [${module_source}]"
     # shellcheck disable=SC1090
-    bl64_check_file "${SYSDEN64_PATH_LIB}/${module}.bash" &&
-      source "${SYSDEN64_PATH_LIB}/${module}.bash" &&
+    bl64_check_file "$module_source" &&
+      source "$module_source" &&
       "module_${module}_setup" "$home" ||
       return $?
   done
@@ -817,15 +856,7 @@ function initialize() {
 # Main
 #
 
-declare SYSDEN64_COMMAND=''
-declare SYSDEN64_DEBUG="$BL64_DBG_TARGET_NONE"
-declare SYSDEN64_OPTION=''
-declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
-declare SYSDEN64_HOME="$HOME"
-declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
-declare SYSDEN64_PROFILE='default'
-declare SYSDEN64_MODULE=''
-bl64_lib_script_version_set '7.0.0'
+bl64_lib_script_version_set '7.1.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
@@ -849,7 +880,7 @@ Parameters
 -o Home    : Set the full path to the users home directory. Defaults to $HOME
 -i Repo    : Set the path to the configuration repository. Defaults to $HOME/sd64
 -p Profile : Specify the configuration profile name. Required for -w. Defaults to default.
--m Module  : Module name. Required for -a, -b. Defaults to $HOME
+-m Module  : Module name. Required for -d and -r. Optional for -g and -u
 
 Help
 -h         : Show help
