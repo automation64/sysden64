@@ -193,6 +193,19 @@ declare SYSDEN64_MODULES_DEDICATED="${SYSDEN64_MODULES_DEDICATED:-$SYSDEN64_MODU
 }
 
 #
+# Internal variables
+#
+
+declare SYSDEN64_COMMAND=''
+declare SYSDEN64_DEBUG="$BL64_DBG_TARGET_NONE"
+declare SYSDEN64_OPTION=''
+declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
+declare SYSDEN64_HOME="$HOME"
+declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
+declare SYSDEN64_PROFILE='default'
+declare SYSDEN64_MODULE=''
+
+#
 # Module Functions
 #
 
@@ -356,6 +369,12 @@ function module_shared_upgrade() {
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_BASE $SYSDEN64_MODULES_SHARED; do
+    if [[ -n "$SYSDEN64_MODULE" ]]; then
+      if [[ "$module" != "$SYSDEN64_MODULE" ]]; then
+        bl64_dbg_app_show_info "skip module upgrade if not requested (${module})"
+        continue
+      fi
+    fi
     module_single_upgrade "$SYSDEN64_PATH_SHARED" "$module" ||
       return $?
   done
@@ -418,6 +437,12 @@ function module_dedicated_upgrade() {
 
   # shellcheck disable=SC2164
   for module in $SYSDEN64_MODULES_PROFILE; do
+    if [[ -n "$SYSDEN64_MODULE" ]]; then
+      if [[ "$module" != "$SYSDEN64_MODULE" ]]; then
+        bl64_dbg_app_show_info "skip module upgrade if not requested (${module})"
+        continue
+      fi
+    fi
     for profile in $profile_list; do
       profile="${SYSDEN64_PATH_DEDICATED}/${profile}"
       module_single_upgrade "$profile" "$module" ||
@@ -817,15 +842,7 @@ function initialize() {
 # Main
 #
 
-declare SYSDEN64_COMMAND=''
-declare SYSDEN64_DEBUG="$BL64_DBG_TARGET_NONE"
-declare SYSDEN64_OPTION=''
-declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
-declare SYSDEN64_HOME="$HOME"
-declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
-declare SYSDEN64_PROFILE='default'
-declare SYSDEN64_MODULE=''
-bl64_lib_script_version_set '7.0.0'
+bl64_lib_script_version_set '7.1.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
@@ -849,7 +866,7 @@ Parameters
 -o Home    : Set the full path to the users home directory. Defaults to $HOME
 -i Repo    : Set the path to the configuration repository. Defaults to $HOME/sd64
 -p Profile : Specify the configuration profile name. Required for -w. Defaults to default.
--m Module  : Module name. Required for -a, -b. Defaults to $HOME
+-m Module  : Module name. Required for -d and -r. Optional for -g
 
 Help
 -h         : Show help
