@@ -378,7 +378,7 @@ function module_shared_upgrade() {
 
 function profile_list_get() {
   cd "$SYSDEN64_PATH_DEDICATED" &&
-    echo * &&
+    bl64_bsh_pattern_match_file '*' &&
     return 0
   bl64_msg_show_error "Unable to list profiles in ${SYSDEN64_PATH_DEDICATED}"
   return $BL64_LIB_ERROR_TASK_FAILED
@@ -713,10 +713,14 @@ function lock_list() {
     repository_check_user &&
     locks_repository_create &&
     cd "$SYSDEN64_PATH_LOCKS" &&
-    (
-      shopt -s nullglob
-      echo *"${SYSDEN64_SUFFIX_NOTUPGRADE}"
-    )
+    bl64_bsh_pattern_match_file "*${SYSDEN64_SUFFIX_NOTUPGRADE}"
+}
+
+function profile_list() {
+  bl64_dbg_app_show_function
+  repository_check_init &&
+    repository_check_user &&
+    profile_list_get
 }
 
 function lock_disable() {
@@ -756,53 +760,56 @@ function initialize() {
   bl64_dbg_app_show_function
 
   case "$SYSDEN64_COMMAND" in
-  'system_wide_create')
-    SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
-    if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
-      bl64_msg_show_error "The system-wide feature can not be used when user-wide configuration is already deployed (${SYSDEN64_REPOSITORY})"
-      # shellcheck disable=SC2086
-      return $BL64_LIB_ERROR_TASK_FAILED
-    fi
-    ;;
-  'profile_switch')
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    # shellcheck disable=SC2034
-    SYSDEN64_ACTION_SWITCH="$BL64_VAR_ON"
-    ;;
-  'lab_create')
-    SYSDEN64_FLAG_LAB='ON'
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    ;;
-  'user_wide_create')
-    SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
-      return $?
-    ;;
-  'configuration_sync')
-    # shellcheck disable=SC2034
-    SYSDEN64_ACTION_SYNC="$BL64_VAR_ON"
-    [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
-    ;;
-  'sysden64_upgrade')
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    ;;
-  'lock_list')
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    ;;
-  'lock_disable' | 'lock_enable')
-    SYSDEN64_FLAG_USER_WIDE='ON'
-    bl64_check_parameter 'SYSDEN64_MODULE' ||
-      { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
-    if [[ "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_CUSTOM" || "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_PROFILE" ]]; then
-      bl64_msg_show_info "This module is permanently excluded from upgrades. There is no need to disable/reenable it (module: ${module})"
-      return 0
-    fi
-    ;;
-  *)
-    bl64_check_parameter 'SYSDEN64_COMMAND' ||
-      { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
-    ;;
+    'system_wide_create')
+      SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
+      if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+        bl64_msg_show_error "The system-wide feature can not be used when user-wide configuration is already deployed (${SYSDEN64_REPOSITORY})"
+        # shellcheck disable=SC2086
+        return $BL64_LIB_ERROR_TASK_FAILED
+      fi
+      ;;
+    'profile_switch')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      # shellcheck disable=SC2034
+      SYSDEN64_ACTION_SWITCH="$BL64_VAR_ON"
+      ;;
+    'lab_create')
+      SYSDEN64_FLAG_LAB='ON'
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'user_wide_create')
+      SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
+        return $?
+      ;;
+    'configuration_sync')
+      # shellcheck disable=SC2034
+      SYSDEN64_ACTION_SYNC="$BL64_VAR_ON"
+      [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'sysden64_upgrade')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'profile_list')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'lock_list')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'lock_disable' | 'lock_enable')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      bl64_check_parameter 'SYSDEN64_MODULE' ||
+        { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
+      if [[ "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_CUSTOM" || "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_PROFILE" ]]; then
+        bl64_msg_show_info "This module is permanently excluded from upgrades. There is no need to disable/reenable it (module: ${module})"
+        return 0
+      fi
+      ;;
+    *)
+      bl64_check_parameter 'SYSDEN64_COMMAND' ||
+        { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
+      ;;
   esac
 
   SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-${SYSDEN64_PATH_ROOT}/lib}"
@@ -868,7 +875,10 @@ bl64_msg_help_parameters_set \
 
 Configuration management
 -u         : Apply configuration changes from the repository to the user home.
+
+Profile management
 -w         : Switch to the specified configuration profile. Requires the -p argument
+-f         : List profiles
 
 Modules management
 -g         : Upgrade module definitions.
@@ -887,40 +897,42 @@ Help
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':slcwugdrko:i:p:m:V:D:h' SYSDEN64_OPTION; do
+while getopts ':slcwugdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
-  s) SYSDEN64_COMMAND='user_wide_create' ;;
-  l) SYSDEN64_COMMAND='system_wide_create' ;;
-  c) SYSDEN64_COMMAND='lab_create' ;;
-  u) SYSDEN64_COMMAND='configuration_sync' ;;
-  w) SYSDEN64_COMMAND='profile_switch' ;;
-  g) SYSDEN64_COMMAND='sysden64_upgrade' ;;
-  d) SYSDEN64_COMMAND='lock_disable' ;;
-  r) SYSDEN64_COMMAND='lock_enable' ;;
-  k) SYSDEN64_COMMAND='lock_list' ;;
-  o) SYSDEN64_HOME="$OPTARG" ;;
-  i) SYSDEN64_REPOSITORY="$OPTARG" ;;
-  p) SYSDEN64_PROFILE="$OPTARG" ;;
-  m) SYSDEN64_MODULE="$OPTARG" ;;
-  V) SYSDEN64_VERBOSE="$OPTARG" ;;
-  D) SYSDEN64_DEBUG="$OPTARG" ;;
-  h) bl64_msg_help_show && exit 0 ;;
-  *) bl64_msg_help_show && exit 1 ;;
+    s) SYSDEN64_COMMAND='user_wide_create' ;;
+    l) SYSDEN64_COMMAND='system_wide_create' ;;
+    c) SYSDEN64_COMMAND='lab_create' ;;
+    u) SYSDEN64_COMMAND='configuration_sync' ;;
+    w) SYSDEN64_COMMAND='profile_switch' ;;
+    f) SYSDEN64_COMMAND='profile_list' ;;
+    g) SYSDEN64_COMMAND='sysden64_upgrade' ;;
+    d) SYSDEN64_COMMAND='lock_disable' ;;
+    r) SYSDEN64_COMMAND='lock_enable' ;;
+    k) SYSDEN64_COMMAND='lock_list' ;;
+    o) SYSDEN64_HOME="$OPTARG" ;;
+    i) SYSDEN64_REPOSITORY="$OPTARG" ;;
+    p) SYSDEN64_PROFILE="$OPTARG" ;;
+    m) SYSDEN64_MODULE="$OPTARG" ;;
+    V) SYSDEN64_VERBOSE="$OPTARG" ;;
+    D) SYSDEN64_DEBUG="$OPTARG" ;;
+    h) bl64_msg_help_show && exit 0 ;;
+    *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
-'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'system_wide_create') system_wide_create "$SYSDEN64_HOME" ;;
-'lab_create') lab_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'configuration_sync') configuration_sync "$SYSDEN64_HOME" ;;
-'profile_switch') profile_switch "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-'sysden64_upgrade') sysden64_upgrade ;;
-'lock_enable') lock_enable "$SYSDEN64_MODULE" ;;
-'lock_disable') lock_disable "$SYSDEN64_MODULE" ;;
-'lock_list') lock_list ;;
-*) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
+  'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
+  'system_wide_create') system_wide_create "$SYSDEN64_HOME" ;;
+  'lab_create') lab_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
+  'configuration_sync') configuration_sync "$SYSDEN64_HOME" ;;
+  'profile_switch') profile_switch "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
+  'profile_list') profile_list "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
+  'sysden64_upgrade') sysden64_upgrade ;;
+  'lock_enable') lock_enable "$SYSDEN64_MODULE" ;;
+  'lock_disable') lock_disable "$SYSDEN64_MODULE" ;;
+  'lock_list') lock_list ;;
+  *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
 esac
 bl64_msg_show_batch_finish $? "$SYSDEN64_COMMAND"
