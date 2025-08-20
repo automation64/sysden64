@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SysDen64
   - Profile list command
 
+### Changed
+
+- Zellij
+  - Update default config
+
 ## [4.2.1]
 
 ### Added
