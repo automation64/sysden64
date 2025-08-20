@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.2.1'
+readonly SYSDEN64_VERSION='4.3.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -541,7 +541,7 @@ function devbin64_setup() {
     return $?
 
   bl64_msg_show_task "set profile (${profile})"
-  "$SYSDEN64_CMD_DEVBIN64_PROFILE" ||
+  "$SYSDEN64_CMD_DEVBIN64_PROFILE" "$profile" ||
     return $?
   if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_LAB"; then
     echo "$profile" >"$SYSDEN64_PATH_TAG_LAB"
@@ -856,7 +856,7 @@ function initialize() {
 # Main
 #
 
-bl64_lib_script_version_set '7.1.0'
+bl64_lib_script_version_set '7.1.1'
 bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
