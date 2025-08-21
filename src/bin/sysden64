@@ -214,9 +214,18 @@ function module_setup_env() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local source="$2"
+  local module_type="${3:-$SYSDEN64_MODULE_TYPE_SHARED}"
+  local model="${4:-}"
 
   bl64_check_parameter 'home' &&
     bl64_check_parameter 'home' || return $?
+
+  if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
+    if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
+      bl64_dbg_app_show_comments 'switching profile. Allow sync if new profile'
+      [[ -n "$model" && -d "${DEV_PATH_PROF_VAULT}/${model}" ]] && return 0
+    fi
+  fi
 
   if [[ -d "${source}/${SYSDEN64_PATH_SHELLENV}/${BL64_OS_TYPE}" ]]; then
     source="${source}/${SYSDEN64_PATH_SHELLENV}/${BL64_OS_TYPE}"
