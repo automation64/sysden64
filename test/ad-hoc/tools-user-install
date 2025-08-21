@@ -1,6 +1,5 @@
 [[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
 
 export INST64_SYSTEM_WIDE="NO"
-/opt/inst64/install-helix &&
-/opt/inst64/install-nvm &&
+/opt/inst64/install-zellij &&
 /opt/inst64/install-ripgrep
