@@ -118,6 +118,7 @@ SYSDEN64_MODULES_DEDICATED_DEFAULT+=' docker'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' gcloud'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' gpg'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' kubectl'
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' oci'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' ssh'
 
 declare SYSDEN64_MODULES_SHARED_DEFAULT=''
@@ -218,7 +219,7 @@ function module_setup_env() {
   local model="${4:-}"
 
   bl64_check_parameter 'home' &&
-    bl64_check_parameter 'home' || return $?
+    bl64_check_parameter 'source' || return $?
 
   if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
     if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
