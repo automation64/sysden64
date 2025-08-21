@@ -431,7 +431,7 @@ function module_dedicated_upgrade() {
 
   bl64_dbg_app_show_info "upgrade dedicated configuration modules (${SYSDEN64_PATH_DEDICATED})"
   bl64_check_parameter 'profile' &&
-    bl64_check_directory "$SYSDEN64_PATH_SHARED" ||
+    bl64_check_directory "$SYSDEN64_PATH_DEDICATED" ||
     return $?
 
   if [[ "$profile" = 'all' ]]; then
