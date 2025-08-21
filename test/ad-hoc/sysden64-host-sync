@@ -1,3 +1,5 @@
+echo "WARNING: replacing local host version"
+
 export TEST_PROJECT_ROOT="."
 export TEST_HOME_ROOT="/opt"
 export TEST_SD64_ROOT="$TEST_HOME_ROOT/sysden64"

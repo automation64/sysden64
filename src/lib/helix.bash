@@ -1,4 +1,4 @@
-# Version: 1.0.0
+# Version: 1.0.1
 function module_helix_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -20,7 +20,7 @@ function module_helix_setup_config() {
   local source="$2"
   local model="$3"
   local target_base="${home}/.config/helix"
-  local config='/.config/helix'
+  local config='.config/helix'
   local config_file='config.toml'
   local target="${home}/${config}/${config_file}"
 
