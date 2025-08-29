@@ -808,6 +808,16 @@ function lock_enable() {
     bl64_fs_file_remove "$module${SYSDEN64_SUFFIX_NOTUPGRADE}"
 }
 
+function module_list() {
+  bl64_dbg_app_show_function "$@"
+  bl64_msg_show_task 'list base configuration modules'
+  echo "$SYSDEN64_MODULES_BASE"
+  bl64_msg_show_task 'list shared configuration modules'
+  echo "$SYSDEN64_MODULES_SHARED"
+  bl64_msg_show_task 'list dedicated configuration modules'
+  echo "$SYSDEN64_MODULES_DEDICATED"
+}
+
 function initialize() {
   bl64_dbg_app_show_function
   local profile_current=''
@@ -914,7 +924,7 @@ function initialize() {
 #
 
 bl64_lib_script_version_set '7.2.0'
-bl64_msg_help_usage_set '<-s|-l|-c|-n|-w|-t|-f|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_usage_set '<-s|-l|-c|-n|-u|-e|-w|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
@@ -926,6 +936,7 @@ bl64_msg_help_parameters_set \
 
 Configuration management
 -u         : Apply configuration changes from the repository to the user home.
+-e         : List configuration modules
 
 Profile management (user-level)
 -w         : Switch to the specified configuration profile. Requires the -p argument
@@ -949,13 +960,14 @@ Help
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':slcwugntdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
+while getopts ':slcweugntdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
     s) SYSDEN64_COMMAND='user_wide_create' ;;
     n) SYSDEN64_COMMAND='user_wide_relink' ;;
     l) SYSDEN64_COMMAND='system_wide_create' ;;
     c) SYSDEN64_COMMAND='lab_create' ;;
     u) SYSDEN64_COMMAND='configuration_sync' ;;
+    e) SYSDEN64_COMMAND='module_list' ;;
     w) SYSDEN64_COMMAND='profile_switch' ;;
     f) SYSDEN64_COMMAND='profile_list' ;;
     t) SYSDEN64_COMMAND='profile_current' ;;
@@ -982,6 +994,7 @@ case "$SYSDEN64_COMMAND" in
   'system_wide_create') system_wide_create "$SYSDEN64_HOME" ;;
   'lab_create') lab_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
   'configuration_sync') configuration_sync "$SYSDEN64_HOME" ;;
+  'module_list') module_list ;;
   'profile_switch') profile_switch "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
   'profile_list') profile_list ;;
   'profile_current') profile_current ;;

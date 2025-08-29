@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - SysDen64
-  - Show current profile
+  - Show current profile, show modules
 - Modules
   - K9S
 
