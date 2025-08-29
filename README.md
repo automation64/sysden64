@@ -33,24 +33,8 @@ chmod 755 ./install-installer64 &&
 Run `sysden64` with the appropriate flags:
 
 ```sh
-sysden64 <-s|-l|-w|-u|-g> [-o Home] [-i Repo] [-p Profile] [-V Verbose] [-D Debug] [-h]
+sysden64 -h
 ```
-
-### Available Commands:
-
-| Command      | Description                                                                       |
-| ------------ | --------------------------------------------------------------------------------- |
-| `-s`         | Create a user-wide configuration                                                  |
-| `-l`         | Create a system-wide configuration                                                |
-| `-u`         | Synchronize the current configuration                                             |
-| `-w`         | Switch to the specified configuration profile (requires `-p`)                     |
-| `-g`         | Upgrade user-wide modules                                                         |
-| `-h`         | Show help                                                                         |
-| `-o Home`    | Set the full path to the user's home directory (defaults to `$HOME`)              |
-| `-i Repo`    | Set the path to the configuration repository (defaults to `$HOME/sd64`)           |
-| `-p Profile` | Specify the configuration profile name (required for `-w`, defaults to `default`) |
-| `-V Verbose` | Set verbosity level (Format: `BL64_MSG_VERBOSE_*`)                                |
-| `-D Debug`   | Enable debugging mode (Format: `BL64_DBG_TARGET_*`)                               |
 
 Example:
 
