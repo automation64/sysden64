@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.3.0'
+readonly SYSDEN64_VERSION='4.4.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -204,7 +204,7 @@ declare SYSDEN64_OPTION=''
 declare SYSDEN64_VERBOSE="$BL64_MSG_VERBOSE_APP"
 declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
-declare SYSDEN64_PROFILE='default'
+declare SYSDEN64_PROFILE=''
 declare SYSDEN64_MODULE=''
 
 #
@@ -536,6 +536,39 @@ function module_dedicated_setup() {
   done
 }
 
+function devbin64_load() {
+  bl64_dbg_app_show_function "$@"
+  local repository="$1"
+  local profile="${2:-}"
+
+  bl64_msg_show_task "load shell environment (${repository} / ${profile})"
+  DEV_PROFILE="$profile"
+  unset DEV_PATH_ROOT
+  # shellcheck disable=SC1090
+  cd "$repository" &&
+    source "$SYSDEN64_CMD_DEVBIN64_SET"
+}
+
+function profile_read() {
+  bl64_dbg_app_show_function
+  if [[ -s "$SYSDEN64_PATH_TAG_PROFILE" ]]; then
+    echo "$(<"$SYSDEN64_PATH_TAG_PROFILE")"
+  else
+    bl64_msg_show_error "unable to determine current profile (${SYSDEN64_PATH_TAG_PROFILE})"
+    return 1
+  fi
+}
+
+function profile_save() {
+  bl64_dbg_app_show_function "$@"
+  local profile="$1"
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_LAB"; then
+    echo "$profile" >"$SYSDEN64_PATH_TAG_LAB"
+  else
+    echo "$profile" >"$SYSDEN64_PATH_TAG_PROFILE"
+  fi
+}
+
 function devbin64_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -543,22 +576,12 @@ function devbin64_setup() {
   local profile="$3"
 
   bl64_msg_show_phase 'populate configuration repository'
-  bl64_msg_show_task "source environment (${repository} - ${profile})"
-  DEV_PROFILE="$profile"
-  unset DEV_PATH_ROOT
-  # shellcheck disable=SC1090
-  cd "$repository" &&
-    source "$SYSDEN64_CMD_DEVBIN64_SET" ||
-    return $?
+  devbin64_load "$repository" "$profile" || return $?
 
   bl64_msg_show_task "set profile (${profile})"
-  "$SYSDEN64_CMD_DEVBIN64_PROFILE" "$profile" ||
+  "$SYSDEN64_CMD_DEVBIN64_PROFILE" "$profile" &&
+    profile_save "$profile" ||
     return $?
-  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_LAB"; then
-    echo "$profile" >"$SYSDEN64_PATH_TAG_LAB"
-  else
-    echo "$profile" >"$SYSDEN64_PATH_TAG_PROFILE"
-  fi
 
   bl64_msg_show_task "create shared configuration store (${SYSDEN64_PATH_SHARED})"
   bl64_fs_dir_create \
@@ -566,7 +589,28 @@ function devbin64_setup() {
     "$SYSDEN64_PATH_SHARED" ||
     return $?
 
-  bl64_msg_show_task "create/update home links to profile (${profile})"
+  if [[ -d "${home}/${SYSDEN64_PREFIX_SD64}vault" ]]; then
+    repository_relink "$home" "$repository"
+  fi
+}
+
+function user_wide_relink() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local repository="$2"
+
+  repository_check_init &&
+    repository_check_user &&
+    devbin64_load "$repository" "$(profile_read)" &&
+    repository_relink "$home" "$repository"
+}
+
+function repository_relink() {
+  bl64_dbg_app_show_function "$@"
+  local home="$1"
+  local repository="$2"
+
+  bl64_msg_show_task 'create/update sysden64 directory shortcuts (symlinks)'
   # shellcheck disable=SC2154
   bl64_fs_symlink_create \
     "${DEV_PATH_DOCS}" "${home}/${SYSDEN64_PREFIX_SD64}docs" "$BL64_VAR_ON" &&
@@ -639,7 +683,7 @@ function user_wide_create() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local repository="$2"
-  local profile="$3"
+  local profile='default'
 
   if [[ -d "$repository" ]]; then
     bl64_msg_show_warning 'The user-wide configuration was already deployed. Use the upgrade (-g) or sync (-u) options to maintain it.'
@@ -734,6 +778,13 @@ function profile_list() {
     profile_list_get
 }
 
+function profile_current() {
+  bl64_dbg_app_show_function
+  repository_check_init &&
+    repository_check_user &&
+    profile_read
+}
+
 function lock_disable() {
   bl64_dbg_app_show_function "$@"
   local module="$1"
@@ -756,19 +807,9 @@ function lock_enable() {
     bl64_fs_file_remove "$module${SYSDEN64_SUFFIX_NOTUPGRADE}"
 }
 
-#######################################
-# Initialize environment
-#
-# Arguments:
-#   None
-# Outputs:
-#   Initializacion progress messages
-# Returns:
-#   0: initialization ok
-#   >: failed to initialize
-#######################################
 function initialize() {
   bl64_dbg_app_show_function
+  local profile_current=''
 
   case "$SYSDEN64_COMMAND" in
     'system_wide_create')
@@ -781,7 +822,6 @@ function initialize() {
       ;;
     'profile_switch')
       SYSDEN64_FLAG_USER_WIDE='ON'
-      # shellcheck disable=SC2034
       SYSDEN64_ACTION_SWITCH="$BL64_VAR_ON"
       ;;
     'lab_create')
@@ -794,18 +834,16 @@ function initialize() {
       bl64_check_command "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP" ||
         return $?
       ;;
+    'user_wide_relink')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      bl64_check_directory "$SYSDEN64_HOME" ||
+        return $?
+      ;;
     'configuration_sync')
-      # shellcheck disable=SC2034
       SYSDEN64_ACTION_SYNC="$BL64_VAR_ON"
       [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
-    'sysden64_upgrade')
-      SYSDEN64_FLAG_USER_WIDE='ON'
-      ;;
-    'profile_list')
-      SYSDEN64_FLAG_USER_WIDE='ON'
-      ;;
-    'lock_list')
+    'profile_list' | 'profile_current' | 'lock_list' | 'sysden64_upgrade')
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
     'lock_disable' | 'lock_enable')
@@ -874,8 +912,8 @@ function initialize() {
 # Main
 #
 
-bl64_lib_script_version_set '7.1.1'
-bl64_msg_help_usage_set '<-s|-l|-c|-w|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
+bl64_lib_script_version_set '7.2.0'
+bl64_msg_help_usage_set '<-s|-l|-c|-n|-w|-t|-f|-u|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
@@ -883,15 +921,17 @@ bl64_msg_help_parameters_set \
 -s         : Prepare for user repository. Configurations will be stored in a user-level repository
 -l         : Prepare for system repository. Configurations will be read from a system-level repository
 -c         : Prepare for lab container. Configurations will be read from the host user-level repository
+-n         : Recreate user-level repository shorcuts (symlinks)
 
 Configuration management
 -u         : Apply configuration changes from the repository to the user home.
 
-Profile management
+Profile management (user-level)
 -w         : Switch to the specified configuration profile. Requires the -p argument
+-t         : Show current profile
 -f         : List profiles
 
-Modules management
+Modules management (user-level)
 -g         : Upgrade module definitions.
 -d         : Disable upgrade for the module. Requires the -m argument
 -r         : Reenable upgrade for the module. Requires the -m argument
@@ -908,14 +948,16 @@ Help
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':slcwugdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
+while getopts ':slcwugntdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
     s) SYSDEN64_COMMAND='user_wide_create' ;;
+    n) SYSDEN64_COMMAND='user_wide_relink' ;;
     l) SYSDEN64_COMMAND='system_wide_create' ;;
     c) SYSDEN64_COMMAND='lab_create' ;;
     u) SYSDEN64_COMMAND='configuration_sync' ;;
     w) SYSDEN64_COMMAND='profile_switch' ;;
     f) SYSDEN64_COMMAND='profile_list' ;;
+    t) SYSDEN64_COMMAND='profile_current' ;;
     g) SYSDEN64_COMMAND='sysden64_upgrade' ;;
     d) SYSDEN64_COMMAND='lock_disable' ;;
     r) SYSDEN64_COMMAND='lock_enable' ;;
@@ -934,12 +976,14 @@ bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" &
 
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
-  'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
+  'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
+  'user_wide_relink') user_wide_relink "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
   'system_wide_create') system_wide_create "$SYSDEN64_HOME" ;;
   'lab_create') lab_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
   'configuration_sync') configuration_sync "$SYSDEN64_HOME" ;;
   'profile_switch') profile_switch "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
-  'profile_list') profile_list "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
+  'profile_list') profile_list ;;
+  'profile_current') profile_current ;;
   'sysden64_upgrade') sysden64_upgrade ;;
   'lock_enable') lock_enable "$SYSDEN64_MODULE" ;;
   'lock_disable') lock_disable "$SYSDEN64_MODULE" ;;
