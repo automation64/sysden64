@@ -477,7 +477,7 @@ function sysden64_check_deployed() {
 
 function sysden64_is_user_wide() {
   bl64_dbg_app_show_function
-  [[ -s "$SYSDEN64_PATH_TAG_PROFILE" ]]
+  [[ -d "$SYSDEN64_REPOSITORY" ]]
 }
 
 function sysden64_check_user_wide() {
@@ -531,6 +531,11 @@ function module_dedicated_setup() {
   local module_source=''
 
   bl64_msg_show_separator 'configure dedicated modules'
+  if sysden64_is_user_wide; then
+    bl64_check_export 'DEV_PATH_PROF_VAULT' ||
+      return $?
+  fi
+
   for module in $SYSDEN64_MODULES_DEDICATED; do
     module_verify_required "$module" || continue
     module_source="${SYSDEN64_PATH_LIB}/${module}.bash"
@@ -595,8 +600,6 @@ function devbin64_setup() {
   local profile="$3"
 
   bl64_msg_show_phase 'populate configuration repository'
-  devbin64_load "$repository" "$profile" || return $?
-
   bl64_msg_show_task "set profile (${profile})"
   "$SYSDEN64_CMD_DEVBIN64_PROFILE" "$profile" &&
     profile_save "$profile" ||
@@ -704,6 +707,7 @@ function user_wide_create() {
   local profile='default'
 
   repository_create "$repository" &&
+    devbin64_load "$repository" "$profile" &&
     devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
     locks_repository_create &&
@@ -737,7 +741,8 @@ function profile_switch() {
       return 0
   fi
 
-  devbin64_setup "$home" "$repository" "$profile" &&
+  devbin64_load "$repository" "$profile" &&
+    devbin64_setup "$home" "$repository" "$profile" &&
     backup_repository_create &&
     module_dedicated_upgrade "$profile" &&
     module_dedicated_setup "$home" &&
