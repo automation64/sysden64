@@ -13,7 +13,7 @@ function module_X_MODULE_ID_X_setup() {
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" "$module_type" "$model" &&
-    module_oci_setup_config "$home" "$source" "$model"
+    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model"
 }
 
 function module_X_MODULE_ID_X_setup_config() {
