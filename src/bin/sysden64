@@ -289,6 +289,7 @@ function module_check_type() {
   if [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_DEDICATED" &&
     "$module_type" != "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
     bl64_msg_show_error "invalid module type (${module_type})"
+    # shellcheck disable=SC2086
     return $BL64_LIB_ERROR_PARAMETER_INVALID
   fi
 }
@@ -394,6 +395,7 @@ function profile_list_get() {
     bl64_bsh_pattern_match_file '*' &&
     return 0
   bl64_msg_show_error "Unable to list profiles in ${SYSDEN64_PATH_DEDICATED}"
+  # shellcheck disable=SC2086
   return $BL64_LIB_ERROR_TASK_FAILED
 }
 
@@ -437,6 +439,7 @@ function module_dedicated_upgrade() {
     return $?
 
   if [[ "$profile" = 'all' ]]; then
+    # shellcheck disable=SC2086
     profile_list="$(profile_list_get)" ||
       return $BL64_LIB_ERROR_TASK_FAILED
   else
@@ -848,6 +851,7 @@ function initialize() {
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
     'module_sync')
+      # shellcheck disable=SC2034
       SYSDEN64_ACTION_SYNC="$BL64_VAR_ON"
       [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
@@ -944,7 +948,7 @@ function initialize() {
       sysden64_check_deployed &&
         sysden64_check_user_wide &&
         bl64_check_parameter 'SYSDEN64_MODULE' ||
-        { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
+        return $?
       if [[ "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_CUSTOM" || "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_PROFILE" ]]; then
         bl64_msg_show_info "This module is permanently excluded from upgrades. There is no need to disable/reenable it (module: ${module})"
         return 0
@@ -954,13 +958,14 @@ function initialize() {
       sysden64_check_deployed &&
         sysden64_check_user_wide &&
         bl64_check_parameter 'SYSDEN64_MODULE' ||
-        { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
+        return $?
       if [[ "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_CUSTOM" || "$SYSDEN64_MODULE" == "$SYSDEN64_MODULES_PROFILE" ]]; then
         bl64_msg_show_info "This module is permanently excluded from upgrades. There is no need to disable/reenable it (module: ${module})"
         return 0
       fi
       ;;
     *)
+      # shellcheck disable=SC2086
       bl64_check_parameter 'SYSDEN64_COMMAND' ||
         { bl64_msg_help_show && return $BL64_LIB_ERROR_PARAMETER_MISSING; }
       ;;
