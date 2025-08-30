@@ -832,6 +832,7 @@ function initialize() {
   # shellcheck disable=SC2249
   case "$SYSDEN64_COMMAND" in
     'system_wide_create')
+      # shellcheck disable=SC2034
       SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
       ;;
     'lab_create')
@@ -839,6 +840,7 @@ function initialize() {
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
     'user_wide_create')
+      # shellcheck disable=SC2034
       SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
