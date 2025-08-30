@@ -1,4 +1,4 @@
-# template: lib-shared-1.0.0
+# template: lib-dedicated-1.0.0
 # version: 1.0.1
 function module_oci_setup() {
   bl64_dbg_app_show_function "$@"

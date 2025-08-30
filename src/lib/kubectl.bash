@@ -1,5 +1,5 @@
 # Version: 3.0.0
-# template: lib-shared-1.0.0
+# template: lib-dedicated-1.0.0
 function module_kubectl_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -25,7 +25,7 @@ function module_kubectl_setup_config() {
   local config='.kube'
   local target="${target_base}/${config}"
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC" && return 0
+  module_dedicated_is_new "$model" || return 0
   module_config_backup "$model" "$target" ||
     return $?
 
