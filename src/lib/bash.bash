@@ -1,4 +1,5 @@
 # Version: 2.0.0
+# template: legacy
 function module_bash_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
