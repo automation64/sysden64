@@ -792,6 +792,12 @@ function profile_current() {
   profile_read
 }
 
+function devbin64_upgrade() {
+  bl64_dbg_app_show_function
+  cd "$SYSDEN64_REPOSITORY" &&
+    "$SYSDEN64_CMD_DEVBIN64_BOOTSTRAP"
+}
+
 function lock_disable() {
   bl64_dbg_app_show_function "$@"
   local module="$1"
@@ -828,10 +834,6 @@ function initialize() {
     'system_wide_create')
       SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
       ;;
-    'profile_switch')
-      SYSDEN64_FLAG_USER_WIDE='ON'
-      SYSDEN64_ACTION_SWITCH="$BL64_VAR_ON"
-      ;;
     'lab_create')
       SYSDEN64_FLAG_LAB='ON'
       SYSDEN64_FLAG_USER_WIDE='ON'
@@ -847,10 +849,17 @@ function initialize() {
       SYSDEN64_ACTION_SYNC="$BL64_VAR_ON"
       [[ -d "$SYSDEN64_REPOSITORY" ]] && SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
-    'profile_list' | 'profile_current' | 'lock_list' | 'module_upgrade')
+    'module_upgrade' | 'devbin64_upgrade')
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
-    'lock_disable' | 'lock_enable')
+    'profile_list' | 'profile_current')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      ;;
+    'profile_switch')
+      SYSDEN64_FLAG_USER_WIDE='ON'
+      SYSDEN64_ACTION_SWITCH="$BL64_VAR_ON"
+      ;;
+    'lock_disable' | 'lock_enable' | 'lock_list')
       SYSDEN64_FLAG_USER_WIDE='ON'
       ;;
   esac
@@ -910,6 +919,10 @@ function initialize() {
       sysden64_check_deployed
       ;;
     'profile_list')
+      sysden64_check_deployed &&
+        sysden64_check_user_wide
+      ;;
+    'devbin64_upgrade')
       sysden64_check_deployed &&
         sysden64_check_user_wide
       ;;
@@ -980,7 +993,7 @@ function initialize() {
 #
 
 bl64_lib_script_version_set '7.2.0'
-bl64_msg_help_usage_set '<-s|-l|-c|-n|-u|-e|-w|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_usage_set '<-s|-l|-c|-n|-6|-u|-e|-w|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
@@ -989,6 +1002,7 @@ bl64_msg_help_parameters_set \
 -l         : Prepare for system repository. Configurations will be read from a system-level repository
 -c         : Prepare for lab container. Configurations will be read from the host user-level repository
 -n         : Recreate user-level repository shorcuts (symlinks)
+-6         : Upgrade devbin64
 
 Configuration management
 -u         : Apply configuration changes from the repository to the user home.
@@ -1000,7 +1014,7 @@ Profile management (user-level)
 -f         : List profiles
 
 Modules management (user-level)
--g         : Upgrade module definitions.
+-g         : Upgrade module definitions
 -d         : Disable upgrade for the module. Requires the -m argument
 -r         : Reenable upgrade for the module. Requires the -m argument
 -k         : List modules disabled for upgrade
@@ -1016,10 +1030,11 @@ Help
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':slcweugntdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
+while getopts ':slc6weugntdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
     s) SYSDEN64_COMMAND='user_wide_create' ;;
     n) SYSDEN64_COMMAND='user_wide_relink' ;;
+    6) SYSDEN64_COMMAND='devbin64_upgrade' ;;
     l) SYSDEN64_COMMAND='system_wide_create' ;;
     c) SYSDEN64_COMMAND='lab_create' ;;
     u) SYSDEN64_COMMAND='module_sync' ;;
@@ -1048,6 +1063,7 @@ case "$SYSDEN64_COMMAND" in
   'user_wide_create') user_wide_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
   'user_wide_relink') user_wide_relink "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" ;;
   'system_wide_create') system_wide_create "$SYSDEN64_HOME" ;;
+  'devbin64_upgrade') devbin64_upgrade ;;
   'lab_create') lab_create "$SYSDEN64_HOME" "$SYSDEN64_REPOSITORY" "$SYSDEN64_PROFILE" ;;
   'module_sync') module_sync "$SYSDEN64_HOME" ;;
   'module_list') module_list ;;
