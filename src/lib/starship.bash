@@ -1,4 +1,5 @@
 # Version: 1.1.2
+# template: legacy
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"

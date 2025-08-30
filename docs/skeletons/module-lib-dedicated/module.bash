@@ -1,4 +1,4 @@
-# template: lib-shared-1.0.0
+# template: lib-dedicated-1.0.0
 # template: lib-base-1.0.0
 function module_X_MODULE_ID_X_setup() {
   bl64_dbg_app_show_function "$@"
@@ -13,7 +13,7 @@ function module_X_MODULE_ID_X_setup() {
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" "$module_type" "$model" &&
-    module_oci_setup_config "$home" "$source" "$model"
+    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model"
 }
 
 function module_X_MODULE_ID_X_setup_config() {
@@ -25,7 +25,7 @@ function module_X_MODULE_ID_X_setup_config() {
   local config='X_CONFIG_X'
   local target="${target_base}/${config}"
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC" && return 0
+  module_dedicated_is_new "$model" || return 0
   module_config_backup "$model" "$target" ||
     return $?
 

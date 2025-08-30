@@ -1,4 +1,5 @@
 # Version: 2.0.0
+# template: legacy
 declare SYSDEN64_GIT_OMZ='https://github.com/ohmyzsh/ohmyzsh.git'
 declare SYSDEN64_GIT_OMZ_PLUGINS=''
 SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'

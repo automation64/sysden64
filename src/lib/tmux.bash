@@ -1,4 +1,5 @@
-# Version: 1.0.2
+# Version: 1.0.3
+# template: lib-config-1.0.0
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
@@ -14,7 +15,8 @@ function module_tmux_setup() {
   bl64_msg_show_phase 'prepare TMUX'
 
   source="$(module_set_model "$module_type" "$model")" &&
-    module_tmux_setup_config "$home" "$source" "$model"
+    module_tmux_setup_config "$home" "$source" "$model" &&
+    module_tmux_setup_plugins "$home"
 }
 
 function module_tmux_setup_config() {
@@ -27,7 +29,9 @@ function module_tmux_setup_config() {
   local config_file='.tmux.conf'
   local target="${target_base}/${config_file}"
 
-  module_config_backup "$model" "$target" || return $?
+  module_config_backup "$model" "$target" ||
+    return $?
+
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
@@ -35,10 +39,7 @@ function module_tmux_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$target_base" \
-    "${source}/${config}/${config_file}" ||
-    return $?
-
-  module_tmux_setup_plugins "$home"
+    "${source}/${config}/${config_file}"
 }
 
 function module_tmux_setup_plugins() {

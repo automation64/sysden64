@@ -1,4 +1,5 @@
 # Version: 1.0.0
+# template: lib-env-1.0.0
 function module_eza_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"

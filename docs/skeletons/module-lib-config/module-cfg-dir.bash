@@ -22,14 +22,12 @@ function module_X_MODULE_ID_X_setup_config() {
   local model="$3"
   local target_base="${home}/X_BASE_TARGET_X"
   local config='X_CONFIG_X'
-  # local config_file='X_CONFIG_FILE_X'
   local target="${target_base}/${config}"
 
   module_config_backup "$model" "$target" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  # shellcheck disable=SC2086
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
