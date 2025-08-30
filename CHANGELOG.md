@@ -18,9 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - SysDen64
   - Directory shortcut creation is now optional
+- Alacritty
+  - Shell set to zellij
 
 ## [4.3.0]
-
 
 ### Added
 

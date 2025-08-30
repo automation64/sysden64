@@ -2,10 +2,13 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u
-# Version: 1.0.0
+# Version: 1.1.0
 
 shell:
-  program: "/usr/bin/tmux"
+  program: "zellij"
+  # alternative # program: "tmux"
+  # alternative # program: "zsh"
+  # alternative # program: "bash"
 
 window:
   decorations_theme_variant : "Dark"
