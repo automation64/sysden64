@@ -12,7 +12,7 @@ function module_X_MODULE_ID_X_setup() {
   bl64_msg_show_phase 'prepare X_APP_X'
 
   source="$(module_set_model "$module_type" "$model")" &&
-    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model"
+    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model" "$module_type"
 }
 
 function module_X_MODULE_ID_X_setup_config() {
@@ -20,11 +20,12 @@ function module_X_MODULE_ID_X_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base="${home}/X_BASE_TARGET_X"
+  local module_type="$4"
+  local base="${home}/X_BASE_TARGET_X"
   local config='X_CONFIG_X'
-  local target="${target_base}/${config}"
+  local target="${base}/${config}"
 
-  module_config_backup "$model" "$target" ||
+  module_config_backup "$model" "$module_type" "$target" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
@@ -33,6 +34,6 @@ function module_X_MODULE_ID_X_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target_base" \
+    "$base" \
     "${source}/${config}"
 }

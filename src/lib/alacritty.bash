@@ -1,4 +1,4 @@
-# Version: 2.0.0
+# version: 2.0.0
 # template: lib-config-1.0.0
 function module_alacritty_setup() {
   bl64_dbg_app_show_function "$@"
@@ -12,7 +12,7 @@ function module_alacritty_setup() {
   bl64_msg_show_phase 'prepare Alacritty'
 
   source="$(module_set_model "$module_type" "$model")" &&
-    module_alacritty_setup_config "$home" "$source" "$model"
+    module_alacritty_setup_config "$home" "$source" "$model" "$module_type"
 }
 
 function module_alacritty_setup_config() {
@@ -20,13 +20,14 @@ function module_alacritty_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base="${home}"
+  local module_type="$4"
+  local base="${home}"
   local config='.alacritty.toml'
   local config_legacy='.alacritty.yml'
-  local target="${target_base}/${config}"
-  local target_legacy="${target_base}/${config_legacy}"
+  local target="${base}/${config}"
+  local target_legacy="${base}/${config_legacy}"
 
-  module_config_backup "$model" "$target" "$target_legacy" ||
+  module_config_backup "$model" "$module_type" "$target" "$target_legacy" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
@@ -35,6 +36,6 @@ function module_alacritty_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target_base" \
+    "$base" \
     "${source}/${config}"
 }

@@ -1,15 +1,16 @@
-# Version: 2.0.0
-# template: legacy
-declare SYSDEN64_GIT_OMZ='https://github.com/ohmyzsh/ohmyzsh.git'
-declare SYSDEN64_GIT_OMZ_PLUGINS=''
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/zsh-users/zsh-autosuggestions.git'
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/zsh-users/zsh-syntax-highlighting.git'
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/zsh-users/zsh-completions.git'
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/Aloxaf/fzf-tab.git'
-SYSDEN64_GIT_OMZ_PLUGINS+=' https://github.com/joshskidmore/zsh-fzf-history-search.git'
-declare SYSDEN64_GIT_OMZ_THEMES=''
-SYSDEN64_GIT_OMZ_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
+# version: 2.1.0
+# template: lib-env-1.0.0
+declare SYSDEN64_OMZ_GIT_LOCAL='.oh-my-zsh'
+declare SYSDEN64_OMZ_GIT='https://github.com/ohmyzsh/ohmyzsh.git'
+declare SYSDEN64_OMZ_GIT_PLUGINS=''
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/marlonrichert/zsh-autocomplete.git'
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/zsh-users/zsh-autosuggestions.git'
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/zsh-users/zsh-syntax-highlighting.git'
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/zsh-users/zsh-completions.git'
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/Aloxaf/fzf-tab.git'
+SYSDEN64_OMZ_GIT_PLUGINS+=' https://github.com/joshskidmore/zsh-fzf-history-search.git'
+declare SYSDEN64_OMZ_GIT_THEMES=''
+SYSDEN64_OMZ_GIT_THEMES+=' https://github.com/romkatv/powerlevel10k.git'
 
 function module_omz_setup() {
   bl64_dbg_app_show_function "$@"
@@ -17,10 +18,6 @@ function module_omz_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='omz'
   local source=''
-  local config='.oh-my-zsh'
-  local target="${home}/${config}"
-  local local_repo='.oh-my-zsh'
-  local omz_path="${home}/${local_repo}"
 
   [[ -z "$(bl64_bsh_command_locate 'zsh')" ]] &&
     bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
@@ -30,40 +27,38 @@ function module_omz_setup() {
     module_setup_env "$home" "$source" ||
     return $?
 
-  bl64_dbg_app_show_info 'avoid installation when synchronizing config' 
+  bl64_dbg_app_show_info 'avoid installation when synchronizing config'
   if ! bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC"; then
-    module_omz_setup_main "$home" "$local_repo" "$omz_path" &&
-      module_omz_setup_plugins "$home" "$local_repo"
+    module_omz_setup_main "$home" &&
+      module_omz_setup_plugins "$home"
   fi
 }
 
 function module_omz_setup_main() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local local_repo="$2"
-  local omz_path="$3"
+  local omz_path="${home}/${SYSDEN64_OMZ_GIT_LOCAL}"
 
   bl64_msg_show_task "deploy Oh-My-ZSH (${omz_path})"
   bl64_fs_path_remove "$omz_path" &&
     bl64_vcs_git_clone \
-      "$SYSDEN64_GIT_OMZ" \
+      "$SYSDEN64_OMZ_GIT" \
       "$home" \
       'master' \
-      "$local_repo" ||
+      "$SYSDEN64_OMZ_GIT_LOCAL" ||
     return $?
 }
 
 function module_omz_setup_plugins() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local local_repo="$2"
-  local omz_custom_path="${home}/${local_repo}/custom"
+  local omz_custom_path="${home}/${SYSDEN64_OMZ_GIT_LOCAL}/custom"
   local omz_custom_plugins_path="${omz_custom_path}/plugins"
   local omz_custom_themes_path="${omz_custom_path}/themes"
   local plugin=''
 
   bl64_msg_show_task "deploy plugins (${omz_custom_plugins_path})"
-  for plugin in $SYSDEN64_GIT_OMZ_PLUGINS; do
+  for plugin in $SYSDEN64_OMZ_GIT_PLUGINS; do
     bl64_vcs_git_clone \
       "$plugin" \
       "$omz_custom_plugins_path" ||
@@ -72,7 +67,7 @@ function module_omz_setup_plugins() {
 
   bl64_msg_show_task "deploy themes (${omz_custom_themes_path})"
   [[ -d "$omz_custom_themes_path" ]] && bl64_fs_path_remove "$omz_custom_themes_path"
-  for plugin in $SYSDEN64_GIT_OMZ_THEMES; do
+  for plugin in $SYSDEN64_OMZ_GIT_THEMES; do
     bl64_vcs_git_clone \
       "$plugin" \
       "$omz_custom_themes_path" ||

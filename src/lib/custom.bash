@@ -1,4 +1,4 @@
-# Version: 1.2.0
+# version: 1.2.0
 function module_custom_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"

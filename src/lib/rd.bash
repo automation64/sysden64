@@ -1,4 +1,4 @@
-# Version: 1.1.0
+# version: 1.1.0
 # template: lib-config-1.0.0
 function module_rd_setup() {
   bl64_dbg_app_show_function "$@"
@@ -14,7 +14,7 @@ function module_rd_setup() {
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&
-    module_rd_setup_config "$home" "$source" "$model"
+    module_rd_setup_config "$home" "$source" "$model" "$module_type"
 }
 
 function module_rd_setup_config() {
@@ -22,12 +22,13 @@ function module_rd_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base="${home}/Library/Preferences"
+  local module_type="$4"
+  local base="${home}/Library/Preferences"
   local config='profile'
   local config_file='io.rancherdesktop.profile.defaults.plist'
-  local target="${target_base}/${config_file}"
+  local target="${base}/${config_file}"
 
-  module_config_backup "$model" "${target}" ||
+  module_config_backup "$model" "$module_type" "${target}" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
@@ -37,6 +38,6 @@ function module_rd_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target_base" \
+    "$base" \
     "${source}/${config}/${BL64_OS_TYPE}/${config_file}"
 }
