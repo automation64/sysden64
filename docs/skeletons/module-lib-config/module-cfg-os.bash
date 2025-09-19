@@ -12,7 +12,7 @@ function module_X_MODULE_ID_X_setup() {
   bl64_msg_show_phase 'prepare X_APP_X'
 
   source="$(module_set_model "$module_type" "$model")" &&
-    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model"
+    module_X_MODULE_ID_X_setup_config "$home" "$source" "$model" "$module_type"
 }
 
 function module_X_MODULE_ID_X_setup_config() {
@@ -20,29 +20,30 @@ function module_X_MODULE_ID_X_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base=''
+  local module_type="$4"
+  local base=''
   local config='X_CONFIG_X'
   local target=''
 
   if [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_MACOS" ]]; then
-    target_base="${home}/Library/Application Support/X_APP_X"
+    base="${home}/Library/Application Support/X_APP_X"
   elif [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_LINUX" ]]; then
-    target_base="${home}/X_BASE_TARGET_X"
+    base="${home}/X_BASE_TARGET_X"
   fi
-  target="${target_base}/${config}"
+  target="${base}/${config}"
 
-  module_config_backup "$model" "$target" ||
+  module_config_backup "$model" "$module_type" "$target" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$target_base" &&
+    "$base" &&
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target_base" \
+    "$base" \
     "${source}/${config}"
 }

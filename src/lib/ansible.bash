@@ -1,4 +1,4 @@
-# Version: 1.0.1
+# version: 1.0.2
 # template: lib-config-1.0.0
 function module_ansible_setup() {
   bl64_dbg_app_show_function "$@"
@@ -12,18 +12,7 @@ function module_ansible_setup() {
   bl64_msg_show_phase 'prepare Ansible'
 
   source="$(module_set_model "$module_type" "$model")" &&
-    module_ansible_setup_config "$home" "$source" "$model"
-
-  module_dedicated_is_new "$module_type" && return 0
-  module_config_backup "$model" "$target" || return $?
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$home" \
-    "${source}/${config}"
+    module_ansible_setup_config "$home" "$source" "$model" "$module_type"
 }
 
 function module_ansible_setup_config() {
@@ -31,11 +20,12 @@ function module_ansible_setup_config() {
   local home="$1"
   local source="$2"
   local model="$3"
-  local target_base="${home}"
+  local module_type="$4"
+  local base="${home}"
   local config='.ansible.cfg'
-  local target="${target_base}/${config}"
+  local target="${base}/${config}"
 
-  module_config_backup "$model" "$target" ||
+  module_config_backup "$model" "$module_type" "$target" ||
     return $?
 
   bl64_msg_show_task "promote configuration from model (${model}/${config})"
@@ -44,6 +34,6 @@ function module_ansible_setup_config() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$target_base" \
+    "$base" \
     "${source}/${config}"
 }

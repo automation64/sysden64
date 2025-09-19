@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.4.0'
+readonly SYSDEN64_VERSION='4.6.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -113,6 +113,7 @@ SYSDEN64_MODULES_BASE+=" ${SYSDEN64_MODULES_CUSTOM}"
 declare SYSDEN64_MODULES_PROFILE='profile'
 declare SYSDEN64_MODULES_DEDICATED_DEFAULT=''
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=" ${SYSDEN64_MODULES_PROFILE}"
+SYSDEN64_MODULES_DEDICATED_DEFAULT+=' auth0'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' awscli'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' docker'
 SYSDEN64_MODULES_DEDICATED_DEFAULT+=' gcloud'
@@ -254,15 +255,22 @@ function module_setup_env() {
 function module_config_backup() {
   bl64_dbg_app_show_function "$@"
   local model="$1"
+  local module_type="$2"
   local target=''
   local source=''
 
   shift
+  shift
   bl64_check_parameter 'model' || return $?
 
   if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
-    bl64_dbg_app_show_comments 'Switching profiles. No backup required'
-    return 0
+    if [[ "$module_type" == "$SYSDEN64_MODULE_TYPE_DEDICATED" ]]; then
+      bl64_dbg_app_show_comments 'Existing dedicated module and switching profile. No backup required'
+      [[ -d "${DEV_PATH_PROF_VAULT}/${model}" ]] && return 0
+    else
+      bl64_dbg_app_show_comments 'Shared module and switching profile. No backup required'
+      return 0
+    fi
   fi
 
   target="${SYSDEN64_PATH_BACKUP}/${model}"
@@ -317,21 +325,45 @@ function module_set_model() {
 
 function module_dedicated_is_new() {
   bl64_dbg_app_show_function "$@"
+  local model="$1"
+
+  if ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
+    bl64_dbg_app_show_comments 'system_wide set. Consider module as new'
+    return 0
+  fi
+
+  if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
+    if [[ ! -d "${DEV_PATH_PROF_VAULT}/${model}" ]]; then
+      bl64_dbg_app_show_comments 'user-wide set + switching profile. Module is new'
+      return 0
+    else
+      bl64_dbg_app_show_comments 'user-wide set + switching profile. Module is existing'
+      return 1
+    fi
+  else
+    bl64_dbg_app_show_comments 'user-wide set + not switching profile. Consider module as new'
+    return 0
+  fi
+}
+
+function module_dedicated_relink() {
+  bl64_dbg_app_show_function "$@"
   local model="${1:-}"
+  local base="${2:-}"
+  local config="${3:-}"
+  local target="${4:-}"
 
   bl64_check_parameter 'model' ||
     return $?
 
-  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE" ||
-    return 0
-
-  if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
-    bl64_dbg_app_show_comments 'switching profile. Allow sync if new profile'
-    [[ ! -d "${DEV_PATH_PROF_VAULT}/${model}" ]]
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE" &&
+    bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH" &&
+    [[ -d "${DEV_PATH_PROF_VAULT}/${model}" ]]; then
+    bl64_fs_symlink_create "${base}/${config}" "$target" "$BL64_VAR_ON"
     return $?
+  else
+    bl64_dbg_app_show_comments 'No relink needed. Relink applies to user_wide and switching profile only'
   fi
-
-  bl64_dbg_app_show_comments 'allow sync since sync or user-wide deploy is requested'
   return 0
 }
 
@@ -999,7 +1031,7 @@ function initialize() {
 # Main
 #
 
-bl64_lib_script_version_set '7.2.0'
+bl64_lib_script_version_set '7.3.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-n|-6|-u|-e|-w|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
