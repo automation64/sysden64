@@ -30,7 +30,7 @@ function module_zsh_setup_config() {
   module_config_backup "$model" "$module_type" "$target_env" "$target_rc" ||
     return $?
 
-  bl64_msg_show_task "promote configuration from model (${model}/)"
+  bl64_msg_show_task "${SYSDEN64_TXT_PROMOTE_SHARED} (${model}/)"
   bl64_fs_path_copy \
     '0700' \
     "$BL64_VAR_DEFAULT" \
