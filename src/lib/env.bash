@@ -26,7 +26,7 @@ function module_env_setup_config() {
   module_config_backup "$model" "$module_type" "$target" ||
     return $?
 
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
+  bl64_msg_show_task "${SYSDEN64_TXT_PROMOTE_SHARED} (${model}/${config})"
   # shellcheck disable=SC2086
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \

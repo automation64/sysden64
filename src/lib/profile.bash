@@ -1,4 +1,4 @@
-# version: 1.0.0
+# version: 1.0.1
 function module_profile_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -16,7 +16,7 @@ function module_profile_setup() {
   elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC"; then
     module_profile_setup_links "$home" "$source"
   elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_DEPLOY"; then
-    ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE" && return 0
+    ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_LEVEL" && return 0
     module_profile_setup_links "$home" "$source"
   else
     return 0

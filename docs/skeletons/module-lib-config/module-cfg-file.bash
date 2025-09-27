@@ -26,15 +26,5 @@ function module_X_MODULE_ID_X_setup_config() {
   local config_file='X_CONFIG_FILE_X'
   local target="${base}/${config_file}"
 
-  module_config_backup "$model" "$module_type" "$target" ||
-    return $?
-
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$base" \
-    "${source}/${config}/${config_file}"
+  module_shared_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" "${source}/${config}/${config_file}"
 }

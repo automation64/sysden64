@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Modules
   - Auth0
+- SysDen64
+  - Profile remove
 
 ### Fixed
 

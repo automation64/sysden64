@@ -1,4 +1,4 @@
-# version: 1.1.0
+# version: 1.1.1
 # template: lib-config-1.0.0
 function module_zellij_setup() {
   bl64_dbg_app_show_function "$@"
@@ -26,16 +26,5 @@ function module_zellij_setup_config() {
   local config='.config/zellij'
   local target="${home}/${config}"
 
-  module_config_backup "$model" "$module_type" "$target" ||
-    return $?
-
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  # shellcheck disable=SC2086
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$base" \
-    "${source}/${config}"
+  module_shared_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" "${source}/${config}"
 }

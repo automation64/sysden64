@@ -7,5 +7,7 @@ cd "$HOME"
 /bin/rm -Rf "$HOME/sd64-backup"
 /bin/rm -f "$HOME/.sysden64"
 
-/bin/rm -f "$HOME/.gnupg"
-mkdir "$HOME/.gnupg"
+echo 'remove links'
+for i in .aws .kube .ssh .gnupg .config/auth0 .config/gcloud; do
+  /bin/rm -f "$HOME/$i"
+done

@@ -1,5 +1,5 @@
-# template: lib-dedicated-1.0.1
-# version: 1.0.1
+# template: lib-dedicated-1.0.0
+# version: 1.1.0
 function module_oci_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -26,33 +26,5 @@ function module_oci_setup_config() {
   local config='.oci'
   local target="${base}/${config}"
 
-  if module_dedicated_is_new "$model"; then
-    module_config_backup "$model" "$module_type" "$target" ||
-      return $?
-
-    bl64_msg_show_task "promote configuration from model (${model}/${config})"
-    if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_WIDE"; then
-      base="${DEV_PATH_PROF_VAULT}/${model}"
-      bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-        "$base" &&
-        bl64_fs_path_copy \
-          "$BL64_VAR_DEFAULT" \
-          "$BL64_VAR_DEFAULT" \
-          "$BL64_VAR_DEFAULT" \
-          "$BL64_VAR_DEFAULT" \
-          "$base" \
-          "${source}/${config}" &&
-        bl64_fs_symlink_create "${base}/${config}" "$target" "$BL64_VAR_ON"
-    else
-      bl64_fs_path_copy \
-        "$BL64_VAR_DEFAULT" \
-        "$BL64_VAR_DEFAULT" \
-        "$BL64_VAR_DEFAULT" \
-        "$BL64_VAR_DEFAULT" \
-        "$base" \
-        "${source}/${config}"
-    fi
-  else
-    module_dedicated_relink "$model" "${DEV_PATH_PROF_VAULT}/${model}" "$config" "$target"
-  fi
+  module_dedicated_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" 
 }

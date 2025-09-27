@@ -1,4 +1,4 @@
-# version: 1.2.0
+# version: 1.2.1
 # template: lib-config-1.0.0
 function module_starship_setup() {
   bl64_dbg_app_show_function "$@"
@@ -22,19 +22,9 @@ function module_starship_setup_config() {
   local source="$2"
   local model="$3"
   local module_type="$4"
-  local base="$home"
+  local base="${home}/.config"
   local config='.config/starship.toml'
-  local target="${base}/${config}"
+  local target="${home}/${config}"
 
-  module_config_backup "$model" "$module_type" "$target" ||
-    return $?
-
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "${base}/.config" \
-    "${source}/${config}"
+  module_shared_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" "${source}/${config}"
 }

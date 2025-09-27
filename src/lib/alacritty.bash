@@ -1,4 +1,4 @@
-# version: 2.0.0
+# version: 2.0.1
 # template: lib-config-1.0.0
 function module_alacritty_setup() {
   bl64_dbg_app_show_function "$@"
@@ -27,15 +27,6 @@ function module_alacritty_setup_config() {
   local target="${base}/${config}"
   local target_legacy="${base}/${config_legacy}"
 
-  module_config_backup "$model" "$module_type" "$target" "$target_legacy" ||
-    return $?
-
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$base" \
-    "${source}/${config}"
+  module_shared_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" "${source}/${config}" \
+    "$target_legacy"
 }

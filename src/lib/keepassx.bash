@@ -1,4 +1,4 @@
-# version: 1.0.2
+# version: 1.0.3
 # template: lib-config-1.0.0
 function module_keepassx_setup() {
   bl64_dbg_app_show_function "$@"
@@ -25,15 +25,5 @@ function module_keepassx_setup_config() {
   local config='.config/keepassx'
   local target="${home}/${config}"
 
-  module_config_backup "$model" "$module_type" "$target" ||
-    return $?
-
-  bl64_msg_show_task "promote configuration from model (${model}/${config})"
-  bl64_fs_path_copy \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_DEFAULT" \
-    "$base" \
-    "${source}/${config}"
+  module_shared_setup_config "$source" "$model" "$module_type" "$base" "$config" "$target" "${source}/${config}"
 }
