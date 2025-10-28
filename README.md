@@ -10,37 +10,59 @@
 
 ## 📌 Overview
 
-SysDen64 provides a modular, customizable environment that enables IT professionals to maintain consistency and efficiency across different machines and environments. It simplifies configuration management, profile switching, and module synchronization.
+**SysDen64** provides a centralized and modular configuration repository for command line tools that enables users to maintain consistency across different machines and environments.
+
+Main features
+
+- Out-of-the-box configuration defaults for popular command line tools
+- GIT friendly configuration repository for tracking configuration changes
+- Multiple environment support using configuration profiles
+- Modular design to facilitate adding new tools
 
 ---
 
 ## 📦 Installation
 
-Install SysDen64 in your home directory (no root privilege required): $HOME/at64/sysden64
+**SysDen64** can be installed using the **Installer64** tool:
 
-```sh
-INST64_RELEASE="$(curl -s "https://api.github.com/repos/automation64/installer64/releases/latest" | grep '"tag_name":' | cut -d '"' -f 4)" &&
-test -n "$INST64_RELEASE" && curl -LO https://github.com/automation64/installer64/releases/download/${INST64_RELEASE}/install-installer64 &&
-chmod 755 ./install-installer64 &&
-./install-installer64 &&
-./at64/inst64/install-sysden64
+```shell
+curl -sL https://raw.githubusercontent.com/automation64/installer64/main/src/bootstrap | sh
+sudo /opt/inst64/install-devbin64 && sudo /opt/inst64/install-sysden64
 ```
 
 ---
 
 ## 🚀 Usage
 
-Run `sysden64` with the appropriate flags:
+- Create configuration repository
 
 ```sh
-sysden64 -h
+sysden64 -s
 ```
 
-Example:
+- (Optional) customize defaults by editing configuration files:
+  - `$HOME/sd64/etc/shared/<MODULE>/`: module specific configuration files
+  - `$HOME/sd64/etc/shared/custom/.env.d`: shell startup variables, aliases, paths, functions
+
+- Apply configuration changes. Warning: tools that do not support live update may need to be restarted.
 
 ```sh
-# Create a local configuration repository and deploy default configuration files
-sysden64 -s
+# Update one modules
+sysden64 -u -m <MODULE>
+# Or update all modules
+sysden64 -u
+```
+
+- (Optional) Protect module. Use this option to prevent **SysDen64** upgrades from replacing your module customizations.
+
+```sh
+sysden64 -d -m <MODULE>
+```
+
+- (Optional) Upgrade **SysDen64** module defaults. Warning: this option will replace current module definitions with defaults, except for protected modules.
+
+```sh
+sysden64 -g
 ```
 
 ---
@@ -49,7 +71,6 @@ sysden64 -s
 
 Contributions are welcome! Help us improve by submitting issues, feature requests, or pull requests.
 
-- [Contribution Guidelines](https://github.com/automation64/sysden64/blob/main/CONTRIBUTING.md)
 - [Code of Conduct](https://github.com/automation64/sysden64/blob/main/CODE_OF_CONDUCT.md)
 
 ---

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.7.0]
+
+### Added
+
+- SysDen64
+  - Show version information
+
+### Changed
+
+- SysDen64
+  - Show warning instead of failing when a new configuration module is missing in the user repository
+  - Changed verbose format to show task name only
+  - Skip shell reload if the module does not modify the shell environment
+
 ## [4.6.1]
 
 ### Added

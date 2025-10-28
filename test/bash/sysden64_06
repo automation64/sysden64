@@ -6,6 +6,6 @@ if [[ "$DEV_TEST_BASH_CONTAINER_ENVIRONMENT" != 'ON' ]]; then
 fi
 
 source ./test/lib/test.env &&
-./src/bin/sysden64 -h > /dev/null &&
-./src/bin/sysden64 -v > /dev/null &&
-./src/bin/sysden64 -e > /dev/null
+./src/bin/sysden64 -s -i $HOME/test &&
+./src/bin/sysden64 -6 -i $HOME/test &&
+./src/bin/sysden64 -g -i $HOME/test
