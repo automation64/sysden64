@@ -42,7 +42,8 @@ jobs:
       - name: "Prepare environment"
         run: |
           ./bin/dev-lib-base &&
-          ./bin/dev-prep-project
+          ./bin/dev-prep-project &&
+          ./bin/dev-lib-project
 
       - name: "Run tests"
         run: "./bin/dev-test-bash"
