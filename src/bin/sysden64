@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.6.1'
+readonly SYSDEN64_VERSION='4.7.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -85,6 +85,8 @@ declare SYSDEN64_CMD_DEVBIN64_SET='bin/dev-set'
 # DevBin64 / Profile management
 declare SYSDEN64_CMD_DEVBIN64_PROFILE_CREATE='bin/dev-profile-create'
 declare SYSDEN64_CMD_DEVBIN64_PROFILE_REMOVE='bin/dev-profile-remove'
+# DevBin64 / Versiln File
+readonly SYSDEN64_FILE_DEVBIN64_VERSION='.devbin64'
 # DevBin64 / Modules File
 readonly SYSDEN64_FILE_DEVBIN64_MODULE='.devbin64-modules'
 # DevBin64 / Modules
@@ -207,6 +209,7 @@ declare SYSDEN64_HOME="$HOME"
 declare SYSDEN64_REPOSITORY="${SYSDEN64_HOME}/${SYSDEN64_PREFIX_SD64}"
 declare SYSDEN64_PROFILE=''
 declare SYSDEN64_MODULE=''
+declare SYSDEN64_FLAG_SKIP_RELOAD='YES'
 
 #
 # Module Functions
@@ -222,9 +225,14 @@ function module_shared_setup_config() {
   local target="$6"
   local link="$7"
 
+  # shellcheck disable=SC2086
   [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_SHARED" ]] &&
     bl64_msg_show_app_error "module must be shared (${model})" &&
     return $BL64_LIB_ERROR_PARAMETER_INVALID
+
+  [[ ! -d "$base" ]] &&
+    bl64_msg_show_warning "new module detected (${model}). Please upgrade your repository module definitions running 'sysden64 -g'" &&
+    return 0
 
   shift
   shift
@@ -255,6 +263,7 @@ function module_dedicated_setup_config() {
   local config="$5"
   local target="$6"
 
+  # shellcheck disable=SC2086
   [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_DEDICATED" ]] &&
     bl64_msg_show_app_error "module must be dedicated (${model})" &&
     return $BL64_LIB_ERROR_PARAMETER_INVALID
@@ -322,7 +331,8 @@ function module_setup_env() {
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "${home}/${SYSDEN64_PATH_SHELLENV}" \
-    "${source}"/??_*_*.*
+    "${source}"/??_*_*.* &&
+    SYSDEN64_FLAG_SKIP_RELOAD='NO'
 }
 
 function module_config_backup() {
@@ -343,7 +353,7 @@ function module_config_backup() {
       if [[ -d "${DEV_PATH_PROF_VAULT}/${model}" ]]; then
         bl64_dbg_app_show_comments 'Existing dedicated module. No backup required'
         return 0
-      elif [[ -h "$target" ]]; then
+      elif [[ -L "$target" ]]; then
         bl64_dbg_app_show_comments 'Original config already backed up'
         return 0
       fi
@@ -459,6 +469,10 @@ function locks_repository_create() {
 
 function shell_reload_exec() {
   bl64_dbg_app_show_function
+
+  bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_SKIP_RELOAD" &&
+    return 0
+
   if bl64_ui_ask_yesno 'restart current shell for activating updated environment variable values?. Notice that any other terminal window must be manually restarted'; then
     exec "$SHELL" -l
   else
@@ -865,7 +879,8 @@ function profile_switch() {
 function module_upgrade() {
   bl64_dbg_app_show_function
   module_shared_upgrade &&
-    module_dedicated_upgrade 'all'
+    module_dedicated_upgrade 'all' &&
+    version_register
 }
 
 function module_sync() {
@@ -945,11 +960,30 @@ function module_list() {
   echo "$SYSDEN64_MODULES_DEDICATED"
 }
 
+function version_show() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_info "Upstream SysDen64
+- Location: ${SYSDEN64_PATH_ROOT}
+- SysDen64 Version: ${SYSDEN64_VERSION}"
+  if bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_LEVEL"; then
+    bl64_msg_show_info "User repository
+- Location: ${SYSDEN64_REPOSITORY}
+- SysDen64 Version: $(<"$SYSDEN64_PATH_TAG_VERSION")
+- DevBin64 Version: $(<"${SYSDEN64_REPOSITORY}/$SYSDEN64_FILE_DEVBIN64_VERSION")"
+  fi
+}
+
 function initialize() {
   bl64_dbg_app_show_function
+  bl64_msg_show_about
 
   # shellcheck disable=SC2249
   case "$SYSDEN64_COMMAND" in
+    'version_show')
+      if [[ -d "$SYSDEN64_REPOSITORY" ]]; then
+        SYSDEN64_FLAG_USER_LEVEL='ON'
+      fi
+      ;;
     'system_wide_create')
       # shellcheck disable=SC2034
       SYSDEN64_ACTION_DEPLOY="$BL64_VAR_ON"
@@ -1001,6 +1035,7 @@ function initialize() {
   fi
 
   case "$SYSDEN64_COMMAND" in
+    'version_show') ;;
     'system_wide_create')
       if [[ -s "$SYSDEN64_PATH_TAG_VERSION" ]]; then
         bl64_msg_show_warning 'The systetem-level configuration was already deployed. Use the sync (-u) option to refresh the configuration.'
@@ -1091,7 +1126,7 @@ function initialize() {
 # Main
 #
 
-bl64_lib_script_version_set '7.3.0'
+bl64_lib_script_version_set '7.4.0'
 bl64_msg_help_usage_set '<-s|-l|-c|-n|-6|-u|-e|-w|-z|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'SysDen64 is an opinionated portable working environment for the IT nomad'
 # shellcheck disable=SC2016
@@ -1127,10 +1162,11 @@ Parameters
 
 Help
 -h         : Show help
+-v         : Show version information
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':slc6weugntzdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
+while getopts ':slc6weugntzdrkfvo:i:p:m:V:D:h' SYSDEN64_OPTION; do
   case "$SYSDEN64_OPTION" in
     s) SYSDEN64_COMMAND='user_wide_create' ;;
     n) SYSDEN64_COMMAND='user_wide_relink' ;;
@@ -1147,6 +1183,7 @@ while getopts ':slc6weugntzdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
     d) SYSDEN64_COMMAND='lock_disable' ;;
     r) SYSDEN64_COMMAND='lock_enable' ;;
     k) SYSDEN64_COMMAND='lock_list' ;;
+    v) SYSDEN64_COMMAND='version_show' ;;
     o) SYSDEN64_HOME="$OPTARG" ;;
     i) SYSDEN64_REPOSITORY="$OPTARG" ;;
     p) SYSDEN64_PROFILE="$OPTARG" ;;
@@ -1157,7 +1194,7 @@ while getopts ':slc6weugntzdrkfo:i:p:m:V:D:h' SYSDEN64_OPTION; do
     *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$SYSDEN64_DEBUG" && bl64_msg_set_format 'PLAIN' && bl64_msg_set_level "$SYSDEN64_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "$SYSDEN64_COMMAND"
 case "$SYSDEN64_COMMAND" in
@@ -1176,6 +1213,7 @@ case "$SYSDEN64_COMMAND" in
   'lock_enable') lock_enable "$SYSDEN64_MODULE" ;;
   'lock_disable') lock_disable "$SYSDEN64_MODULE" ;;
   'lock_list') lock_list ;;
+  'version_show') version_show ;;
   *) bl64_check_alert_parameter_invalid "$SYSDEN64_COMMAND" ;;
 esac
 bl64_msg_show_batch_finish $? "$SYSDEN64_COMMAND"
