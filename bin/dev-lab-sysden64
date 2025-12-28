@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# * Version: 2.1.0
+# template-task: 1.9.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -13,31 +13,34 @@
 # limitations under the License.
 #######################################
 
-#
-# Imports
-#
-
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
+# shellcheck source-path=/opt/bl64
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 # shellcheck source=bin/dev-env-sysden64
 source ./bin/dev-env-sysden64 || exit 1
 
-#
-# Main
-#
+declare MY_PROFILE="${1:-$DEV_LAB_SYSDEN64_PROFILE_NONE}"
+declare MY_CONTAINER_IMAGE="${2:-}"
 
-DEV_PROFILE="${1:-$DEV_PROFILE}"
-if [[ "$DEV_PROFILE" == "$DEV_LAB_SYSDEN64_PROFILE_NONE" ]]; then
+bl64_lib_script_version_set '2.2.1'
+bl64_msg_help_about_set 'Run SysDen64 lab environment'
+
+if [[ "$MY_PROFILE" == "$DEV_LAB_SYSDEN64_PROFILE_NONE" ]]; then
   if [[ -s "${DEV_PATH_ROOT}/${DEV_LAB_SYSDEN64_PATH_PROFILE}" ]]; then
     DEV_PROFILE="$(<"${DEV_PATH_ROOT}/${DEV_LAB_SYSDEN64_PATH_PROFILE}")"
   else
     DEV_PROFILE="$DEV_LAB_SYSDEN64_PROFILE_DEFAULT"
   fi
+else
+  DEV_PROFILE="$MY_PROFILE"
 fi
 
-shift
 # shellcheck source-path=bin
-source ./bin/dev-set &&
-  source ./bin/dev-env-sysden64 &&
-  "${DEV_PATH_BIN}/dev-profile-create" &&
-  "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$@"
+source "${DEV_PATH_BIN}/dev-init" "$MY_PROFILE" &&
+  "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$MY_CONTAINER_IMAGE"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+source ./test/lib/test.env &&
+./src/bin/sysden64 -s -i $HOME/test

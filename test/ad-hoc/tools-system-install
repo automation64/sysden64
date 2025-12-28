@@ -1,5 +1,6 @@
 [[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
 
+echo 'install extra tools'
 export INST64_SYSTEM_WIDE="YES"
 sudo -E /opt/inst64/install-zellij &&
 sudo -E /opt/inst64/install-ripgrep

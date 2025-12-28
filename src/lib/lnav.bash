@@ -7,9 +7,7 @@ function module_lnav_setup() {
   local model='lnav'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'lnav')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare LNAV'
+  module_detect "$model" 'lnav' 'LNAV' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_lnav_setup_config "$home" "$source" "$model" "$module_type"

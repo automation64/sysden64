@@ -6,10 +6,9 @@ function module_nvm_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='nvm'
   local source=''
+  local extra_locations="${HOME}/.nvm"
 
-  [[ ! -s "${HOME}/.nvm/nvm.sh" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare NVM'
+  module_detect "$model" 'nvm.sh' 'NVM - Node Version Manager' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source"

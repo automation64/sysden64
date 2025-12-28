@@ -7,9 +7,7 @@ function module_p10k_setup() {
   local model='p10k'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'zsh')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare PowerLevel10K'
+  module_detect "$model" 'zsh' 'PowerLevel10K' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&

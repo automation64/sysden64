@@ -1,13 +1,13 @@
 ---
-# Template: 2.3.0
-name: "Test / Bash"
+# template: 2.4.1
+name: "Test/Bash"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
-  DEV_CICD_DEBUG: ""
+  DEV_CICD_DEBUG: "NONE"
   BL64_LIB_CICD: "YES"
   DEV_TEST_BASH_RUNNER_ENVIRONMENT: "ON"
 
@@ -24,27 +24,84 @@ on:
       - "test/bash/**"
 
 jobs:
-  test-bash:
+  test-bash-linux:
     runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        target:
+          - "ALP"
     steps:
-
       - name: "Check out repository code"
         uses: "actions/checkout@main"
 
       - name: "Cache local tools"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
-          path: ./lib
-          key: ${{ runner.os }}-lib-cache
-          restore-keys: |
-            ${{ runner.os }}-lib-cache
+          path: \
+            ./lib/bl64
+            ./lib/inst64
+          key: "lib-base"
 
-      - name: "Prepare environment"
+      - name: "Download tools"
         run: |
-          ./bin/dev-lib-base &&
-          ./bin/dev-prep-project &&
-          ./bin/dev-lib-project
+          ./bin/dev-lib-base
 
-      - name: "Run tests"
-        run: "./bin/dev-test-bash"
-...
+      - name: "Prepare for testing"
+        run: "./bin/dev-prep-project"
+
+      - name: "Run OS specific tests"
+        run: |
+          source ./bin/dev-set &&
+          source ./bin/dev-env-bash &&
+          ./bin/dev-test-bash $DEV_TEST_BASH_CONTAINER_${{matrix.target}} ${DEV_TEST_BASH_CASES}/${{matrix.target}}
+
+      - name: "Run Linux generic tests"
+        run: |
+          source ./bin/dev-set &&
+          source ./bin/dev-env-bash &&
+          ./bin/dev-test-bash $DEV_TEST_BASH_CONTAINER_${{matrix.target}} ${DEV_TEST_BASH_CASES}/LNX
+
+      - name: "Run Unix generic tests"
+        run: |
+          source ./bin/dev-set &&
+          source ./bin/dev-env-bash &&
+          ./bin/dev-test-bash $DEV_TEST_BASH_CONTAINER_${{matrix.target}} ${DEV_TEST_BASH_CASES}/UNX
+
+  test-bash-macos:
+    runs-on: "macos-latest"
+    steps:
+      - name: "Check out repository code"
+        uses: "actions/checkout@main"
+
+      - name: "Upgrade Bash version"
+        run: |
+          ./bin/dev-lib-bash
+
+      - name: "Cache local tools"
+        uses: "actions/cache@v5"
+        with:
+          path: \
+            ./lib/bl64
+            ./lib/inst64
+          key: "lib-base"
+
+      - name: "Download tools"
+        run: |
+          ./bin/dev-lib-base
+
+      - name: "Prepare for testing"
+        run: "./bin/dev-prep-project"
+
+      - name: "Run OS specific tests"
+        run: |
+          source ./bin/dev-set &&
+          source ./bin/dev-env-bash &&
+          ./bin/dev-test-bash-host ${DEV_TEST_BASH_CASES}/MCOS
+
+      - name: "Run Unix generic tests"
+        run: |
+          source ./bin/dev-set &&
+          source ./bin/dev-env-bash &&
+          ./bin/dev-test-bash-host ${DEV_TEST_BASH_CASES}/UNX

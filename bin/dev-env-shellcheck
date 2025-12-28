@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# * Version: 1.0.0
+# template-env: 1.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -13,30 +13,45 @@
 # limitations under the License.
 #######################################
 
+
 #
-# Globals
+# Module variables
+#
+# * Shared internal variables for module tasks
+#
+
+# shellcheck disable=SC2154
+{
+  # Env / ShellCheck / Module environment definition version
+  export DEV_ENV_SHELLCHECK_ID='shellcheck'
+  export DEV_ENV_SHELLCHECK_VERSION='2.0.0'
+  # Env / ShellCheck / Log path
+  export DEV_ENV_SHELLCHECK_PATH_LOGS="${DEV_PATH_LOGS}/${DEV_ENV_SHELLCHECK_ID}"
+
+  # Lib / ShellCheck / Installer
+  export DEV_LIB_SHELLCHECK_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-shellcheck"
+  # Lib / ShellCheck / Skip installation?
+  export DEV_LIB_SHELLCHECK_SKIP='YES'
+  # Lib / ShellCheck / Target
+  export DEV_LIB_SHELLCHECK_TARGET="${DEV_PATH_LIB}/${DEV_ENV_SHELLCHECK_ID}"
+  # Lib / ShellCheck / Configuration
+  export DEV_LIB_SHELLCHECK_CFG="${DEV_PATH_ROOT}/.shellcheckrc"
+}
+
+#
+# Module parameters
 #
 # * Use .dev.env file to override values
 #
 
 # shellcheck disable=SC2154
 {
-  # Env / ShellCheck / Container Registry for tools
-  export DEV_ENV_SHELLCHECK_REGISTRY="${DEV_ENV_SHELLCHECK_REGISTRY:-ghcr.io/automation64}"
-  # Env / ShellCheck / Container path for project mounts
-  export DEV_ENV_SHELLCHECK_CONTAINER_PATH_ROOT='/project'
-  # Lib / ShellCheck / Installer
-  export DEV_LIB_SHELLCHECK_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-shellcheck"
-  # Lib / ShellCheck / Target
-  export DEV_LIB_SHELLCHECK_TARGET="${DEV_LIB_SHELLCHECK_TARGET:-${DEV_PATH_LIB}/shellcheck}"
-  # Lib / ShellCheck / Configuration
-  export DEV_LIB_SHELLCHECK_CFG='.shellcheckrc'
   # Lint / ShellCheck / Target
   export DEV_LINT_SHELLCHECK_TARGET="${DEV_LINT_SHELLCHECK_TARGET:-${DEV_BASE_SRC}}"
-  # Lint / ShellCheck / Container with linting tool
-  export DEV_LINT_SHELLCHECK_CONTAINER="${DEV_LINT_SHELLCHECK_CONTAINER:-shell-lint/alpine-3-shell-lint}"
-  # Lint / ShellCheck / Container entrypoint
-  export DEV_LINT_SHELLCHECK_CONTAINER_ENTRYPOINT="${DEV_LINT_SHELLCHECK_CONTAINER_ENTRYPOINT:-/usr/local/bin/shellcheck}"
+  # Lint / ShellCheck / Format
+  export DEV_LINT_SHELLCHECK_FORMAT="${DEV_LINT_SHELLCHECK_FORMAT:-tty}"
+  # Lint / ShellCheck / Report
+  export DEV_LINT_SHELLCHECK_PATH_REPORT="${DEV_ENV_SHELLCHECK_PATH_LOGS}/${DEV_ENV_SHELLCHECK_ID}.${DEV_LINT_SHELLCHECK_FORMAT}"
 }
 
 #
@@ -48,5 +63,16 @@
 # shellcheck disable=SC2154
 {
   # Lib / ShellCheck / Command
-  export DEV_LIB_SHELLCHECK_BIN="${DEV_LIB_SHELLCHECK_BIN:-${DEV_LIB_SHELLCHECK_TARGET}/shellcheck}"
+  export DEV_LIB_SHELLCHECK_BIN="${DEV_LIB_SHELLCHECK_BIN:-}"
+  if [[ -z "$DEV_LIB_SHELLCHECK_BIN" ]]; then
+    DEV_LIB_SHELLCHECK_BIN="$(bl64_bsh_command_locate_user 'shellcheck')"
+    if [[ -z "$DEV_LIB_SHELLCHECK_BIN" ]]; then
+      DEV_LIB_SHELLCHECK_BIN="${DEV_LIB_SHELLCHECK_TARGET}/shellcheck"
+      if [[ ! -x "${DEV_LIB_SHELLCHECK_BIN}" ]]; then
+        DEV_LIB_SHELLCHECK_SKIP='NO'
+      fi
+    else
+      DEV_LIB_SHELLCHECK_TARGET="$(bl64_fmt_path_get_basename "$DEV_LIB_SHELLCHECK_BIN")"
+    fi
+  fi
 }

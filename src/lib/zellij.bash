@@ -7,9 +7,7 @@ function module_zellij_setup() {
   local model='zellij'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'zellij')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare Zellij'
+  module_detect "$model" 'zellij' 'Zellij' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&

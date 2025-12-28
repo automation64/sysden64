@@ -7,9 +7,7 @@ function module_mc_setup() {
   local model='mc'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'mc')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare MC'
+  module_detect "$model" 'mc' 'MC - Midnight Commander' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_mc_setup_config "$home" "$source" "$model" "$module_type"

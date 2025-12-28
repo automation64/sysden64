@@ -7,9 +7,7 @@ function module_k9s_setup() {
   local model='k9s'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'k9s')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare K9S'
+  module_detect "$model" 'k9s' 'K9S' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_k9s_setup_config "$home" "$source" "$model" "$module_type"

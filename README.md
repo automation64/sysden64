@@ -3,8 +3,20 @@
 ![License](https://img.shields.io/github/license/automation64/sysden64)
 ![GitHub stars](https://img.shields.io/github/stars/automation64/sysden64?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysden64?style=social)
+![Release Downloads](https://img.shields.io/github/downloads/automation64/sysden64/total)
 
 🚀 **SysDen64** is an opinionated, portable working environment designed for the command line warrior who need a flexible and efficient setup on the go.
+
+---
+
+- [sysden64](#sysden64)
+  - [📌 Overview](#-overview)
+  - [📦 Installation](#-installation)
+  - [🚀 Usage](#-usage)
+  - [🛠 Contributing](#-contributing)
+  - [⚠️ Disclaimer](#️-disclaimer)
+  - [📜 License](#-license)
+  - [👤 Author](#-author)
 
 ---
 
@@ -72,6 +84,12 @@ sysden64 -g
 Contributions are welcome! Help us improve by submitting issues, feature requests, or pull requests.
 
 - [Code of Conduct](https://github.com/automation64/sysden64/blob/main/CODE_OF_CONDUCT.md)
+
+---
+
+## ⚠️ Disclaimer
+
+This repository is provided "as is" without any warranties. The author is not responsible for any damages or issues arising from its use. Additionally, this project is not affiliated with or endorsed by any organization or entity. Use at your own risk.
 
 ---
 

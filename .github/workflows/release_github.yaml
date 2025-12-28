@@ -1,15 +1,14 @@
 ---
-# Template: 1.3.0
-name: "Release / GitHub"
+# template: 1.4.1
+name: "Release/GitHub"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
-  DEV_CICD_DEBUG: ""
+  DEV_CICD_DEBUG: "NONE"
   BL64_LIB_CICD: "YES"
-  DEV_LIB_GITHUB_BIN: "gh"
 
 on:
   push:
@@ -26,19 +25,21 @@ jobs:
         uses: "actions/checkout@main"
 
       - name: "Cache local tools"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
-          path: ./lib
-          key: ${{ runner.os }}-lib-cache
-          restore-keys: |
-            ${{ runner.os }}-lib-cache
+          path: \
+            ./lib/bl64
+            ./lib/inst64
+          key: "lib-base"
 
-      - name: "Prepare environment"
-        run: "./bin/dev-lib-installer64"
+      - name: "Download tools"
+        run: |
+          ./bin/dev-lib-base &&
+          ./bin/dev-lib-github
 
-      - name: "Build distributable package"                                                                                                                                                    
+      - name: "Prepare application for release"
         run: "./bin/dev-pack-project"
-        
+
       - name: "Create release"
         run: "./bin/dev-release-github ${GITHUB_REF_NAME}"
         env:

@@ -7,7 +7,7 @@ function module_xdg_setup() {
   local model='xdg'
   local source=''
 
-  bl64_msg_show_task 'prepare XDG'
+  bl64_msg_show_task 'configure XDG'
   bl64_bsh_xdg_create \
     "$home" ||
     return $?

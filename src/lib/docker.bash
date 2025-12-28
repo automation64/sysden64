@@ -7,9 +7,7 @@ function module_docker_setup() {
   local model='docker'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'docker')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare Docker CLI'
+  module_detect "$model" 'docker' 'Docker CLI' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" "$module_type" "$model" &&

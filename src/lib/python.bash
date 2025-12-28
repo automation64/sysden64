@@ -7,9 +7,7 @@ function module_python_setup() {
   local model='python'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'python3')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare Python'
+  module_detect "$model" 'python3' 'Python' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source"

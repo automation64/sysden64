@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ./test/lib/test.env &&
+./src/bin/sysden64 -h > /dev/null &&
+./src/bin/sysden64 -v > /dev/null &&
+./src/bin/sysden64 -e > /dev/null
