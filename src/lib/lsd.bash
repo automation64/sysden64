@@ -7,9 +7,7 @@ function module_lsd_setup() {
   local model='lsd'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'lsd')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare lsd'
+  module_detect "$model" 'lsd' 'lsd' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&

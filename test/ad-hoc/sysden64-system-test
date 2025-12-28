@@ -1,0 +1,17 @@
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
+export TEST_PROJECT_ROOT="/project"
+export TEST_PROJECT_TEST="/project/test/ad-hoc"
+export TEST_HOME_ROOT="/opt"
+export TEST_SD64_ROOT="$TEST_HOME_ROOT/sysden64"
+
+"${TEST_PROJECT_TEST}/sysden64-system-install" &&
+  "${TEST_PROJECT_TEST}/home-reset" ||
+  exit $?
+
+echo "==[TEST START]====================================="
+cd "$HOME" &&
+  "$TEST_SD64_ROOT/bin/sysden64" -s &&
+  cd sd64 ||
+  exit $?
+echo "==[TEST END]====================================="

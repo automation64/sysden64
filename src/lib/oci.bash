@@ -8,9 +8,7 @@ function module_oci_setup() {
   local source=''
   local extra_locations="${HOME}/.local/bin"
 
-  [[ -z "$(bl64_bsh_command_locate 'oci' "$extra_locations")" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare OCI CLI'
+  module_detect "$model" 'oci' 'OCI - Oracle Cloud CLI' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_oci_setup_config "$home" "$source" "$model" "$module_type"

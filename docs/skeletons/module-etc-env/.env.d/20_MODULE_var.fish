@@ -4,4 +4,4 @@
 #   - apply updates: sysden64 -u -m MODULE
 # Version: 1.0.1
 
-set -gx  X_MODULE_VAR_NAME_X 'X_MODULE_VAR_VALUE_X'
+set -gx X_MODULE_VAR_NAME_X 'X_MODULE_VAR_VALUE_X'

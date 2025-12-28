@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# * Version: 6.2.0
+# template-env: 1.2.0
 #######################################
 # Copyright [2023] [serdigital64@gmail.com]
 #
@@ -9,7 +9,6 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #    export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_VAR}/home"
-
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,22 +17,17 @@
 #######################################
 
 #
-# Globals
+# Module variables
 #
-# * Use .dev.env file to override values
+# * Shared internal variables for module tasks
 #
 
 # shellcheck disable=SC2154
 {
-  # Lab / SysDen64 / Container paths
-  export DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER='/home'
-  export DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER:-/sysden64}"
-  export DEV_LAB_SYSDEN64_PATH_SD64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/${DEV_LAB_SYSDEN64_PATH_SD64_BASE}"
-  export DEV_LAB_SYSDEN64_PATH_BL64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/lib/bl64"
-  # Env / SysDen64 / Registry for lab and testing containers
-  export DEV_ENV_SYSDEN64_REGISTRY="${DEV_ENV_SYSDEN64_REGISTRY:-ghcr.io/automation64}"
-  # Lab / SysDen64 / Default image
-  export DEV_LAB_SYSDEN64_CONTAINER="${DEV_LAB_SYSDEN64_CONTAINER:-toolbox/oraclelinux-9-toolbox-gitops}"
+  # Env / SysDen64 / Module environment definition version
+  export DEV_ENV_SYSDEN64_ID='sysden64'
+  export DEV_ENV_SYSDEN64_VERSION='6.4.0'
+
   # Lab / SysDen64 / Profile names
   export DEV_LAB_SYSDEN64_PROFILE_DEFAULT='default'
   export DEV_LAB_SYSDEN64_PROFILE_NONE='none'
@@ -43,13 +37,47 @@
   export DEV_LAB_SYSDEN64_PATH_SD64_BASE='lib/sd64'
   export DEV_LAB_SYSDEN64_PATH_SD64_LOCAL="${DEV_PATH_ROOT}/${DEV_LAB_SYSDEN64_PATH_SD64_BASE}"
   export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_VAR}/home"
+  # Lab / SysDen64 / Container paths
+  export DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER='/home'
+  export DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER='/sysden64'
+  export DEV_LAB_SYSDEN64_PATH_SD64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/${DEV_LAB_SYSDEN64_PATH_SD64_BASE}"
+  export DEV_LAB_SYSDEN64_PATH_BL64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/lib/bl64"
   # Lab / SysDen64 / Helper scripts
   export DEV_LAB_SYSDEN64_SCRIPT_HOME="${DEV_LAB_SYSDEN64_PATH_SD64_LOCAL}/bin/sysden64"
   export DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/bin/dev-lab-sysden64-entrypoint"
-  # Lab / SysDen64 / Container user shell
-  export DEV_LAB_SYSDEN64_CONTAINER_SHELL="${DEV_LAB_SYSDEN64_CONTAINER_SHELL:-/bin/zsh}"
+
+  # Lib / SysDen64 / Installer
+  export DEV_LIB_SYSDEN64_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-sysden64"
+  # Lib / SysDen64 / Skip installation?
+  export DEV_LIB_SYSDEN64_SKIP='YES'
+  # Lib / SysDen64 / Target
+  export DEV_LIB_SYSDEN64_TARGET="${DEV_LIB_SYSDEN64_TARGET:-${DEV_PATH_LIB}/sd64}"
+
+}
+
+#
+# Module parameters
+#
+# * Use .dev.env file to override values
+#
+
+# shellcheck disable=SC2154
+{
+  # Env / SysDen64 / Registry for lab and testing containers
+  export DEV_ENV_SYSDEN64_REGISTRY="${DEV_ENV_SYSDEN64_REGISTRY:-ghcr.io/automation64}"
   # Lib / SysDen64 / Replace existing configuration on new lab startup? (ON|OFF)
   export DEV_LIB_SYSDEN64_REPLACE_ENABLED="${DEV_LIB_SYSDEN64_REPLACE_ENABLED:-OFF}"
+  # Lab / SysDen64 / Default image
+  export DEV_LAB_SYSDEN64_CONTAINER="${DEV_LAB_SYSDEN64_CONTAINER:-toolbox/oraclelinux-9-toolbox-gitops}"
+  # Lab / SysDen64 / Container user shell
+  export DEV_LAB_SYSDEN64_CONTAINER_SHELL="${DEV_LAB_SYSDEN64_CONTAINER_SHELL:-/bin/zsh}"
+  # Lab / SysDen64 / Container user
+  export DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE="${DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE:-YES}"
+  export DEV_LAB_SYSDEN64_CONTAINER_USER_NAME="${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME:-}"
+  export DEV_LAB_SYSDEN64_CONTAINER_USER_UID="${DEV_LAB_SYSDEN64_CONTAINER_USER_UID:-}"
+  export DEV_LAB_SYSDEN64_CONTAINER_USER_HOME="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME:-/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}}"
+  # Lab / SysDen64 / Container user
+  export DEV_LAB_SYSDEN64_CONTAINER_PROFILE="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME}/.sysden64-lab"
 }
 
 #
@@ -60,10 +88,17 @@
 
 # shellcheck disable=SC2154
 {
-  # Lab / SysDen64 / Container user
-  export DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE="${DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE:-YES}"
-  export DEV_LAB_SYSDEN64_CONTAINER_USER_NAME="${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME:-$USER}"
-  export DEV_LAB_SYSDEN64_CONTAINER_USER_UID="${DEV_LAB_SYSDEN64_CONTAINER_USER_UID:-$UID}"
-  export DEV_LAB_SYSDEN64_CONTAINER_USER_HOME="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME:-${DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER}/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}}"
-  export DEV_LAB_SYSDEN64_CONTAINER_PROFILE="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME}/.sysden64-lab"
+  # Lib / SysDen64 / Command
+  export DEV_LIB_SYSDEN64_BIN="${DEV_LIB_SYSDEN64_BIN:-}"
+  if [[ -z "$DEV_LIB_SYSDEN64_BIN" ]]; then
+    DEV_LIB_SYSDEN64_BIN="$(bl64_bsh_command_locate_user 'sysden64')"
+    if [[ -z "$DEV_LIB_SYSDEN64_BIN" ]]; then
+      DEV_LIB_SYSDEN64_BIN="${DEV_LIB_SYSDEN64_TARGET}/sysden64"
+      if [[ ! -x "${DEV_LIB_SYSDEN64_BIN}" ]]; then
+        DEV_LIB_SYSDEN64_SKIP='NO'
+      fi
+    else
+      DEV_LIB_SYSDEN64_TARGET="$(bl64_fmt_path_get_basename "$DEV_LIB_SYSDEN64_BIN")"
+    fi
+  fi
 }

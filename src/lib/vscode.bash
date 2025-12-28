@@ -8,9 +8,7 @@ function module_vscode_setup() {
   local source=''
   local extra_locations='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
 
-  [[ -z "$(bl64_bsh_command_locate 'code' "$extra_locations")" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare VSCode'
+  module_detect "$model" 'code' 'VSCode IDE' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&

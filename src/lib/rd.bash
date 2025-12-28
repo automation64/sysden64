@@ -6,11 +6,16 @@ function module_rd_setup() {
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local model='rd'
   local source=''
+  local extra_locations=''
 
-  [[ "$BL64_OS_TYPE" != "$BL64_OS_TYPE_MACOS" ]] &&
-    [[ ! -x '/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/bin/docker' ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare Rancher Desktop'
+  if [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_MACOS" ]]; then
+    extra_locations='/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/bin'
+  else
+    bl64_dbg_app_show_comments 'the tool is only supported on macOS.'
+    return 0
+  fi
+
+  module_detect "$model" 'docker' 'Rancher Desktop' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ./test/lib/test.env &&
+./src/bin/sysden64 -s -i $HOME/test -p profile1 &&
+./src/bin/sysden64 -w -i $HOME/test -p profile2 &&
+./src/bin/sysden64 -w -i $HOME/test -p profile3

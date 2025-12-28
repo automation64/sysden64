@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source ./test/lib/test.env &&
+./src/bin/sysden64 -s -i $HOME/test &&
+./src/bin/sysden64 -d -i $HOME/test -m bash &&
+./src/bin/sysden64 -u -i $HOME/test -m bash &&
+./src/bin/sysden64 -r -i $HOME/test -m bash &&
+./src/bin/sysden64 -u -i $HOME/test -m bash

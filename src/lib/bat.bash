@@ -7,9 +7,7 @@ function module_bat_setup() {
   local model='bat'
   local source=''
 
-  [[ -z "$(bl64_bsh_command_locate 'bat')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare Bat'
+  module_detect "$model" 'bat' 'Bat - Bash Testing' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source"

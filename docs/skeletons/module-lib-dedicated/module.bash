@@ -5,11 +5,9 @@ function module_X_MODULE_ID_X_setup() {
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
   local model='X_MODULE_ID_X'
-  local source=''
+  local extra_locations='X_EXTRA_LOCATIONS_PLACEHOLDER_X'
 
-  [[ -z "$(bl64_bsh_command_locate 'X_COMMAND_X')" ]] &&
-    bl64_dbg_app_show_info "$SYSDEN64_TXT_NOT_DETECTED" && return 0
-  bl64_msg_show_phase 'prepare X_MODULE_NAME_X'
+  module_detect "$model" 'X_MODULE_ID_X' 'X_MODULE_NAME_X' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" "$module_type" "$model" &&

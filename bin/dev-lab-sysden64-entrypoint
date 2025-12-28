@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# template-task: 1.9.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -12,28 +13,22 @@
 # limitations under the License.
 #######################################
 
-#
-# Imports
-#
-
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
 # shellcheck source=bin/dev-env-sysden64
 source ./bin/dev-env-sysden64 || exit 1
-# shellcheck source-path=lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rbac.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
+# shellcheck source-path=/opt/bl64
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rbac.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rnd.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-iam.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
-#
-# Functions
-#
-
-function dev_lab_user_create() {
+function my_user_create() {
   bl64_dbg_app_show_function
 
   if bl64_lib_flag_is_enabled "$DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE"; then
@@ -66,7 +61,7 @@ function dev_lab_user_create() {
   fi
 }
 
-function dev_lab_user_setup() {
+function my_user_setup() {
   bl64_dbg_app_show_function
   if bl64_lib_flag_is_enabled "$DEV_LIB_SYSDEN64_REPLACE_ENABLED"; then
     bl64_msg_show_task 'Prepare to replace SysDen64 Lab Container configuration'
@@ -85,7 +80,7 @@ function dev_lab_user_setup() {
     -p "$DEV_PROFILE"
 }
 
-function dev_lab_shell_open() {
+function my_shell_open() {
   bl64_dbg_app_show_function
   bl64_msg_show_task "open interactive shell (${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}@${DEV_PROFILE})"
   bl64_msg_show_info 'type "exit" when done'
@@ -93,8 +88,9 @@ function dev_lab_shell_open() {
     -l "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME"
 }
 
-function dev_lab_initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
+  dev_bin64_task_initialize &&
   bl64_check_export 'DEV_PROFILE' &&
     bl64_check_export 'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' &&
     bl64_check_export 'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' &&
@@ -102,17 +98,12 @@ function dev_lab_initialize() {
     bl64_check_export 'DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER'
 }
 
-#
-# Main
-#
-
-[[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
-bl64_lib_script_version_set '4.0.0'
-bl64_msg_set_format "$DEV_VERBOSE" && bl64_msg_all_enable_verbose
+bl64_lib_script_version_set '4.0.1'
+bl64_msg_help_about_set 'Run SysDen64 Lab Environment Entry Point'
+dev_bin64_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-dev_lab_initialize &&
-  dev_lab_user_create &&
-  dev_lab_user_setup &&
-  dev_lab_shell_open
+my_user_create &&
+  my_user_setup &&
+  my_shell_open
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
