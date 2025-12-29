@@ -15,7 +15,6 @@ plugins=(
   virtualenv
   fzf-tab
   zsh-autosuggestions
-  zsh-interactive-cd
   zsh-syntax-highlighting
 )
 
