@@ -2,6 +2,7 @@
 # template: 1.1.0
 name: "SAST/GitLeaks"
 
+# yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
   pull_request:
@@ -10,6 +11,7 @@ on:
   push:
     branches:
       - "feature/**"
+      - "release/**"
 
 jobs:
   sast-gitleaks:

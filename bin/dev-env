@@ -43,7 +43,7 @@
   export DEV_MODULE_LOAD=''
 
   # Env / DevBin64 / Current version
-  export DEV_BIN64_VERSION='12.1.0'
+  export DEV_BIN64_VERSION='12.2.0'
 
   # Env / DevBin64 / Project root
   export DEV_PATH_ROOT=''
@@ -235,8 +235,8 @@ function dev_bin64_tmp_setup() {
     return $?
 
   if [[ -n "${module_paths[*]}" ]]; then
-    bl64_msg_show_task 'initialize module ephemeral paths'
-    bl64_fs_dir_create \
+    bl64_msg_show_task 'reset module ephemeral paths'
+    bl64_fs_dir_reset \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "${module_paths[@]}"
   fi
@@ -254,8 +254,8 @@ function dev_bin64_log_setup() {
     return $?
 
   if [[ -n "${module_paths[*]}" ]]; then
-    bl64_msg_show_task 'initialize module logging paths'
-    bl64_fs_dir_create \
+    bl64_msg_show_task 'reset module logging paths'
+    bl64_fs_dir_reset \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
       "${module_paths[@]}"
   fi

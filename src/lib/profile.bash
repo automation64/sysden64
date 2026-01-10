@@ -1,4 +1,4 @@
-# version: 1.0.1
+# version: 1.0.2
 function module_profile_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -6,7 +6,7 @@ function module_profile_setup() {
   local model='profile'
   local source=''
 
-  bl64_msg_show_phase 'prepare profile'
+  bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: SysDen64 Profile"
 
   source="$(module_set_model "$module_type" "$model")" ||
     return $?
@@ -30,7 +30,7 @@ function module_profile_setup_links() {
   local resource_list=''
   local resource=''
 
-  bl64_msg_show_task "update dedicated configuration links (${home}/${SYSDEN64_PATH_SHELLENV})"
+  bl64_msg_show_subtask "update dedicated configuration links (${home}/${SYSDEN64_PATH_SHELLENV})"
   resource_list="$(cd "${source}/${SYSDEN64_PATH_SHELLENV}" && echo *)" ||
     return $?
   for resource in $resource_list; do

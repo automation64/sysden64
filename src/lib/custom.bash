@@ -1,4 +1,4 @@
-# version: 1.2.0
+# version: 1.2.1
 function module_custom_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -6,7 +6,7 @@ function module_custom_setup() {
   local model='custom'
   local source=''
 
-  bl64_msg_show_phase 'prepare custom'
+  bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: Custom"
 
   source="$(module_set_model "$module_type" "$model")" ||
     return $?

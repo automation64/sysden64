@@ -9,6 +9,5 @@ function module_X_MODULE_ID_X_setup() {
 
   module_detect "$model" 'X_MODULE_ID_X' 'X_MODULE_NAME_X' "$extra_locations" || return 0
 
-  source="$(module_set_model "$module_type" "$model")" ||
-    return $?
+  source="$(module_set_model "$module_type" "$model")"
 }

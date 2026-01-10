@@ -1,4 +1,4 @@
-# version: 2.0.1
+# version: 2.0.2
 # template: lib-config-1.0.0
 function module_bash_setup() {
   bl64_dbg_app_show_function "$@"
@@ -28,7 +28,7 @@ function module_bash_setup_config() {
   module_config_backup "$model" "$module_type" "$target_profile" "$target_rc" ||
     return $?
 
-  bl64_msg_show_task "${SYSDEN64_TXT_PROMOTE_SHARED} (${model}/)"
+  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${source}->${base})"
   bl64_fs_path_copy \
     '0700' \
     "$BL64_VAR_DEFAULT" \

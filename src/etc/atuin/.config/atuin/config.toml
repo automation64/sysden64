@@ -2,11 +2,12 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.1.0
 
 update_check = false
 search_mode = "fuzzy"
 filter_mode = "global"
+keymap_mode = "auto"
 search_mode_shell_up_key_binding = "fuzzy"
 style = "full"
 show_preview = true
@@ -17,3 +18,6 @@ secrets_filter = true
 
 [theme]
 name = "marine"
+
+[dotfiles]
+enabled = false

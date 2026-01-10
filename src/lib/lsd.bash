@@ -1,4 +1,4 @@
-# version: 1.0.2
+# version: 1.0.3
 # template: lib-config-1.0.0
 function module_lsd_setup() {
   bl64_dbg_app_show_function "$@"
@@ -7,7 +7,7 @@ function module_lsd_setup() {
   local model='lsd'
   local source=''
 
-  module_detect "$model" 'lsd' 'lsd' || return 0
+  module_detect "$model" 'lsd' 'LSD - Enhanced ls' || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
     module_setup_env "$home" "$source" &&
