@@ -33,7 +33,7 @@ function module_X_MODULE_ID_X_setup_config() {
   module_config_backup "$model" "$module_type" "$target" ||
     return $?
 
-  bl64_msg_show_task "${SYSDEN64_TXT_PROMOTE_SHARED} (${model}/${config})"
+  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${model}/${config})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \

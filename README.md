@@ -5,8 +5,6 @@
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysden64?style=social)
 ![Release Downloads](https://img.shields.io/github/downloads/automation64/sysden64/total)
 
-🚀 **SysDen64** is an opinionated, portable working environment designed for the command line warrior who need a flexible and efficient setup on the go.
-
 ---
 
 - [sysden64](#sysden64)

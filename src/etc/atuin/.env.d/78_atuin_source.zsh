@@ -2,9 +2,11 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.1.0
 
-# Source: atuin init bash
+#
+# Content generated with: atuin init <SHELL> --disable-up-arrow
+#
 # shellcheck disable=SC2034,SC2153,SC2086,SC2155
 
 # Above line is because shellcheck doesn't support zsh, per
@@ -121,10 +123,3 @@ zle -N _atuin_up_search_widget _atuin_up_search
 bindkey -M emacs '^r' atuin-search
 bindkey -M viins '^r' atuin-search-viins
 bindkey -M vicmd '/' atuin-search
-bindkey -M emacs '^[[A' atuin-up-search
-bindkey -M vicmd '^[[A' atuin-up-search-vicmd
-bindkey -M viins '^[[A' atuin-up-search-viins
-bindkey -M emacs '^[OA' atuin-up-search
-bindkey -M vicmd '^[OA' atuin-up-search-vicmd
-bindkey -M viins '^[OA' atuin-up-search-viins
-bindkey -M vicmd 'k' atuin-up-search-vicmd

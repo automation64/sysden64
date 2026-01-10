@@ -2,12 +2,13 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.1.0
 
-# Source: atuin init bash
-
+#
+# Content generated with: atuin init <SHELL> --disable-up-arrow
+#
 __atuin_bind_ctrl_r=true
-__atuin_bind_up_arrow=true
+__atuin_bind_up_arrow=false
 # Include guard
 if [[ ${__atuin_initialized-} == true ]]; then
     false

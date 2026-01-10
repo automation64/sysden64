@@ -2,9 +2,11 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.1.0
 
-# Source: atuin init bash
+#
+# Content generated with: atuin init <SHELL> --disable-up-arrow
+#
 set -gx ATUIN_SESSION (atuin uuid)
 set --erase ATUIN_HISTORY_ID
 
@@ -79,16 +81,12 @@ end
 
 if string match -q '4.*' $version
     bind ctrl-r _atuin_search
-    bind up _atuin_bind_up
     if bind -M insert >/dev/null 2>&1
         bind -M insert ctrl-r _atuin_search
-        bind -M insert up _atuin_bind_up
     end
 else
     bind \cr _atuin_search
-    bind -k up _atuin_bind_up; bind \eOA _atuin_bind_up; bind \e\[A _atuin_bind_up
     if bind -M insert >/dev/null 2>&1
         bind -M insert \cr _atuin_search
-        bind -M insert -k up _atuin_bind_up; bind -M insert \eOA _atuin_bind_up; bind -M insert \e\[A _atuin_bind_up
     end
 end

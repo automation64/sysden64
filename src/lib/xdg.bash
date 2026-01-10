@@ -1,5 +1,5 @@
-# version: 1.0.0
-# template: legacy
+# version: 1.0.1
+# template: lib-base-1.0.0
 function module_xdg_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
@@ -7,9 +7,9 @@ function module_xdg_setup() {
   local model='xdg'
   local source=''
 
-  bl64_msg_show_task 'configure XDG'
-  bl64_bsh_xdg_create \
-    "$home" ||
+  bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: XDG"
+
+  bl64_bsh_xdg_create "$home" ||
     return $?
 
   source="$(module_set_model "$module_type" "$model")" &&
