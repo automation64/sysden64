@@ -1,0 +1,26 @@
+{
+  //
+  // VSCode / Settings / Text
+  //
+  // Settings Template Version: 10NOV25
+  // VSCode Version: >= 1.66
+  //
+  "yaml.validate": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+  },
+  "[yaml]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+}

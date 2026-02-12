@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Doc
+    //
+    // Settings Template Version: 14DEC25
+    // VSCode Version: >= 1.66
+    //
+    "bierner.markdown-checkbox",
+    "bierner.markdown-emoji",
+    "bierner.markdown-mermaid",
+    "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+    "darkriszty.markdown-table-prettify",
+    "davidanson.vscode-markdownlint",
+    "hediet.vscode-drawio",
+    "mdickin.markdown-shortcuts",
+    "Perkovec.emoji",
+    "phoihos.markdown-markmap",
+    "yzhang.markdown-all-in-one",
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  //
+  // VSCode / Settings / Doc
+  //
+  // Settings Template Version: 20MAY24
+  // VSCode Version: >= 1.66
+  //
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off",
+    },
+  },
+}

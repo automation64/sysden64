@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / DevOps
+    //
+    // Settings Template Version: 20NOV25
+    // VSCode Version: >= 1.66
+    //
+    "marquesmps.dockerfile-validator",
+    "ms-azuretools.vscode-docker",
+  ]
+}
+
+//
+// Deprecated
+//
+
+// "foxundermoon.shell-format",
+// "mkhl.shfmt",
+// "timonwong.shellcheck",

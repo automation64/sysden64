@@ -1,0 +1,11 @@
+{
+  //
+  // VSCode / Settings / DevOps
+  //
+  // Settings Template Version: 12FEB26
+  // VSCode Version: >= 1.66
+  //
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  }
+}

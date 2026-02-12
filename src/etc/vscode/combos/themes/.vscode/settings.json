@@ -1,0 +1,22 @@
+{
+  //
+  // VSCode / Settings / Theme
+  //
+  // Settings Template Version: 12FEB26
+  // VSCode Version: >= 1.66
+  //
+  "debug.console.fontSize": 13,
+  "editor.fontSize": 13,
+  "editor.smoothScrolling": true,
+  "markdown.preview.fontSize": 13,
+  "peacock.affectActivityBar": true,
+  "peacock.affectStatusAndTitleBorders": true,
+  "peacock.surpriseMeOnStartup": true,
+  "scm.inputFontSize": 13,
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.smoothScrolling": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "workbench.list.smoothScrolling": true,
+  "workbench.sideBar.location": "right",
+}

@@ -1,0 +1,62 @@
+{
+  //
+  // VSCode / Settings / IAC
+  //
+  // Settings Template Version: 10NOV25
+  // VSCode Version: >= 1.66
+  //
+  "azureTerraform.checkTerraformCmd": false,
+  "opentofu.codelens.referenceCount": true,
+  "opentofu.experimentalFeatures.prefillRequiredFields": true,
+  "opentofu.experimentalFeatures.validateOnSave": true,
+  "opentofu.languageServer.ignoreSingleFileWarning": true,
+  "redhat.telemetry.enabled": false,
+  "[opentofu]": {
+    "editor.defaultFormatter": "opentofu.vscode-opentofu",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.tabSize": 2,
+  },
+  "[opentofu-vars]": {
+    "editor.defaultFormatter": "opentofu.vscode-opentofu",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.tabSize": 2,
+  },
+  "[opentofu-test]": {
+    "editor.defaultFormatter": "opentofu.vscode-opentofu",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.tabSize": 2,
+  },
+  "[ansible]": {
+    "editor.formatOnType": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true,
+    },
+  },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.formatOnSaveMode": "file",
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.formatOnSaveMode": "file",
+  },
+  "azureTerraform.survey": {
+    "surveyPromptDate": "never",
+    "surveyPromptIgnoreCount": 0,
+  },
+  // "files.associations": {
+  //   "*.tofu": "opentofu"
+  // }
+}

@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Javascript
+    //
+    // Settings Template Version: 12FEB26
+    // VSCode Version: >= 1.66
+    //
+    "ms-vscode.js-debug",
+    "firsttris.vscode-jest-runner",
+    "christian-kohler.npm-intellisense",
+  ]
+}

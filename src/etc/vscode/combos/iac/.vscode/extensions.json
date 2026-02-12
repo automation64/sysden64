@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / IaC
+    //
+    // Settings Template Version: 20NOV25
+    // VSCode Version: >= 1.66
+    //
+    "opentofu.vscode-opentofu",
+    "HashiCorp.terraform",
+    "ms-azuretools.vscode-azureterraform",
+    "redhat.ansible",
+    "Tim-Koehler.helm-intellisense",
+    "ms-kubernetes-tools.kind-vscode",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-openshift-connector",
+  ]
+}

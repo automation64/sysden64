@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Python
+    //
+    // Settings Template Version: 20MAY24
+    // VSCode Version: >= 1.66
+    //
+    "ms-python.python",
+    "ms-toolsai.jupyter",
+  ]
+}
+

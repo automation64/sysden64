@@ -13,11 +13,9 @@
 # limitations under the License.
 #######################################
 
-# shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
 # shellcheck source=bin/dev-env-sysden64
 source ./bin/dev-env-sysden64 || exit 1
-# shellcheck source-path=/opt/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rbac.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-rnd.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-iam.bash" &&

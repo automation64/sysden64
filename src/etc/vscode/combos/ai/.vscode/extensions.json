@@ -1,0 +1,27 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / AI
+    //
+    // Settings Template Version: 14DEC25
+    // VSCode Version: >= 1.66
+    //
+    "GitHub.copilot-chat",
+    "ms-vscode.vscode-websearchforcopilot",
+  ]
+}
+
+//
+// Catalog
+//
+
+// "Continue.continue",
+// "anthropic.claude-code",
+// "Google.geminicodeassist",
+// "openai.chatgpt"
+
+//
+// Deprecated
+//
+
+// "GitHub.copilot",

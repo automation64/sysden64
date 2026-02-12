@@ -16,7 +16,6 @@
 # Imports
 #
 
-# shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
 
 #
@@ -42,9 +41,6 @@ function my_download() {
 if [[ "$DEV_LIB_INSTALLER64_SKIP" == 'YES' ]]; then
   exit 0
 fi
-
-dev_bin64_msg_show_task 'dev-lib-installer64' 'remove older Installer64 versions'
-[[ -d "$DEV_LIB_INSTALLER64_TARGET" ]] && rm -Rf "$DEV_LIB_INSTALLER64_TARGET"
 
 dev_bin64_msg_show_task 'dev-lib-installer64' 'download Installer64'
 cd "$DEV_PATH_LIB" &&

@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Go
+    //
+    // Settings Template Version: 10OCT23
+    // VSCode Version: >= 1.66
+    //
+    "golang.go",
+  ]
+}
+

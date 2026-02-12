@@ -1,4 +1,4 @@
-# version: 1.0.0
+# version: 1.0.1
 # template: lib-config-1.0.0
 function module_vscodeoss_setup() {
   bl64_dbg_app_show_function "$@"
@@ -8,6 +8,7 @@ function module_vscodeoss_setup() {
   local source=''
   local extra_locations=''
 
+  [[ "$BL64_OS_TYPE" != "$BL64_OS_TYPE_LINUX" ]] && return 0
   module_detect "$model" 'code-oss' 'VSCode OSS IDE' "$extra_locations" || return 0
 
   source="$(module_set_model "$module_type" "$model")" &&
