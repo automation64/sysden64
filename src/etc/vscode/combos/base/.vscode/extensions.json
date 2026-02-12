@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Base
+    //
+    // Settings Template Version: 14DEC25
+    // VSCode Version: >= 1.66
+    //
+    "aaron-bond.better-comments",
+    "alefragnani.bookmarks",
+    "alefragnani.project-manager",
+    "jannisx11.batch-rename-extension",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh-edit",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-wsl",
+    "oderwat.indent-rainbow",
+    "qcz.text-power-tools",
+    "sleistner.vscode-fileutils",
+    "streetsidesoftware.code-spell-checker",
+    "tyriar.sort-lines"
+  ]
+}

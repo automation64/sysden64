@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Dev
+    //
+    // Settings Template Version: 12FEB26
+    // VSCode Version: >= 1.66
+    //
+    "donjayamanne.githistory",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "fabiospampinato.vscode-diff",
+    "louiswt.regexp-preview",
+    "ryu1kn.partial-diff",
+  ]
+}

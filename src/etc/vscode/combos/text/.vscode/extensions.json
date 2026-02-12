@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Text
+    //
+    // Settings Template Version: 20MAY24
+    // VSCode Version: >= 1.66
+    //
+    "tuxtina.json2yaml",
+    "zainchen.json",
+    "dotjoshjohnson.xml",
+    "redhat.vscode-yaml",
+  ]
+}
+

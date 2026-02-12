@@ -1,0 +1,14 @@
+{
+  //
+  // VSCode / Settings / Dev
+  //
+  // Settings Template Version: 12FEB26
+  // VSCode Version: >= 1.66
+  //
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "never",
+  "gitlens.codeLens.authors.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.telemetry.enabled": false,
+}

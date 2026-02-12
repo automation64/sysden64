@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Extensions / Shell
+    //
+    // Settings Template Version: 12AUG25
+    // VSCode Version: >= 1.66
+    //
+    "ironmansoftware.powershellprotools",
+    "ms-vscode.powershell",
+    "remisa.shellman",
+    "mads-hartmann.bash-ide-vscode",
+    "rogalmic.bash-debug",
+  ]
+}
+
+//
+// Deprecated
+//
+
+// "foxundermoon.shell-format",
+// "mkhl.shfmt",
+// "timonwong.shellcheck",

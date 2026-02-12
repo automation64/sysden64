@@ -1,0 +1,21 @@
+{
+  //
+  // VSCode / Settings / Shell
+  //
+  // Settings Template Version: 12FEB26
+  // VSCode Version: >= 1.66
+  //
+  "bashIde.backgroundAnalysisMaxFiles": 5,
+  "bashIde.enableSourceErrorDiagnostics": true,
+  "bashIde.globPattern": "**/*@(.sh|.bash)",
+  "bashIde.includeAllWorkspaceSymbols": true,
+  "bashIde.logLevel": "error",
+  "bashIde.shellcheckArguments": "--rcfile=./.shellcheckrc",
+  "bashIde.shellcheckPath": "shellcheck",
+  "bashIde.shfmt.caseIndent": true,
+  "[shellscript]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "mads-hartmann.bash-ide-vscode",
+    "files.eol": "\n",
+  },
+}

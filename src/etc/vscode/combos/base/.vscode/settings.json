@@ -1,0 +1,66 @@
+{
+  //
+  // VSCode / Settings / Base
+  //
+  // Settings Template Version: 12FEB26
+  // VSCode Version: >= 1.66
+  //
+  "accessibility.verbosity.terminal": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorStyle": "block",
+  "editor.cursorSurroundingLines": 1,
+  "editor.linkedEditing": true,
+  "editor.matchBrackets": "never",
+  "editor.minimap.enabled": false,
+  "editor.parameterHints.cycle": true,
+  "editor.renderControlCharacters": true,
+  "editor.renderLineHighlight": "none",
+  "editor.renderLineHighlightOnlyWhenFocus": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.showFoldingControls": "always",
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "on",
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.enableDragAndDrop": false,
+  "files.enableTrash": true,
+  "keyboard.dispatch": "keyCode",
+  "search.followSymlinks": false,
+  "search.useIgnoreFiles": true,
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.altClickMovesCursor": false,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.enableFileLinks": "notRemote",
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.initialHint": false,
+  "terminal.integrated.sendKeybindingsToShell": true,
+  "terminal.integrated.shellIntegration.quickFixEnabled": false,
+  "terminal.integrated.shellIntegration.showCommandGuide": false,
+  "terminal.integrated.showExitAlert": false,
+  "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.suggest.enabled": false,
+  "terminal.integrated.suggest.upArrowNavigatesHistory": false,
+  "window.closeWhenEmpty": false,
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.tips.enabled": false,
+  "terminal.integrated.suggest.providers": {
+    "lsp": false,
+  },
+  //
+  // Local defaults section. Use to isolate settings that should not be replaced when updating from the master template
+  //
+  "editor.fontFamily": "Noto Mono",
+  "terminal.integrated.fontFamily": "'MesloLGS NF'",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.colorTheme": "Activate UMBRA protocol",
+  "files.associations": {
+  },
+  //
+  // Runtime section. Use this section to isolate local changes made automatically by VSCode
+  //
+}

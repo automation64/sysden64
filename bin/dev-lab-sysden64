@@ -13,9 +13,7 @@
 # limitations under the License.
 #######################################
 
-# shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
-# shellcheck source-path=/opt/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
@@ -41,6 +39,5 @@ else
   DEV_PROFILE="$MY_PROFILE"
 fi
 
-# shellcheck source-path=bin
-source "${DEV_PATH_BIN}/dev-init" "$MY_PROFILE" &&
+source "${DEV_PATH_BIN}/dev-profile-set" "$MY_PROFILE" &&
   "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$MY_CONTAINER_IMAGE"

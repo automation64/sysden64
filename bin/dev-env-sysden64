@@ -91,14 +91,14 @@
   # Lib / SysDen64 / Command
   export DEV_LIB_SYSDEN64_BIN="${DEV_LIB_SYSDEN64_BIN:-}"
   if [[ -z "$DEV_LIB_SYSDEN64_BIN" ]]; then
-    DEV_LIB_SYSDEN64_BIN="$(bl64_bsh_command_locate_user 'sysden64')"
+    DEV_LIB_SYSDEN64_BIN="$(dev_bin64_lib_locate 'sysden64')"
     if [[ -z "$DEV_LIB_SYSDEN64_BIN" ]]; then
       DEV_LIB_SYSDEN64_BIN="${DEV_LIB_SYSDEN64_TARGET}/sysden64"
       if [[ ! -x "${DEV_LIB_SYSDEN64_BIN}" ]]; then
         DEV_LIB_SYSDEN64_SKIP='NO'
       fi
     else
-      DEV_LIB_SYSDEN64_TARGET="$(bl64_fmt_path_get_basename "$DEV_LIB_SYSDEN64_BIN")"
+      DEV_LIB_SYSDEN64_TARGET="$(dev_bin64_lib_basename "$DEV_LIB_SYSDEN64_BIN")"
     fi
   fi
 }
