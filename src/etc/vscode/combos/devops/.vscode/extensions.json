@@ -3,11 +3,12 @@
     //
     // VSCode / Extensions / DevOps
     //
-    // Settings Template Version: 20NOV25
+    // Settings Template Version: 19MAR26
     // VSCode Version: >= 1.66
     //
     "marquesmps.dockerfile-validator",
     "ms-azuretools.vscode-docker",
+    "MS-SarifVSCode.sarif-viewer"
   ]
 }
 

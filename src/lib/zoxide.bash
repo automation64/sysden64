@@ -1,14 +1,14 @@
-# version: 1.0.0
+# version: 1.0.1
 # template: lib-env-1.0.0
 function module_zoxide_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local model='zoxide'
+  local module='zoxide'
   local source=''
 
-  module_detect "$model" 'zoxide' 'Zoxide' || return 0
+  module_detect "$module" 'zoxide' 'Zoxide - Enhanced CD' || return 0
 
-  source="$(module_set_model "$module_type" "$model")" &&
-    module_setup_env "$home" "$source"
+  source="$(module_config_get_source "$module_type" "$module")" &&
+    module_setup_env "$home" "$source" "$module_type" "$module"
 }

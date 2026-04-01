@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.11.0]
+
+### Added
+
+- Modules
+  - Microsoft .NET SDK
+- VSCode
+  - Extension: Sarif Viewer
+
+### Fixed
+
+- SysDen64
+  - Profile module deployment and switch
+
+### Changed
+
+- VSCode, Antigravity, VSCodeOSS, VSCodium
+  - Base settings moved to vscode/combos
+- Custom
+  - Lowered env file priority from x9 to x8
+
 ## [4.10.0]
 
 ### Added
@@ -159,9 +180,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Helix
   - Zoxide
 - Bash
-  - Load shell specific functions and settings from .env.d/*.bash
+  - Load shell specific functions and settings from .env.d/\*.bash
 - ZSH
-  - Load shell specific functions and settings from .env.d/*.zsh
+  - Load shell specific functions and settings from .env.d/\*.zsh
 - VSCode
   - Default config
 - Zellij
@@ -181,7 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SysDen64
   - Use system-wide (/opt/) or user-wide (at64/) automation64 instead of repository-wide (sd64/lib/)
 - Custom
-  - **breaking-change** Changed .env.d/* file names to ensure custom module is the last one to be loaded
+  - **breaking-change** Changed .env.d/\* file names to ensure custom module is the last one to be loaded
 - P10K
   - **breaking-change** Migrated shell snippet to .env.d loaders
 - OMZ

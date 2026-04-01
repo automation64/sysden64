@@ -2,9 +2,10 @@
   //
   // VSCode / Settings / Doc
   //
-  // Settings Template Version: 20MAY24
+  // Settings Template Version: 01APR26
   // VSCode Version: >= 1.66
   //
+  "hediet.vscode-drawio.resizeImages": null,
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.detectIndentation": false,
@@ -14,7 +15,7 @@
     "editor.quickSuggestions": {
       "comments": "off",
       "strings": "off",
-      "other": "off",
-    },
-  },
+      "other": "off"
+    }
+  }
 }

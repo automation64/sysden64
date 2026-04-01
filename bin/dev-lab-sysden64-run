@@ -30,6 +30,22 @@ declare MY_CONTAINER_IMAGE="${1:-$DEV_LAB_SYSDEN64_CONTAINER}"
 
 function my_open() {
   bl64_dbg_app_show_function
+  if [[ -z "$DEV_LAB_SYSDEN64_CONTAINER_USER_UID" ]]; then
+    bl64_dbg_app_show_comments 'Container user not defined, using current user'
+    DEV_LAB_SYSDEN64_CONTAINER_USER_NAME="$(bl64_iam_user_get_current)" &&
+      DEV_LAB_SYSDEN64_CONTAINER_USER_UID="$(bl64_iam_user_get_id "$DEV_LAB_SYSDEN64_CONTAINER_USER_NAME")" &&
+      DEV_LAB_SYSDEN64_CONTAINER_USER_HOME="/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}" ||
+      return $?
+  fi
+
+  bl64_dbg_app_show_vars \
+    'DEV_LIB_SYSDEN64_REPLACE_ENABLED' \
+    'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
+    'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
+    'DEV_LAB_SYSDEN64_CONTAINER_USER_HOME' \
+    'DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE' \
+    'DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER' \
+    'DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER'
   if [[ -n "$DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE" ]]; then
     bl64_fs_dir_create \
       "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
@@ -39,7 +55,6 @@ function my_open() {
         --user='root' \
         --workdir="$DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER" \
         --entrypoint="$DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT" \
-        --env "SYSDEN64_PATH_ROOT=${DEV_LAB_SYSDEN64_PATH_SD64_CONTAINER}" \
         --env "SYSDEN64_PATH_BL64=${DEV_LAB_SYSDEN64_PATH_BL64_CONTAINER}" \
         --env 'DEV_PROFILE' \
         --env 'DEV_LIB_SYSDEN64_REPLACE_ENABLED' \
@@ -64,20 +79,14 @@ function my_open() {
 function my_initialize() {
   bl64_dbg_app_show_function
   dev_bin64_task_initialize &&
-  bl64_cnt_setup &&
+    bl64_cnt_setup &&
     bl64_check_export 'DEV_PROFILE' &&
     dev_bin64_task_show_setup \
-      'DEV_PROFILE' \
       'DEV_ENV_SYSDEN64_REGISTRY' \
-      'MY_CONTAINER_IMAGE' \
-      'DEV_LAB_SYSDEN64_CONTAINER_USER_NAME' \
-      'DEV_LAB_SYSDEN64_CONTAINER_USER_UID' \
-      'DEV_LAB_SYSDEN64_CONTAINER_USER_HOME' \
-      'DEV_LAB_SYSDEN64_PATH_DEN' \
-      'DEV_LIB_SYSDEN64_REPLACE_ENABLED'
+      'MY_CONTAINER_IMAGE'
 }
 
-bl64_lib_script_version_set '5.0.1'
+bl64_lib_script_version_set '6.0.0'
 bl64_msg_help_about_set 'Open SysDen64 Lab Container environment'
 dev_bin64_initialize && my_initialize || exit $?
 

@@ -2,9 +2,10 @@
   //
   // VSCode / Settings / DevOps
   //
-  // Settings Template Version: 12FEB26
+  // Settings Template Version: 19MAR26
   // VSCode Version: >= 1.66
   //
+  "sarif-viewer.connectToGithubCodeScanning": "off",
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   }
