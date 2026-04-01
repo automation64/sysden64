@@ -5,10 +5,7 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#    export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_VAR}/home"
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +23,7 @@
 {
   # Env / SysDen64 / Module environment definition version
   export DEV_ENV_SYSDEN64_ID='sysden64'
-  export DEV_ENV_SYSDEN64_VERSION='6.4.0'
+  export DEV_ENV_SYSDEN64_VERSION='7.0.0'
 
   # Lab / SysDen64 / Profile names
   export DEV_LAB_SYSDEN64_PROFILE_DEFAULT='default'
@@ -34,16 +31,13 @@
   # Lab / SysDen64 / Current profile marker
   export DEV_LAB_SYSDEN64_PATH_PROFILE='.sysden64-profile'
   # Lab / SysDen64 / Local paths
-  export DEV_LAB_SYSDEN64_PATH_SD64_BASE='lib/sd64'
-  export DEV_LAB_SYSDEN64_PATH_SD64_LOCAL="${DEV_PATH_ROOT}/${DEV_LAB_SYSDEN64_PATH_SD64_BASE}"
   export DEV_LAB_SYSDEN64_PATH_DEN="${DEV_PATH_PROF_VAR}/home"
   # Lab / SysDen64 / Container paths
   export DEV_LAB_SYSDEN64_PATH_HOME_CONTAINER='/home'
   export DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER='/sysden64'
-  export DEV_LAB_SYSDEN64_PATH_SD64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/${DEV_LAB_SYSDEN64_PATH_SD64_BASE}"
   export DEV_LAB_SYSDEN64_PATH_BL64_CONTAINER="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/lib/bl64"
   # Lab / SysDen64 / Helper scripts
-  export DEV_LAB_SYSDEN64_SCRIPT_HOME="${DEV_LAB_SYSDEN64_PATH_SD64_LOCAL}/bin/sysden64"
+  export DEV_LAB_SYSDEN64_SCRIPT_BOOTSTRAP='/opt/sysden64/bin/sysden64'
   export DEV_LAB_SYSDEN64_SCRIPT_ENTRYPOINT="${DEV_LAB_SYSDEN64_PATH_ROOT_CONTAINER}/bin/dev-lab-sysden64-entrypoint"
 
   # Lib / SysDen64 / Installer
@@ -75,7 +69,7 @@
   export DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE="${DEV_LAB_SYSDEN64_CONTAINER_USER_CREATE:-YES}"
   export DEV_LAB_SYSDEN64_CONTAINER_USER_NAME="${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME:-}"
   export DEV_LAB_SYSDEN64_CONTAINER_USER_UID="${DEV_LAB_SYSDEN64_CONTAINER_USER_UID:-}"
-  export DEV_LAB_SYSDEN64_CONTAINER_USER_HOME="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME:-/home/${DEV_LAB_SYSDEN64_CONTAINER_USER_NAME}}"
+  export DEV_LAB_SYSDEN64_CONTAINER_USER_HOME="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME:-}"
   # Lab / SysDen64 / Container user
   export DEV_LAB_SYSDEN64_CONTAINER_PROFILE="${DEV_LAB_SYSDEN64_CONTAINER_USER_HOME}/.sysden64-lab"
 }

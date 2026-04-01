@@ -1,22 +1,20 @@
-# version: 1.0.2
+# version: 1.0.3
 function module_profile_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
-  local model='profile'
+  local module='profile'
   local source=''
 
+  ! user_wide_is_enabled && return 0
   bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: SysDen64 Profile"
 
-  source="$(module_set_model "$module_type" "$model")" ||
+  source="$(module_config_get_source "$module_type" "$module")" ||
     return $?
 
-  if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH"; then
-    module_profile_setup_links "$home" "$source"
-  elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC"; then
-    module_profile_setup_links "$home" "$source"
-  elif bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_DEPLOY"; then
-    ! bl64_lib_flag_is_enabled "$SYSDEN64_FLAG_USER_LEVEL" && return 0
+  if bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SWITCH" ||
+    bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_SYNC" ||
+    bl64_lib_flag_is_enabled "$SYSDEN64_ACTION_DEPLOY"; then
     module_profile_setup_links "$home" "$source"
   else
     return 0

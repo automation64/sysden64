@@ -2,7 +2,7 @@
   //
   // VSCode / Settings / Base
   //
-  // Settings Template Version: 12FEB26
+  // Settings Template Version: 01APR26
   // VSCode Version: >= 1.66
   //
   "accessibility.verbosity.terminal": false,
@@ -49,17 +49,24 @@
   "workbench.startupEditor": "newUntitledFile",
   "workbench.tips.enabled": false,
   "terminal.integrated.suggest.providers": {
-    "lsp": false,
+    "lsp": false
   },
   //
   // Local defaults section. Use to isolate settings that should not be replaced when updating from the master template
   //
+  "debug.console.fontSize": 13,
   "editor.fontFamily": "Noto Mono",
+  "editor.fontSize": 13,
+  "markdown.preview.fontSize": 13,
+  "scm.inputFontSize": 13,
   "terminal.integrated.fontFamily": "'MesloLGS NF'",
-  "workbench.productIconTheme": "fluent-icons",
+  "terminal.integrated.fontSize": 13,
+  "window.zoomLevel": 0,
+  "window.zoomPerWindow": false,
   "workbench.colorTheme": "Activate UMBRA protocol",
-  "files.associations": {
-  },
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.sideBar.location": "right",
+  "files.associations": {}
   //
   // Runtime section. Use this section to isolate local changes made automatically by VSCode
   //

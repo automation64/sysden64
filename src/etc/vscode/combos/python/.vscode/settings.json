@@ -1,0 +1,9 @@
+{
+  //
+  // VSCode / Settings / Python
+  //
+  // Settings Template Version: 01APR26
+  // VSCode Version: >= 1.66
+  //
+  "python.languageServer": "Default"
+}

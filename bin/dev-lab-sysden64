@@ -26,7 +26,7 @@ source ./bin/dev-env-sysden64 || exit 1
 declare MY_PROFILE="${1:-$DEV_LAB_SYSDEN64_PROFILE_NONE}"
 declare MY_CONTAINER_IMAGE="${2:-}"
 
-bl64_lib_script_version_set '2.2.1'
+bl64_lib_script_version_set '3.0.0'
 bl64_msg_help_about_set 'Run SysDen64 lab environment'
 
 if [[ "$MY_PROFILE" == "$DEV_LAB_SYSDEN64_PROFILE_NONE" ]]; then
@@ -39,5 +39,5 @@ else
   DEV_PROFILE="$MY_PROFILE"
 fi
 
-source "${DEV_PATH_BIN}/dev-profile-set" "$MY_PROFILE" &&
+source "${DEV_PATH_BIN}/dev-profile-set" "$DEV_PROFILE" &&
   "${DEV_PATH_BIN}/dev-lab-sysden64-run" "$MY_CONTAINER_IMAGE"
