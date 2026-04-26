@@ -1,35 +1,35 @@
 # version: 1.3.1
-# template: lib-config-1.0.0
+# template: lib-config-2.0.0
 function module_env_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local module='env'
-  local source=''
+  local module_name='env'
+  local module_etc=''
 
   bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: ENV"
 
-  source="$(module_config_get_source "$module_type" "$module")" &&
-    module_env_setup_config "$home" "$source" "$module" "$module_type"
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" &&
+    module_env_setup_config "$home" "$module_etc" "$module_name" "$module_type"
 }
 
 function module_env_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local source="$2"
-  local module="$3"
+  local module_etc="$2"
+  local module_name="$3"
   local module_type="$4"
-  local base="${home}"
-  local config='.env.d'
-  local target="${base}/${config}"
+  local config_destination="${home}"
+  local module_config='.env.d'
+  local config_backup="${config_destination}/${module_config}"
 
-  module_config_backup "$module" "$module_type" "$target" ||
+  module_config_backup "$module_name" "$module_type" "$config_backup" ||
     return $?
 
-  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${module}/${config})"
+  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${module_name}/${module_config})"
   # shellcheck disable=SC2086
   bl64_fs_dir_create \
     "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$target" &&
-    module_setup_env "$home" "$source" "$module_type" "$module"
+    "$config_backup" &&
+    module_setup_env "$home" "$module_etc" "$module_type" "$module_name"
 }

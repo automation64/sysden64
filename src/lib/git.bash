@@ -1,27 +1,27 @@
 # version: 1.1.3
-# template: lib-config-1.0.0
+# template: lib-config-2.0.0
 function module_git_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local module='git'
-  local source=''
+  local module_name='git'
+  local module_etc=''
 
-  module_detect "$module" 'git' 'GIT - CLI' || return 0
+  module_detect "$module_name" 'git' 'GIT - CLI' || return 0
 
-  source="$(module_config_get_source "$module_type" "$module")" &&
-    module_git_setup_config "$home" "$source" "$module" "$module_type"
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" &&
+    module_git_setup_config "$home" "$module_etc" "$module_name" "$module_type"
 }
 
 function module_git_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local source="$2"
-  local module="$3"
+  local module_etc="$2"
+  local module_name="$3"
   local module_type="$4"
-  local base="${home}"
-  local config='.gitconfig'
-  local target="${base}/${config}"
+  local config_destination="${home}"
+  local module_config='.gitconfig'
+  local config_backup="${config_destination}/${module_config}"
 
-  module_shared_setup_config "$source" "$module" "$module_type" "$base" "$config" "$target" "${source}/${config}"
+  module_shared_setup_config "$module_etc" "$module_name" "$module_type" "$config_destination" "$config_backup" "${module_etc}/${module_config}"
 }

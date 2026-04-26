@@ -47,7 +47,7 @@ source "${SYSDEN64_PATH_BL64}/bashlib64-module-tm.bash" &&
 #
 
 # SysDen64 / Version
-readonly SYSDEN64_VERSION='4.11.0'
+readonly SYSDEN64_VERSION='4.12.0'
 # SysDen64 / Application configuration setup modules
 declare SYSDEN64_PATH_LIB="${SYSDEN64_PATH_LIB:-}"
 # SysDen64 / Application configuration boilerplates
@@ -132,6 +132,8 @@ SYSDEN64_MODULES_SHARED_DEFAULT+=' eza'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' fd'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' fzf'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' gemini'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' gnome_nautilus'
+SYSDEN64_MODULES_SHARED_DEFAULT+=' ghostty'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' git'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' github'
 SYSDEN64_MODULES_SHARED_DEFAULT+=' go'
@@ -261,33 +263,31 @@ function module_detect() {
 # Promote shared module configuration
 #
 # Arguments:
-#   $1: source. Base path for the source configuration. Format: full path ($HOME/sd64/etc/shared/<MODULE>)
-#   $2: module: Module name
+#   $1: module_etc. Shared module path. Format: full path ($HOME/sd64/etc/shared/<MODULE>)
+#   $2: module_name: Module name
 #   $3: module_type: Module type. Format: SYSDEN64_MODULE_TYPE_*
-#   $4: base: Base path for the target configuration. Format: full path without the configuration subpath
-#   $5: config: Configuration subpath in the source. Format: relative path
-#   $6: target: Configuration destination. Format: full path
-#   $7: link: Configuration source. Format: full path
-#   $@: additional target configuration files to backup. Format: full path
+#   $4: config_destination: Where the module configuration will be copied to. Format: full path without the configuration subpath
+#   $5: config_backup: Configuration object to backup before promoting the new one. Format: full path
+#   $6: module_config: Configuration object to promote. Format: full path
+#   $@: additional config_backups. Format: list of full path
 #######################################
 function module_shared_setup_config() {
   bl64_dbg_app_show_function "$@"
-  local source="$1"
-  local module="$2"
+  local module_etc="$1"
+  local module_name="$2"
   local module_type="$3"
-  local base="$4"
-  local config="$5"
-  local target="$6"
-  local link="$7"
+  local config_destination="$4"
+  local config_backup="$5"
+  local module_config="$6"
 
   if [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_SHARED" ]]; then
-    bl64_msg_show_app_error "module must be shared (${module})"
+    bl64_msg_show_app_error "module must be shared (${module_name})"
     # shellcheck disable=SC2086
     return $BL64_LIB_ERROR_PARAMETER_INVALID
   fi
 
-  if [[ ! -d "$source" ]]; then
-    bl64_msg_show_warning "new module available (${module}). Please upgrade your repository module definitions (sysden64 -g) and try again"
+  if [[ ! -d "$module_etc" ]]; then
+    bl64_msg_show_warning "new module available (${module_name}). Please upgrade your repository module definitions (sysden64 -g) and try again"
     return 0
   fi
 
@@ -297,58 +297,57 @@ function module_shared_setup_config() {
   shift
   shift
   shift
-  shift
-  module_config_backup "$module" "$module_type" "$target" "$@" ||
+  module_config_backup "$module_name" "$module_type" "$config_backup" "$@" ||
     return $?
 
-  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${link} -> ${base})"
+  bl64_msg_show_subtask "${SYSDEN64_TXT_PROMOTE_SHARED} (${module_config} -> ${config_destination})"
   bl64_fs_path_copy \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
     "$BL64_VAR_DEFAULT" \
-    "$base" \
-    "$link"
+    "$config_destination" \
+    "$module_config"
 }
 
 function module_dedicated_setup_config() {
   bl64_dbg_app_show_function "$@"
-  local source="$1"
-  local module="$2"
+  local module_etc="$1"
+  local module_name="$2"
   local module_type="$3"
-  local base="$4"
-  local config="$5"
-  local target="$6"
+  local config_destination="$4"
+  local module_config="$5"
+  local config_backup="$6"
 
   # shellcheck disable=SC2086
   [[ "$module_type" != "$SYSDEN64_MODULE_TYPE_DEDICATED" ]] &&
-    bl64_msg_show_app_error "module must be dedicated (${module})" &&
+    bl64_msg_show_app_error "module_name must be dedicated (${module_name})" &&
     return $BL64_LIB_ERROR_PARAMETER_INVALID
 
-  if module_dedicated_is_new "$module"; then
-    module_config_backup "$module" "$module_type" "$target" ||
+  if module_dedicated_is_new "$module_name"; then
+    module_config_backup "$module_name" "$module_type" "$config_backup" ||
       return $?
 
-    bl64_msg_show_subtask "promote dedicated configuration from repository (${module}/${config})"
+    bl64_msg_show_subtask "promote dedicated configuration from repository (${module_name}/${module_config})"
     if user_wide_is_enabled; then
-      base="${DEV_PATH_PROF_VAULT}/${module}"
+      config_destination="${DEV_PATH_PROF_VAULT}/${module_name}"
       bl64_fs_dir_create "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-        "$base" &&
+        "$config_destination" &&
         bl64_fs_path_merge \
-          "${source}/${config}" \
-          "$base" &&
-        bl64_fs_symlink_create "${base}" "$target" "$BL64_VAR_ON"
+          "${module_etc}/${module_config}" \
+          "$config_destination" &&
+        bl64_fs_symlink_create "${config_destination}" "$config_backup" "$BL64_VAR_ON"
     else
       bl64_fs_path_copy \
         "$BL64_VAR_DEFAULT" \
         "$BL64_VAR_DEFAULT" \
         "$BL64_VAR_DEFAULT" \
         "$BL64_VAR_DEFAULT" \
-        "$base" \
-        "${source}/${config}"
+        "$config_destination" \
+        "${module_etc}/${module_config}"
     fi
   else
-    module_dedicated_relink "$module" "${DEV_PATH_PROF_VAULT}/${module}" "$config" "$target"
+    module_dedicated_relink "$module_name" "${DEV_PATH_PROF_VAULT}/${module_name}" "$module_config" "$config_backup"
   fi
 }
 
@@ -858,8 +857,7 @@ function devbin64_setup() {
 
   bl64_msg_show_task 'populate configuration repository'
   bl64_msg_show_subtask "set profile (${profile})"
-  "$SYSDEN64_CMD_DEVBIN64_PROFILE_CREATE" "$profile" &&
-    profile_save "$profile" ||
+  "$SYSDEN64_CMD_DEVBIN64_PROFILE_CREATE" "$profile" ||
     return $?
 
   bl64_msg_show_subtask "create shared configuration store (${SYSDEN64_PATH_SHARED})"
@@ -962,6 +960,7 @@ function user_wide_create() {
   local repository="$2"
 
   repository_create "$repository" &&
+    profile_save "$SYSDEN64_PROFILE" &&
     devbin64_load "$repository" "$SYSDEN64_PROFILE" &&
     devbin64_setup "$home" "$repository" "$SYSDEN64_PROFILE" &&
     locks_repository_create &&
@@ -997,7 +996,8 @@ function profile_switch() {
     fi
   fi
 
-  devbin64_load "$repository" "$profile" &&
+  profile_save "$profile" &&
+    devbin64_load "$repository" "$profile" &&
     devbin64_setup "$home" "$repository" "$profile" &&
     module_dedicated_upgrade "$profile" &&
     module_dedicated_setup "$home" &&

@@ -2,10 +2,7 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.1.0
-
-set -gx MANPATH "/home/linuxbrew/.linuxbrew/share/man" $MANPATH
-set -gx INFOPATH "/home/linuxbrew/.linuxbrew/share/info" $INFOPATH
+# Version: 1.2.0
 
 set -gx HOMEBREW_PREFIX "/home/linuxbrew/.linuxbrew"
 set -gx HOMEBREW_CELLAR "/home/linuxbrew/.linuxbrew/Cellar"
