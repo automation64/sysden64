@@ -1,5 +1,5 @@
 # version: 1.0.5
-# template: lib-config-1.0.0
+# template: lib-config-2.0.0
 declare SYSDEN64_GIT_TMUX_PLUGINS=''
 SYSDEN64_GIT_TMUX_PLUGINS+=' https://github.com/tmux-plugins/tpm.git'
 
@@ -7,28 +7,28 @@ function module_tmux_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local module='tmux'
-  local source=''
+  local module_name='tmux'
+  local module_etc=''
 
-  module_detect "$module" 'tmux' 'TMUX - Terminal Multiplexer' || return 0
+  module_detect "$module_name" 'tmux' 'TMUX - Terminal Multiplexer' || return 0
 
-  source="$(module_config_get_source "$module_type" "$module")" &&
-    module_tmux_setup_config "$home" "$source" "$module" "$module_type" &&
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" &&
+    module_tmux_setup_config "$home" "$module_etc" "$module_name" "$module_type" &&
     module_tmux_setup_plugins "$home"
 }
 
 function module_tmux_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local source="$2"
-  local module="$3"
+  local module_etc="$2"
+  local module_name="$3"
   local module_type="$4"
-  local base="${home}"
-  local config='conf'
+  local config_destination="${home}"
+  local module_config='conf'
   local config_file='.tmux.conf'
-  local target="${base}/${config_file}"
+  local config_backup="${config_destination}/${config_file}"
 
-  module_shared_setup_config "$source" "$module" "$module_type" "$base" "$config" "$target" "${source}/${config}/${config_file}"
+  module_shared_setup_config "$module_etc" "$module_name" "$module_type" "$config_destination" "$config_backup" "${module_etc}/${module_config}/${config_file}"
 }
 
 function module_tmux_setup_plugins() {

@@ -3,24 +3,24 @@ function module_custom_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local module='custom'
-  local source=''
+  local module_name='custom'
+  local module_etc=''
 
   bl64_msg_show_subtask "${SYSDEN64_TXT_CONFIGURE_MODULE}: Custom"
 
-  source="$(module_config_get_source "$module_type" "$module")" ||
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" ||
     return $?
 
-  module_setup_env "$home" "$source" "$module_type" "$module"
+  module_setup_env "$home" "$module_etc" "$module_type" "$module_name"
 }
 
 function module_custom_upgrade() {
   bl64_dbg_app_show_function
-  local module='custom'
-  local base_env="${SYSDEN64_PATH_ETC}/${module}/${SYSDEN64_PATH_SHELLENV}"
+  local module_name='custom'
+  local base_env="${SYSDEN64_PATH_ETC}/${module_name}/${SYSDEN64_PATH_SHELLENV}"
   local source_env=''
 
-  source_env="$(module_config_get_source "$SYSDEN64_MODULE_TYPE_SHARED" "$module")" &&
+  source_env="$(module_config_get_source "$SYSDEN64_MODULE_TYPE_SHARED" "$module_name")" &&
     source_env="${source_env}/${SYSDEN64_PATH_SHELLENV}" &&
     module_custom_upgrade_legacy_v3_5 "$source_env" "$base_env" &&
     module_custom_upgrade_legacy_v4_11 "$source_env" &&
@@ -128,13 +128,13 @@ function module_custom_upgrade_new() {
   bl64_dbg_app_show_function
   local source_env="$1"
   local base_env="$2"
-  local module='custom'
+  local module_name='custom'
   local files=''
   local file=''
 
-  bl64_msg_show_task "upgrade module (${module}: new files only)"
+  bl64_msg_show_task "upgrade module_name (${module_name}: new files only)"
   bl64_bsh_run_pushd "$base_env" &&
-    files="$(bl64_bsh_pattern_match_file "*_${module}_*")" &&
+    files="$(bl64_bsh_pattern_match_file "*_${module_name}_*")" &&
     bl64_bsh_run_popd ||
     return $?
 

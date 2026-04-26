@@ -2,7 +2,8 @@
 
 export TEST_PROJECT_ROOT="/project"
 export TEST_HOME_ROOT="$HOME/at64"
+export TEST_PROJECT_TEST="${TEST_PROJECT_ROOT}/test/adhoc"
 
-"${TEST_PROJECT_ROOT}/test/ad-hoc/at64-user-install" &&
-"${TEST_PROJECT_ROOT}/test/ad-hoc/tools-user-install" &&
-"${TEST_PROJECT_ROOT}/test/ad-hoc/sysden64-user-sync"
+"${TEST_PROJECT_TEST}/at64-user-install" &&
+  "${TEST_PROJECT_TEST}/tools-user-install" &&
+  "${TEST_PROJECT_TEST}/sysden64-user-sync"

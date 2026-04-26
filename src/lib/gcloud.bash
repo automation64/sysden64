@@ -1,28 +1,28 @@
 # version: 3.0.2
-# template: lib-dedicated-1.0.0
+# template: lib-dedicated-1.0.1
 function module_gcloud_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_DEDICATED"
-  local module='gcloud'
-  local source=''
+  local module_name='gcloud'
+  local module_etc=''
 
-  module_detect "$module" 'gcloud' 'GCloud - CLI' || return 0
+  module_detect "$module_name" 'gcloud' 'GCloud - CLI' || return 0
 
-  source="$(module_config_get_source "$module_type" "$module")" &&
-    module_setup_env "$home" "$source" "$module_type" "$module" &&
-    module_gcloud_setup_config "$home" "$source" "$module" "$module_type"
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" &&
+    module_setup_env "$home" "$module_etc" "$module_type" "$module_name" &&
+    module_gcloud_setup_config "$home" "$module_etc" "$module_name" "$module_type"
 }
 
 function module_gcloud_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local source="$2"
-  local module="$3"
+  local module_etc="$2"
+  local module_name="$3"
   local module_type="$4"
-  local base="${home}/.config"
-  local config='.config/gcloud'
-  local target="${home}/${config}"
+  local config_destination="${home}/.config"
+  local module_config='.config/gcloud'
+  local config_backup="${home}/${module_config}"
 
-  module_dedicated_setup_config "$source" "$module" "$module_type" "$base" "$config" "$target"
+  module_dedicated_setup_config "$module_etc" "$module_name" "$module_type" "$config_destination" "$module_config" "$config_backup"
 }

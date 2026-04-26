@@ -1,29 +1,29 @@
 # version: 2.0.3
-# template: lib-config-1.0.0
+# template: lib-config-2.0.0
 function module_p10k_setup() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
-  local module='p10k'
-  local source=''
+  local module_name='p10k'
+  local module_etc=''
 
-  module_detect "$module" 'zsh' 'PowerLevel10K - Zsh Theme' || return 0
+  module_detect "$module_name" 'zsh' 'PowerLevel10K - Zsh Theme' || return 0
 
-  source="$(module_config_get_source "$module_type" "$module")" &&
-    module_setup_env "$home" "$source" "$module_type" "$module" &&
-    module_p10k_setup_config "$home" "$source" "$module" "$module_type" ||
+  module_etc="$(module_config_get_source "$module_type" "$module_name")" &&
+    module_setup_env "$home" "$module_etc" "$module_type" "$module_name" &&
+    module_p10k_setup_config "$home" "$module_etc" "$module_name" "$module_type" ||
     return $?
 }
 
 function module_p10k_setup_config() {
   bl64_dbg_app_show_function "$@"
   local home="$1"
-  local source="$2"
-  local module="$3"
+  local module_etc="$2"
+  local module_name="$3"
   local module_type="$4"
-  local base="${home}"
-  local config='.p10k.zsh'
-  local target="${base}/${config}"
+  local config_destination="${home}"
+  local module_config='.p10k.zsh'
+  local config_backup="${config_destination}/${module_config}"
 
-  module_shared_setup_config "$source" "$module" "$module_type" "$base" "$config" "$target" "${source}/${config}"
+  module_shared_setup_config "$module_etc" "$module_name" "$module_type" "$config_destination" "$config_backup" "${module_etc}/${module_config}"
 }
