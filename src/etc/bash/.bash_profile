@@ -2,7 +2,17 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.1.0
+
+# Load System-Wide settings
+if [[ -d /etc/profile.d ]]; then
+  _module=""
+  for _module in /etc/profile.d/*.sh; do
+    [[ -r "$_module" ]] &&
+      source "$_module"
+  done
+  unset _module
+fi
 
 # Import BashRC content
 if [[ -f "${HOME}/.bashrc" ]]; then

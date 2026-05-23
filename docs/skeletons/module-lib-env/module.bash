@@ -6,8 +6,8 @@ function module_X_MODULE_ID_X_setup() {
   local home="$1"
   local module_type="$SYSDEN64_MODULE_TYPE_SHARED"
   local module_name='X_MODULE_ID_X'
-  local extra_locations='X_EXTRA_LOCATIONS_PLACEHOLDER_X'
   local module_etc=''
+  local extra_locations='X_EXTRA_LOCATIONS_PLACEHOLDER_X'
 
   module_detect "$module_name" 'X_MODULE_ID_X' 'X_MODULE_NAME_X' "$extra_locations" || return 0
 

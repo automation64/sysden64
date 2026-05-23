@@ -7,7 +7,7 @@
 # Set initial system path
 export PATH="/bin:/usr/bin"
 
-# Load global RC
+# Load System-Wide setting
 [[ -f /etc/bashrc ]] &&
   source /etc/bashrc
 
@@ -25,12 +25,12 @@ fi
 if [[ -d "${HOME}/.env.d" ]]; then
   _module=""
   # Load variables, paths and aliases
-  for _module in "${HOME}/.env.d"/*.env ; do
+  for _module in "${HOME}/.env.d"/*.env; do
     [[ -r "$_module" ]] &&
       source "$_module"
   done
   # Load shell settings and functions
-  for _module in "${HOME}/.env.d"/*.bash ; do
+  for _module in "${HOME}/.env.d"/*.bash; do
     [[ -r "$_module" ]] &&
       source "$_module"
   done

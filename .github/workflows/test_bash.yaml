@@ -1,6 +1,9 @@
 ---
-# template: 2.6.0
+# template: 2.7.0
 name: "Test/Bash"
+
+permissions:
+  contents: read
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
