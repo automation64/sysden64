@@ -2,8 +2,8 @@
   //
   // VSCode / Settings / AI
   //
-  // Settings Template Version: 14DEV25
+  // Settings Template Version: 14DEC25
   // VSCode Version: >= 1.66
   //
-  "gitlens.ai.model": "vscode",
+  "gitlens.ai.model": "vscode"
 }

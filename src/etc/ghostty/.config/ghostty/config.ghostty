@@ -2,7 +2,9 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.0.0
+# Version: 1.0.1
+
+# example # theme = dracula+
 
 abnormal-command-exit-runtime = 250
 alpha-blending = linear-corrected
@@ -191,7 +193,6 @@ split-inherit-working-directory = true
 split-preserve-zoom = no-navigation
 tab-inherit-working-directory = true
 term = xterm-ghostty
-theme = dracula+
 title-report = false
 undo-timeout = 5s
 unfocused-split-fill = 

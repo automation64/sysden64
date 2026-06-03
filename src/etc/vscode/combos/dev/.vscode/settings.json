@@ -2,7 +2,7 @@
   //
   // VSCode / Settings / Dev
   //
-  // Settings Template Version: 12FEB26
+  // Settings Template Version: 03JUN26
   // VSCode Version: >= 1.66
   //
   "diffEditor.hideUnchangedRegions.enabled": true,
@@ -11,4 +11,5 @@
   "gitlens.codeLens.authors.enabled": false,
   "gitlens.codeLens.recentChange.enabled": false,
   "gitlens.telemetry.enabled": false,
+  "securecoder.enabled": true
 }

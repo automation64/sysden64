@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    //
+    // VSCode / Settings / Rust
+    //
+    // Settings Template Version: 23MAY26
+    // VSCode Version: >= 1.66
+    //
+    "rust-lang.rust-analyzer"
+  ]
+}

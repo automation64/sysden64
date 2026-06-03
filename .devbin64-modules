@@ -1,7 +1,7 @@
+act
 bash
 git
 github
 gitleaks
 shellcheck
-sysden64
-act
+yamllint

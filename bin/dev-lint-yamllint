@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# template-lint: 1.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+source ./bin/dev-set || exit 1
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
+source ./bin/dev-env-yamllint || exit 1
+
+declare MY_TARGET="${*:-${DEV_LINT_YAMLLINT_TARGET}}"
+declare MY_CONTAINER_ENABLED=''
+
+function dev_lint_yamllint_local() {
+  bl64_dbg_app_show_function "$@"
+  local target="$1"
+  "$DEV_LIB_YAMLLINT_BIN" \
+    --config-file "${DEV_LIB_YAMLLINT_CFG}" \
+    --format "$DEV_LINT_YAMLLINT_FORMAT" \
+    --strict \
+    "$target" >>"$DEV_LINT_YAMLLINT_PATH_REPORT"
+}
+
+function dev_lint_yamllint_container() {
+  bl64_dbg_app_show_function "$@"
+  local target="$1"
+  # shellcheck disable=SC2086
+  bl64_cnt_run \
+    $BL64_CNT_SET_RM \
+    $BL64_CNT_SET_TTY \
+    --workdir="$DEV_ENV_YAMLLINT_CONTAINER_PATH_ROOT" \
+    --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_ENV_YAMLLINT_CONTAINER_PATH_ROOT},readonly" \
+    --entrypoint="${DEV_LINT_YAMLLINT_CONTAINER_ENTRYPOINT}" \
+    "${DEV_ENV_YAMLLINT_REGISTRY}/${DEV_LINT_YAMLLINT_CONTAINER}" \
+    --config-file "${DEV_ENV_YAMLLINT_CONTAINER_PATH_ROOT}/${DEV_LIB_YAMLLINT_CFG}" \
+    --format "$DEV_LINT_YAMLLINT_FORMAT" \
+    --strict \
+    "$target" >>"$DEV_LINT_YAMLLINT_PATH_REPORT"
+}
+
+function my_lint() {
+  bl64_dbg_app_show_function
+  local current=''
+
+  echo '' >"$DEV_LINT_YAMLLINT_PATH_REPORT"
+  for current in $MY_TARGET; do
+    bl64_msg_show_phase "lint YAML target (${current})"
+    if [[ -n "$MY_CONTAINER_ENABLED" ]]; then
+      dev_lint_yamllint_container "$current"
+    else
+      dev_lint_yamllint_local "$current"
+    fi
+  done
+}
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  dev_bin64_task_initialize &&
+    dev_bin64_log_setup "$BL64_VAR_ON" "$DEV_ENV_YAMLLINT_PATH_LOGS" ||
+    return $?
+
+  if [[ ! -x "$DEV_LIB_YAMLLINT_BIN" ]]; then
+    MY_CONTAINER_ENABLED='YES'
+    bl64_cnt_setup ||
+      return $?
+  else
+    bl64_check_command "$DEV_LIB_YAMLLINT_BIN" ||
+      return $?
+  fi
+
+  dev_bin64_task_show_setup \
+    'DEV_LINT_YAMLLINT_PATH_REPORT' \
+    'MY_TARGET'
+}
+
+bl64_lib_script_version_set '1.1.1'
+bl64_msg_help_about_set 'Lint source code'
+dev_bin64_initialize && my_initialize || exit $?
+
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+my_lint
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# template-env: 1.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Module variables
+#
+# * Shared internal variables for module tasks
+#
+
+# shellcheck disable=SC2154
+{
+  # Env / YAMLLint / Module environment definition version
+  export DEV_ENV_YAMLLINT_ID='yamllint'
+  export DEV_ENV_YAMLLINT_VERSION='2.0.0'
+  # Env / YAMLLint / Log path
+  export DEV_ENV_YAMLLINT_PATH_LOGS="${DEV_PATH_LOGS}/${DEV_ENV_YAMLLINT_ID}"
+  # Env / YAMLLint / Container path for project mounts
+  export DEV_ENV_YAMLLINT_CONTAINER_PATH_ROOT='/project'
+
+  # Lib / YAMLLint / Installer
+  export DEV_LIB_YAMLLINT_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-yamllint"
+  # Lib / YAMLLint / Skip installation?
+  export DEV_LIB_YAMLLINT_SKIP='YES'
+  # Lib / YAMLLint / Target
+  export DEV_LIB_YAMLLINT_TARGET="${DEV_PATH_LIB}/${DEV_ENV_YAMLLINT_ID}"
+  # Lib / YAMLLint / Configuration
+  export DEV_LIB_YAMLLINT_CFG="${DEV_PATH_ROOT}/.yamllint.yaml"
+
+  # Env / YAMLLint / Container Registry for tools
+  export DEV_ENV_YAMLLINT_REGISTRY='ghcr.io/automation64'
+  # Lint / YAMLLint / Format
+  export DEV_LINT_YAMLLINT_FORMAT='parsable'
+  # Lint / YAMLLint / Report
+  export DEV_LINT_YAMLLINT_PATH_REPORT="${DEV_ENV_YAMLLINT_PATH_LOGS}/${DEV_ENV_YAMLLINT_ID}-lint.${DEV_LINT_YAMLLINT_FORMAT}"
+  # Lint / YAMLLint / Container with linting tool
+  export DEV_LINT_YAMLLINT_CONTAINER='yaml-lint/alpine-3-yaml-lint'
+  # Lint / YAMLLint / Container entrypoint
+  export DEV_LINT_YAMLLINT_CONTAINER_ENTRYPOINT='/usr/bin/yamllint'
+}
+
+#
+# Module parameters
+#
+# * Use .dev.env file to override values
+#
+
+# shellcheck disable=SC2154
+{
+  # Lint / YAMLLint / Target
+  export DEV_LINT_YAMLLINT_TARGET="${DEV_LINT_YAMLLINT_TARGET:-${DEV_PATH_SRC}}"
+}
+
+#
+# Locals
+#
+# * Use .local.env file or CICD variables to override values
+#
+
+# shellcheck disable=SC2154
+{
+  # Lib / YAMLLint / Command
+  export DEV_LIB_YAMLLINT_BIN="${DEV_LIB_YAMLLINT_BIN:-}"
+  if [[ -z "$DEV_LIB_YAMLLINT_BIN" ]]; then
+    DEV_LIB_YAMLLINT_BIN="$(dev_bin64_lib_locate 'yamllint')"
+    if [[ -z "$DEV_LIB_YAMLLINT_BIN" ]]; then
+      DEV_LIB_YAMLLINT_BIN="${DEV_LIB_YAMLLINT_TARGET}/yamllint"
+      if [[ ! -x "${DEV_LIB_YAMLLINT_BIN}" ]]; then
+        DEV_LIB_YAMLLINT_SKIP='NO'
+      fi
+    else
+      DEV_LIB_YAMLLINT_TARGET="$(dev_bin64_lib_basename "$DEV_LIB_YAMLLINT_BIN")"
+    fi
+  fi
+}
