@@ -350,7 +350,8 @@ function module_dedicated_setup_config() {
         "${module_etc}/${module_config}"
     fi
   else
-    module_dedicated_relink "$module_name" "${DEV_PATH_PROF_VAULT}/${module_name}" "$module_config" "$config_backup"
+    config_destination="${DEV_PATH_PROF_VAULT}/${module_name}"
+    module_dedicated_relink "$module_name" "$config_destination" "$config_backup"
   fi
 }
 
@@ -511,8 +512,7 @@ function module_dedicated_relink() {
   bl64_dbg_app_show_function "$@"
   local module="${1:-}"
   local base="${2:-}"
-  local config="${3:-}"
-  local target="${4:-}"
+  local target="${3:-}"
 
   bl64_check_parameter 'module' ||
     return $?
@@ -1287,7 +1287,7 @@ function initialize() {
 # Main
 #
 
-bl64_lib_script_version_set '7.5.1'
+bl64_lib_script_version_set '7.5.2'
 bl64_msg_help_usage_set '<-s|-l|-c|-n|-6|-u|-e|-w|-z|-t|-f|-g|-d|-r|-k> [-o Home] [-i Repo] [-p Profile] [-m Module] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'User configuration management tool'
 # shellcheck disable=SC2016
