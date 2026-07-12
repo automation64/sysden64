@@ -23,9 +23,7 @@
 {
   # Env / YAMLLint / Module environment definition version
   export DEV_ENV_YAMLLINT_ID='yamllint'
-  export DEV_ENV_YAMLLINT_VERSION='2.0.0'
-  # Env / YAMLLint / Log path
-  export DEV_ENV_YAMLLINT_PATH_LOGS="${DEV_PATH_LOGS}/${DEV_ENV_YAMLLINT_ID}"
+  export DEV_ENV_YAMLLINT_VERSION='3.0.0'
   # Env / YAMLLint / Container path for project mounts
   export DEV_ENV_YAMLLINT_CONTAINER_PATH_ROOT='/project'
 
@@ -36,14 +34,12 @@
   # Lib / YAMLLint / Target
   export DEV_LIB_YAMLLINT_TARGET="${DEV_PATH_LIB}/${DEV_ENV_YAMLLINT_ID}"
   # Lib / YAMLLint / Configuration
-  export DEV_LIB_YAMLLINT_CFG="${DEV_PATH_ROOT}/.yamllint.yaml"
+  export DEV_LIB_YAMLLINT_CFG="${DEV_PATH_ROOT}/.yamllint-generic.yaml"
 
   # Env / YAMLLint / Container Registry for tools
   export DEV_ENV_YAMLLINT_REGISTRY='ghcr.io/automation64'
   # Lint / YAMLLint / Format
   export DEV_LINT_YAMLLINT_FORMAT='parsable'
-  # Lint / YAMLLint / Report
-  export DEV_LINT_YAMLLINT_PATH_REPORT="${DEV_ENV_YAMLLINT_PATH_LOGS}/${DEV_ENV_YAMLLINT_ID}-lint.${DEV_LINT_YAMLLINT_FORMAT}"
   # Lint / YAMLLint / Container with linting tool
   export DEV_LINT_YAMLLINT_CONTAINER='yaml-lint/alpine-3-yaml-lint'
   # Lint / YAMLLint / Container entrypoint
@@ -58,6 +54,11 @@
 
 # shellcheck disable=SC2154
 {
+  # Env / YAMLLint / Log path
+  export DEV_ENV_YAMLLINT_PATH_LOGS="${DEV_ENV_YAMLLINT_PATH_LOGS:-${DEV_PATH_PROF_LOGS}/${DEV_ENV_YAMLLINT_ID}}"
+
+  # Lint / YAMLLint / Report
+  export DEV_LINT_YAMLLINT_PATH_REPORT="${DEV_ENV_YAMLLINT_PATH_LOGS}/${DEV_ENV_YAMLLINT_ID}-lint.${DEV_LINT_YAMLLINT_FORMAT}"
   # Lint / YAMLLint / Target
   export DEV_LINT_YAMLLINT_TARGET="${DEV_LINT_YAMLLINT_TARGET:-${DEV_PATH_SRC}}"
 }

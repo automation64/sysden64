@@ -2,14 +2,15 @@
 # To update this file:
 #   - edit source: $HOME/sd64/etc/shared/MODULE/
 #   - apply updates: sysden64 -u -m MODULE
-# Version: 1.1.0
+# Version: 1.1.1
 
 # Set initial system path
 export PATH="/bin:/usr/bin"
 
 # Load System-Wide setting
-[[ -f /etc/bashrc ]] &&
+if [[ -f /etc/bashrc ]]; then
   source /etc/bashrc
+fi
 
 # Load user RC
 if [[ -d "${HOME}/.bashrc.d" ]]; then

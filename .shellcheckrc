@@ -1,6 +1,8 @@
-# Template: 1.0.0
 #
-# Configuration
+# ShellCheck / Configuration
+#
+# * Version: 1.0.0
+# * Template: 1.0.0
 #
 
 external-sources=true
@@ -15,3 +17,7 @@ enable=add-default-case
 enable=avoid-nullary-conditions
 enable=check-unassigned-uppercase
 enable=deprecate-which
+
+#
+# Project settings
+#

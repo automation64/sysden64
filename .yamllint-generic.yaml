@@ -3,17 +3,18 @@
 # YAMLLint / Configuration / Generic
 #
 # * Version: 1.0.0
-# * Template: 1.0.0
+# * Template: 2.0.0
 #
 
 yaml-files:
   - "*.yaml"
   - "*.yml"
-  - ".yamllint"
 
 ignore-from-file:
   - ".gitignore"
-  - ".yamlignore"
+  - ".yamlignore-generic"
+
+extends: default
 
 rules:
   anchors: enable
