@@ -13,18 +13,9 @@
 # limitations under the License.
 #######################################
 
-# shellcheck source=bin/dev-set
-source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
-# shellcheck source-path=/opt/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-arc.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
-# shellcheck source-path=bin
-source ./bin/dev-env-project || exit 1
+source ./bin/dev-set &&
+  source ./bin/dev-source-base &&
+  source ./bin/dev-env-project || exit 1
 
 function my_pack() {
   bl64_dbg_app_show_function
@@ -37,7 +28,7 @@ function my_pack() {
     "$BL64_VAR_DEFAULT" \
     "$DEV_PACK_PROJECT_PATH_STAGING" \
     $DEV_PACK_PROJECT_ASSETS &&
-  bl64_msg_show_task 'create dstributable bundle'
+    bl64_msg_show_task 'create dstributable bundle'
   # shellcheck disable=SC2086,SC2035
   cd "$DEV_PACK_PROJECT_PATH_STAGING" &&
     bl64_arc_run_tar \
@@ -47,19 +38,19 @@ function my_pack() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  dev_bin64_task_initialize &&
+  dev_base_task_initialize &&
     bl64_arc_setup &&
-    dev_bin64_build_setup "$DEV_PACK_PROJECT_PATH_TARGET" "$DEV_PACK_PROJECT_PATH_STAGING" &&
-    dev_bin64_task_show_setup \
+    dev_base_pack_setup "$DEV_PACK_PROJECT_PATH_TARGET" "$DEV_PACK_PROJECT_PATH_STAGING" &&
+    dev_base_task_show_setup \
       'DEV_BUILD_PROJECT_PATH_OUTPUT' \
       'DEV_PACK_PROJECT_PATH_TARGET' \
       'DEV_PACK_PROJECT_BUNDLE' \
       'DEV_PACK_PROJECT_DISTRIBUTABLE'
 }
 
-bl64_lib_script_version_set '2.1.0'
+bl64_lib_script_version_set '3.0.0'
 bl64_msg_help_about_set 'Pack application for release'
-dev_bin64_initialize && my_initialize || exit $?
+dev_base_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 my_pack
